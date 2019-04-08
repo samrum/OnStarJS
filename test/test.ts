@@ -11,7 +11,7 @@ const config = {
   deviceId: "742249ce-18e0-4c82-8bb2-9975367a7631",
   vin: "1G2ZF58B774109863",
   username: "dev@rubenmedina.com",
-  password: "passw0rd",
+  password: "p@ssw0rd",
   onStarPin: "1234",
 };
 
