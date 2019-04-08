@@ -1,0 +1,48 @@
+{
+  "name": "onstarjs",
+  "version": "0.1.0",
+  "description": "Package for making OnStar API requests",
+  "main": "dist/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samrum/OnStarJS.git"
+  },
+  "keywords": [
+    "onstar",
+    "chevrolet",
+    "gm"
+  ],
+  "author": "Ruben Medina",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/samrum/OnStarJS/issues"
+  },
+  "homepage": "https://github.com/samrum/OnStarJS#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "jsonwebtoken": "^8.5.1",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.11",
+    "@types/jsonwebtoken": "^8.3.2",
+    "@types/uuid": "^3.4.4",
+    "jest": "^24.7.1",
+    "prettier": "^1.16.4",
+    "rollup": "^1.9.0",
+    "rollup-plugin-typescript": "^1.0.1",
+    "ts-jest": "^24.0.2",
+    "ts-mockito": "^2.3.1",
+    "tslib": "^1.9.3",
+    "typescript": "^3.4.2"
+  },
+  "peerDependencies": {}
+}
