@@ -1,7 +1,7 @@
 {
   "name": "onstarjs",
   "version": "1.0.0",
-  "description": "Package for making OnStar API requests",
+  "description": "Unofficial package for making OnStar API requests",
   "main": "dist/index.js",
   "directories": {
     "test": "test"
