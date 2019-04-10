@@ -9,6 +9,8 @@ An unofficial NodeJS library to make OnStar requests.
 Only exposes a method to remote start (aka precondition) a vehicle for now. Doesn't handle any failure responses from OnStar after the initial request is made.
 
 ## Example Usage
+Use a random version 4 uuid as a deviceId.
+
     import OnStar from "onstarjs";
 
     const config = {
