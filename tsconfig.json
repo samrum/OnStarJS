@@ -4,6 +4,7 @@
         "strict": true,
         "esModuleInterop": true,
         "declaration": true,
+        "moduleResolution": "node",
     },
     "exclude": ["node_modules"]
 }
