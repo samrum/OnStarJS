@@ -10,7 +10,7 @@ import RequestService from "../src/RequestService";
 const config = {
   deviceId: "742249ce-18e0-4c82-8bb2-9975367a7631",
   vin: "1G2ZF58B774109863",
-  username: "dev@rubenmedina.com",
+  username: "foo@bar.com",
   password: "p@ssw0rd",
   onStarPin: "1234",
 };
