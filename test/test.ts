@@ -2,7 +2,7 @@ import { mock, instance, when, anyString, anything } from "ts-mockito";
 import { AxiosResponse } from "axios";
 
 import { OAuthToken } from "../src/types";
-import OnStar from "../src/OnStar";
+import OnStar from "../src/index";
 import TokenHandler from "../src/TokenHandler";
 import Request from "../src/Request";
 import RequestService from "../src/RequestService";

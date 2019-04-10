@@ -2,3 +2,4 @@
 node_modules
 dist
 coverage
+.rpt2_cache
