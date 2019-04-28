@@ -27,9 +27,7 @@ class RequestService {
   }
 
   async connectRequest(): Promise<AxiosResponse> {
-    const request = new OnStarRequest(
-      `/account/vehicles/${this.config.vin}/commands/connect`,
-    );
+    const request = new OnStarRequest(this.getCommandPath("connect"));
 
     return await this.sendOnStarRequest(request);
   }
@@ -45,24 +43,20 @@ class RequestService {
   }
 
   async startRequest(): Promise<AxiosResponse> {
-    const request = new OnStarRequest(
-      `/account/vehicles/${this.config.vin}/commands/start`,
-    );
+    const request = new OnStarRequest(this.getCommandPath("start"));
 
     return await this.sendOnStarRequest(request);
   }
 
   async cancelStartRequest(): Promise<AxiosResponse> {
-    const request = new OnStarRequest(
-      `/account/vehicles/${this.config.vin}/commands/cancelStart`,
-    );
+    const request = new OnStarRequest(this.getCommandPath("cancelStart"));
 
     return await this.sendOnStarRequest(request);
   }
 
   async lockDoorRequest(): Promise<AxiosResponse> {
     const request = new OnStarRequest(
-      `/account/vehicles/${this.config.vin}/commands/lockDoor`,
+      this.getCommandPath("lockDoor"),
     ).setRequestBody({
       lockDoorRequest: {
         delay: 0,
@@ -74,7 +68,7 @@ class RequestService {
 
   async unlockDoorRequest(): Promise<AxiosResponse> {
     const request = new OnStarRequest(
-      `/account/vehicles/${this.config.vin}/commands/unlockDoor`,
+      this.getCommandPath("unlockDoor"),
     ).setRequestBody({
       unlockDoorRequest: {
         delay: 0,
@@ -86,7 +80,7 @@ class RequestService {
 
   async alertRequest(): Promise<AxiosResponse> {
     const request = new OnStarRequest(
-      `/account/vehicles/${this.config.vin}/commands/alert`,
+      this.getCommandPath("alert"),
     ).setRequestBody({
       alertRequest: {
         action: ["Honk", "Flash"],
@@ -100,16 +94,14 @@ class RequestService {
   }
 
   async cancelAlertRequest(): Promise<AxiosResponse> {
-    const request = new OnStarRequest(
-      `/account/vehicles/${this.config.vin}/commands/cancelAlert`,
-    );
+    const request = new OnStarRequest(this.getCommandPath("cancelAlert"));
 
     return await this.sendOnStarRequest(request);
   }
 
   async getChargingProfileRequest(): Promise<AxiosResponse> {
     const request = new OnStarRequest(
-      `/account/vehicles/${this.config.vin}/commands/getChargingProfile`,
+      this.getCommandPath("getChargingProfile"),
     );
 
     return await this.sendOnStarRequest(request);
@@ -117,7 +109,7 @@ class RequestService {
 
   async setChargingProfileRequest(): Promise<AxiosResponse> {
     const request = new OnStarRequest(
-      `/account/vehicles/${this.config.vin}/commands/setChargingProfile`,
+      this.getCommandPath("setChargingProfile"),
     ).setRequestBody({
       chargingProfile: {
         chargeMode: "IMMEDIATE",
@@ -130,7 +122,7 @@ class RequestService {
 
   async diagnosticsRequest(): Promise<AxiosResponse> {
     const request = new OnStarRequest(
-      `/account/vehicles/${this.config.vin}/commands/diagnostics`,
+      this.getCommandPath("diagnostics"),
     ).setRequestBody({
       diagnosticsRequest: {
         diagnosticItem: [
@@ -186,7 +178,11 @@ class RequestService {
     }
   */
 
-  private async getHeaders(request: OnStarRequest): any {
+  private getCommandPath(command: string): string {
+    return `/account/vehicles/${this.config.vin}/commands/${command}`;
+  }
+
+  private async getHeaders(request: OnStarRequest): Promise<any> {
     const headers: any = {
       Accept: "application/json",
       "Accept-Language": "en-US",
