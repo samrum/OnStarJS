@@ -1,5 +1,4 @@
 import { mock, instance, when, anyString, anything } from "ts-mockito";
-import { AxiosResponse } from "axios";
 
 import { OAuthToken } from "../src/types";
 import OnStar from "../src/index";
@@ -38,40 +37,30 @@ const expiredToken: OAuthToken = {
   expiration: Date.now() - 24 * 60 * 60 * 1000,
 };
 
+const upgradedToken: OAuthToken = {
+  ...authToken,
+  upgraded: true,
+};
+
 let onStar: OnStar;
 
 describe("OnStar", () => {
   beforeEach(() => {
-    const tokenHandler = mock(TokenHandler);
-    when(tokenHandler.createUpgradeJWT()).thenReturn("upgradeJWT");
-    when(tokenHandler.refreshAuthToken(anything())).thenResolve(authToken);
-
     const requestService = mock(RequestService);
 
-    onStar = new OnStar(
-      config,
-      instance(tokenHandler),
-      instance(requestService),
-    );
+    onStar = new OnStar(config, instance(requestService));
   });
 
   test("create", () => {
     expect(OnStar.create(config)).toBeInstanceOf(OnStar);
   });
 
-  test("remoteStart", async () => {
-    await onStar.remoteStart();
+  test("start", async () => {
+    await onStar.start();
   });
 
-  test("remoteStartWithUpgradedToken", async () => {
-    const upgradedToken = { ...authToken, upgraded: true };
-
-    const tokenHandler = mock(TokenHandler);
-    when(tokenHandler.refreshAuthToken(anything())).thenResolve(upgradedToken);
-
-    onStar.setTokenHandler(instance(tokenHandler));
-
-    await onStar.remoteStart();
+  test("cancelStart", async () => {
+    await onStar.cancelStart();
   });
 });
 
@@ -79,21 +68,30 @@ describe("Request", () => {
   test("Access Methods Work", () => {
     const request = new Request("/secret/path");
     const contentType = "text/html";
-    const requestBody = `{username: "Ayaya"}`;
+    const body = `{"username":"Ayaya"}`;
+    const objectBody = {
+      username: "Ayaya",
+    };
 
     expect(request.getPath()).toEqual("/secret/path");
 
-    expect(request.getAuthToken()).toBeUndefined();
-    request.setAuthToken(authToken);
-    expect(request.getAuthToken()).toEqual(authToken);
+    expect(request.isAuthRequired()).toBeTruthy();
+    request.setAuthRequired(false);
+    expect(request.isAuthRequired()).toBeFalsy();
 
-    expect(request.getContentType()).toEqual("text/plain");
+    expect(request.isUpgradeRequired()).toBeTruthy();
+    request.setUpgradeRequired(false);
+    expect(request.isUpgradeRequired()).toBeFalsy();
+
+    expect(request.getContentType()).toEqual("application/json; charset=UTF-8");
     request.setContentType(contentType);
     expect(request.getContentType()).toEqual(contentType);
 
-    expect(request.getRequestBody()).toEqual("{}");
-    request.setRequestBody(requestBody);
-    expect(request.getRequestBody()).toEqual(requestBody);
+    expect(request.getBody()).toEqual("{}");
+    request.setBody(body);
+    expect(request.getBody()).toEqual(body);
+    request.setBody(objectBody);
+    expect(request.getBody()).toEqual(body);
   });
 });
 
@@ -101,7 +99,14 @@ let requestService: RequestService;
 
 describe("RequestService", () => {
   beforeEach(() => {
-    requestService = new RequestService({
+    const tokenHandler = mock(TokenHandler);
+    when(tokenHandler.createUpgradeJWT()).thenReturn("upgradeJWT");
+    when(tokenHandler.createAuthJWT()).thenReturn("authJWT");
+    when(tokenHandler.decodeAuthRequestResponse(anything())).thenReturn(
+      authToken,
+    );
+
+    requestService = new RequestService(config, instance(tokenHandler), {
       post: jest.fn(),
     });
   });
@@ -111,15 +116,53 @@ describe("RequestService", () => {
   });
 
   test("connectRequest", async () => {
-    await requestService.connectRequest("vin", authToken);
+    await requestService.connectRequest();
   });
 
   test("upgradeRequest", async () => {
-    await requestService.upgradeRequest("vin", authToken);
+    await requestService.upgradeRequest();
   });
 
-  test("remoteStartRequest", async () => {
-    await requestService.remoteStartRequest("vin", authToken);
+  test("startRequest", async () => {
+    await requestService.startRequest();
+  });
+
+  test("cancelStartRequest", async () => {
+    await requestService.cancelStartRequest();
+  });
+
+  test("lockDoorRequest", async () => {
+    await requestService.lockDoorRequest();
+  });
+
+  test("unlockDoorRequest", async () => {
+    await requestService.unlockDoorRequest();
+  });
+
+  test("alertRequest", async () => {
+    await requestService.alertRequest();
+  });
+
+  test("cancelAlertRequest", async () => {
+    await requestService.cancelAlertRequest();
+  });
+
+  test("getChargingProfileRequest", async () => {
+    await requestService.getChargingProfileRequest();
+  });
+
+  test("setChargingProfileRequest", async () => {
+    await requestService.setChargingProfileRequest();
+  });
+
+  test("diagnosticsRequest", async () => {
+    await requestService.diagnosticsRequest();
+  });
+
+  test("expiredAuthTokenReplacedWithNewToken", async () => {
+    requestService.setAuthToken(expiredToken);
+
+    await requestService.startRequest();
   });
 });
 
@@ -127,13 +170,7 @@ let tokenHandler: TokenHandler;
 
 describe("TokenHandler", () => {
   beforeEach(() => {
-    const mockRequestService = mock(RequestService);
-    when(mockRequestService.authTokenRequest(anyString())).thenResolve({
-      data:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOiJPTUJfQ1ZZX0FORF8zRjEiLCJjcmVkZW50aWFsIjoiMTIzNCIsImNyZWRlbnRpYWxfdHlwZSI6IlBJTiIsImRldmljZV9pZCI6ImRldmljZS1pZC1mYWtlIiwiZ3JhbnRfdHlwZSI6InBhc3N3b3JkIiwibm9uY2UiOiJZekpsTTJSaU1tWmpObVJsTURZek1EVmlOaiIsInRpbWVzdGFtcCI6IjIwMTktMDQtMDhUMDQ6NDY6MDcuMDAxWiJ9.Yi9QANYYzX2XNz5u4_D7tKqAgVk9pZ5FSwJt5jdZvrQ",
-    } as AxiosResponse);
-
-    tokenHandler = new TokenHandler(config, instance(mockRequestService));
+    tokenHandler = new TokenHandler(config);
   });
 
   test("authTokenIsValid", () => {
@@ -141,15 +178,22 @@ describe("TokenHandler", () => {
     expect(TokenHandler.authTokenIsValid(expiredToken)).toBeFalsy();
   });
 
-  test("refreshAuthToken", async () => {
-    expect(await tokenHandler.refreshAuthToken(authToken)).toEqual(authToken);
-
-    expect(await tokenHandler.refreshAuthToken(expiredToken)).not.toEqual(
-      authToken,
-    );
-  });
-
   test("createUpgradeJWT", () => {
     expect(tokenHandler.createUpgradeJWT().split(".").length - 1).toEqual(2);
+  });
+
+  test("createAuthJWT", () => {
+    expect(tokenHandler.createAuthJWT().split(".").length - 1).toEqual(2);
+  });
+
+  test("decodeAuthRequestResponse", () => {
+    const response = {
+      data:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOiJPTUJfQ1ZZX0FORF8zRjEiLCJjcmVkZW50aWFsIjoiMTIzNCIsImNyZWRlbnRpYWxfdHlwZSI6IlBJTiIsImRldmljZV9pZCI6ImRldmljZS1pZC1mYWtlIiwiZ3JhbnRfdHlwZSI6InBhc3N3b3JkIiwibm9uY2UiOiJZekpsTTJSaU1tWmpObVJsTURZek1EVmlOaiIsInRpbWVzdGFtcCI6IjIwMTktMDQtMDhUMDQ6NDY6MDcuMDAxWiJ9.Yi9QANYYzX2XNz5u4_D7tKqAgVk9pZ5FSwJt5jdZvrQ",
+    };
+
+    expect(tokenHandler.decodeAuthRequestResponse(response)).not.toEqual(
+      authToken,
+    );
   });
 });

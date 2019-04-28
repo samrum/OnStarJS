@@ -1,8 +1,9 @@
 class Request {
   private path: string;
-  private requestBody: string = "{}";
+  private body: string = "{}";
   private contentType: string = "application/json; charset=UTF-8";
   private authRequired: boolean = true;
+  private upgradeRequired: boolean = true;
 
   constructor(path: string) {
     this.path = path;
@@ -12,18 +13,16 @@ class Request {
     return this.path;
   }
 
-  getRequestBody(): string {
-    return this.requestBody;
+  getBody(): string {
+    return this.body;
   }
 
-  setRequestBody(body: string | object) {
-    let requestBody = body;
-
-    if (typeof requestBody === "object") {
-      requestBody = JSON.stringify(requestBody);
+  setBody(body: string | object) {
+    if (typeof body === "object") {
+      body = JSON.stringify(body);
     }
 
-    this.requestBody = requestBody;
+    this.body = body;
 
     return this;
   }
@@ -34,6 +33,16 @@ class Request {
 
   setAuthRequired(authRequired: boolean) {
     this.authRequired = authRequired;
+
+    return this;
+  }
+
+  isUpgradeRequired(): boolean {
+    return this.upgradeRequired;
+  }
+
+  setUpgradeRequired(upgradeRequired: boolean) {
+    this.upgradeRequired = upgradeRequired;
 
     return this;
   }

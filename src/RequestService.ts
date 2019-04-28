@@ -1,8 +1,10 @@
 import { AxiosResponse, AxiosPromise } from "axios";
 
 import TokenHandler from "./TokenHandler";
-import OnStarRequest from "./Request";
+import Request from "./Request";
 import { OAuthToken, OnStarConfig } from "./types";
+
+const ONSTAR_API_BASE = "https://api.gm.com/api/v1";
 
 interface httpClient {
   post(url: string, data: any, config: any): AxiosPromise<any>;
@@ -17,71 +19,72 @@ class RequestService {
     private client: httpClient,
   ) {}
 
+  setAuthToken(authToken: OAuthToken) {
+    this.authToken = authToken;
+  }
+
   async authTokenRequest(jwt: string): Promise<AxiosResponse> {
-    const request = new OnStarRequest("/oauth/token")
+    const request = new Request("/oauth/token")
       .setContentType("text/plain")
       .setAuthRequired(false)
-      .setRequestBody(jwt);
+      .setBody(jwt);
 
-    return await this.sendOnStarRequest(request);
+    return await this.sendRequest(request);
   }
 
   async connectRequest(): Promise<AxiosResponse> {
-    const request = new OnStarRequest(this.getCommandPath("connect"));
+    const request = new Request(
+      this.getCommandPath("connect"),
+    ).setUpgradeRequired(false);
 
-    return await this.sendOnStarRequest(request);
+    return await this.sendRequest(request);
   }
 
   async upgradeRequest(): Promise<AxiosResponse> {
     const jwt = this.tokenHandler.createUpgradeJWT();
 
-    const request = new OnStarRequest("/oauth/token/upgrade")
+    const request = new Request("/oauth/token/upgrade")
       .setContentType("text/plain")
-      .setRequestBody(jwt);
+      .setUpgradeRequired(false)
+      .setBody(jwt);
 
-    return await this.sendOnStarRequest(request);
+    return await this.sendRequest(request);
   }
 
   async startRequest(): Promise<AxiosResponse> {
-    const request = new OnStarRequest(this.getCommandPath("start"));
+    const request = new Request(this.getCommandPath("start"));
 
-    return await this.sendOnStarRequest(request);
+    return await this.sendRequest(request);
   }
 
   async cancelStartRequest(): Promise<AxiosResponse> {
-    const request = new OnStarRequest(this.getCommandPath("cancelStart"));
+    const request = new Request(this.getCommandPath("cancelStart"));
 
-    return await this.sendOnStarRequest(request);
+    return await this.sendRequest(request);
   }
 
   async lockDoorRequest(): Promise<AxiosResponse> {
-    const request = new OnStarRequest(
-      this.getCommandPath("lockDoor"),
-    ).setRequestBody({
+    const request = new Request(this.getCommandPath("lockDoor")).setBody({
       lockDoorRequest: {
         delay: 0,
       },
     });
 
-    return await this.sendOnStarRequest(request);
+    return await this.sendRequest(request);
   }
 
   async unlockDoorRequest(): Promise<AxiosResponse> {
-    const request = new OnStarRequest(
-      this.getCommandPath("unlockDoor"),
-    ).setRequestBody({
+    const request = new Request(this.getCommandPath("unlockDoor")).setBody({
       unlockDoorRequest: {
         delay: 0,
       },
     });
 
-    return await this.sendOnStarRequest(request);
+    return await this.sendRequest(request);
   }
 
   async alertRequest(): Promise<AxiosResponse> {
-    const request = new OnStarRequest(
-      this.getCommandPath("alert"),
-    ).setRequestBody({
+    const request = new Request(this.getCommandPath("alert")).setBody({
       alertRequest: {
         action: ["Honk", "Flash"],
         delay: 0,
@@ -90,40 +93,36 @@ class RequestService {
       },
     });
 
-    return await this.sendOnStarRequest(request);
+    return await this.sendRequest(request);
   }
 
   async cancelAlertRequest(): Promise<AxiosResponse> {
-    const request = new OnStarRequest(this.getCommandPath("cancelAlert"));
+    const request = new Request(this.getCommandPath("cancelAlert"));
 
-    return await this.sendOnStarRequest(request);
+    return await this.sendRequest(request);
   }
 
   async getChargingProfileRequest(): Promise<AxiosResponse> {
-    const request = new OnStarRequest(
-      this.getCommandPath("getChargingProfile"),
-    );
+    const request = new Request(this.getCommandPath("getChargingProfile"));
 
-    return await this.sendOnStarRequest(request);
+    return await this.sendRequest(request);
   }
 
   async setChargingProfileRequest(): Promise<AxiosResponse> {
-    const request = new OnStarRequest(
+    const request = new Request(
       this.getCommandPath("setChargingProfile"),
-    ).setRequestBody({
+    ).setBody({
       chargingProfile: {
         chargeMode: "IMMEDIATE",
         rateType: "MIDPEAK",
       },
     });
 
-    return await this.sendOnStarRequest(request);
+    return await this.sendRequest(request);
   }
 
   async diagnosticsRequest(): Promise<AxiosResponse> {
-    const request = new OnStarRequest(
-      this.getCommandPath("diagnostics"),
-    ).setRequestBody({
+    const request = new Request(this.getCommandPath("diagnostics")).setBody({
       diagnosticsRequest: {
         diagnosticItem: [
           "ENGINE COOLANT TEMP",
@@ -154,7 +153,7 @@ class RequestService {
       },
     });
 
-    return await this.sendOnStarRequest(request);
+    return await this.sendRequest(request);
   }
 
   // handle response
@@ -182,7 +181,7 @@ class RequestService {
     return `/account/vehicles/${this.config.vin}/commands/${command}`;
   }
 
-  private async getHeaders(request: OnStarRequest): Promise<any> {
+  private async getHeaders(request: Request): Promise<any> {
     const headers: any = {
       Accept: "application/json",
       "Accept-Language": "en-US",
@@ -196,9 +195,11 @@ class RequestService {
     if (request.isAuthRequired()) {
       const authToken = await this.getAuthToken();
 
-      if (authToken) {
-        headers["Authorization"] = `Bearer ${authToken.access_token}`;
+      if (request.isUpgradeRequired() && !authToken.upgraded) {
+        await this.connectAndUpgradeAuthToken();
       }
+
+      headers["Authorization"] = `Bearer ${authToken.access_token}`;
     }
 
     return headers;
@@ -206,17 +207,13 @@ class RequestService {
 
   private async getAuthToken(): Promise<OAuthToken> {
     if (!this.authToken || !TokenHandler.authTokenIsValid(this.authToken)) {
-      this.authToken = await this.createAndInitializeAuthToken();
-    }
-
-    if (!this.authToken.upgraded) {
-      await this.connectAndUpgradeAuthToken();
+      this.authToken = await this.createNewAuthToken();
     }
 
     return this.authToken;
   }
 
-  private async createAndInitializeAuthToken(): Promise<OAuthToken> {
+  private async createNewAuthToken(): Promise<OAuthToken> {
     const jwt = this.tokenHandler.createAuthJWT();
 
     const authRequestResponse = await this.authTokenRequest(jwt);
@@ -233,13 +230,11 @@ class RequestService {
     }
   }
 
-  private async sendOnStarRequest(
-    request: OnStarRequest,
-  ): Promise<AxiosResponse> {
-    const onStarUrl = `https://api.gm.com/api/v1${request.getPath()}`;
+  private async sendRequest(request: Request): Promise<AxiosResponse> {
+    const onStarUrl = `${ONSTAR_API_BASE}${request.getPath()}`;
     const headers = await this.getHeaders(request);
 
-    return await this.client.post(onStarUrl, request.getRequestBody(), {
+    return await this.client.post(onStarUrl, request.getBody(), {
       headers,
     });
   }
