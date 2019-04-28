@@ -1,10 +1,8 @@
-import { OAuthToken } from "./types";
-
 class Request {
   private path: string;
   private requestBody: string = "{}";
   private contentType: string = "application/json; charset=UTF-8";
-  private authToken?: OAuthToken;
+  private authRequired: boolean = true;
 
   constructor(path: string) {
     this.path = path;
@@ -30,12 +28,12 @@ class Request {
     return this;
   }
 
-  getAuthToken(): OAuthToken | undefined {
-    return this.authToken;
+  isAuthRequired(): boolean {
+    return this.authRequired;
   }
 
-  setAuthToken(token?: OAuthToken) {
-    this.authToken = token;
+  setAuthRequired(authRequired: boolean) {
+    this.authRequired = authRequired;
 
     return this;
   }

@@ -1,5 +1,6 @@
 import { AxiosResponse, AxiosPromise } from "axios";
 
+import TokenHandler from "./TokenHandler";
 import OnStarRequest from "./Request";
 import { OAuthToken, OnStarConfig } from "./types";
 
@@ -8,167 +9,158 @@ interface httpClient {
 }
 
 class RequestService {
-  constructor(private config: OnStarConfig, private client: httpClient) {}
+  private authToken?: OAuthToken;
+
+  constructor(
+    private config: OnStarConfig,
+    private tokenHandler: TokenHandler,
+    private client: httpClient,
+  ) {}
 
   async authTokenRequest(jwt: string): Promise<AxiosResponse> {
     const request = new OnStarRequest("/oauth/token")
       .setContentType("text/plain")
+      .setAuthRequired(false)
       .setRequestBody(jwt);
 
     return await this.sendOnStarRequest(request);
   }
 
-  async connectRequest(authToken?: OAuthToken): Promise<AxiosResponse> {
+  async connectRequest(): Promise<AxiosResponse> {
     const request = new OnStarRequest(
       `/account/vehicles/${this.config.vin}/commands/connect`,
-    ).setAuthToken(authToken);
+    );
 
     return await this.sendOnStarRequest(request);
   }
 
-  async upgradeRequest(
-    jwt: string,
-    authToken?: OAuthToken,
-  ): Promise<AxiosResponse> {
+  async upgradeRequest(): Promise<AxiosResponse> {
+    const jwt = this.tokenHandler.createUpgradeJWT();
+
     const request = new OnStarRequest("/oauth/token/upgrade")
       .setContentType("text/plain")
-      .setAuthToken(authToken)
       .setRequestBody(jwt);
 
     return await this.sendOnStarRequest(request);
   }
 
-  async startRequest(authToken?: OAuthToken): Promise<AxiosResponse> {
+  async startRequest(): Promise<AxiosResponse> {
     const request = new OnStarRequest(
       `/account/vehicles/${this.config.vin}/commands/start`,
-    ).setAuthToken(authToken);
+    );
 
     return await this.sendOnStarRequest(request);
   }
 
-  async cancelStartRequest(authToken?: OAuthToken): Promise<AxiosResponse> {
+  async cancelStartRequest(): Promise<AxiosResponse> {
     const request = new OnStarRequest(
       `/account/vehicles/${this.config.vin}/commands/cancelStart`,
-    ).setAuthToken(authToken);
+    );
 
     return await this.sendOnStarRequest(request);
   }
 
-  async lockDoorRequest(authToken?: OAuthToken): Promise<AxiosResponse> {
+  async lockDoorRequest(): Promise<AxiosResponse> {
     const request = new OnStarRequest(
       `/account/vehicles/${this.config.vin}/commands/lockDoor`,
-    )
-      .setAuthToken(authToken)
-      .setRequestBody({
-        lockDoorRequest: {
-          delay: 0,
-        },
-      });
+    ).setRequestBody({
+      lockDoorRequest: {
+        delay: 0,
+      },
+    });
 
     return await this.sendOnStarRequest(request);
   }
 
-  async unlockDoorRequest(authToken?: OAuthToken): Promise<AxiosResponse> {
+  async unlockDoorRequest(): Promise<AxiosResponse> {
     const request = new OnStarRequest(
       `/account/vehicles/${this.config.vin}/commands/unlockDoor`,
-    )
-      .setAuthToken(authToken)
-      .setRequestBody({
-        unlockDoorRequest: {
-          delay: 0,
-        },
-      });
+    ).setRequestBody({
+      unlockDoorRequest: {
+        delay: 0,
+      },
+    });
 
     return await this.sendOnStarRequest(request);
   }
 
-  async alertRequest(authToken?: OAuthToken): Promise<AxiosResponse> {
+  async alertRequest(): Promise<AxiosResponse> {
     const request = new OnStarRequest(
       `/account/vehicles/${this.config.vin}/commands/alert`,
-    )
-      .setAuthToken(authToken)
-      .setRequestBody({
-        alertRequest: {
-          action: ["Honk", "Flash"],
-          delay: 0,
-          duration: 1,
-          override: ["DoorOpen", "IgnitionOn"],
-        },
-      });
+    ).setRequestBody({
+      alertRequest: {
+        action: ["Honk", "Flash"],
+        delay: 0,
+        duration: 1,
+        override: ["DoorOpen", "IgnitionOn"],
+      },
+    });
 
     return await this.sendOnStarRequest(request);
   }
 
-  async cancelAlertRequest(authToken?: OAuthToken): Promise<AxiosResponse> {
+  async cancelAlertRequest(): Promise<AxiosResponse> {
     const request = new OnStarRequest(
       `/account/vehicles/${this.config.vin}/commands/cancelAlert`,
-    ).setAuthToken(authToken);
+    );
 
     return await this.sendOnStarRequest(request);
   }
 
-  async getChargingProfileRequest(
-    authToken?: OAuthToken,
-  ): Promise<AxiosResponse> {
+  async getChargingProfileRequest(): Promise<AxiosResponse> {
     const request = new OnStarRequest(
       `/account/vehicles/${this.config.vin}/commands/getChargingProfile`,
-    ).setAuthToken(authToken);
+    );
 
     return await this.sendOnStarRequest(request);
   }
 
-  async setChargingProfileRequest(
-    authToken?: OAuthToken,
-  ): Promise<AxiosResponse> {
+  async setChargingProfileRequest(): Promise<AxiosResponse> {
     const request = new OnStarRequest(
       `/account/vehicles/${this.config.vin}/commands/setChargingProfile`,
-    )
-      .setAuthToken(authToken)
-      .setRequestBody({
-        chargingProfile: {
-          chargeMode: "IMMEDIATE",
-          rateType: "MIDPEAK",
-        },
-      });
+    ).setRequestBody({
+      chargingProfile: {
+        chargeMode: "IMMEDIATE",
+        rateType: "MIDPEAK",
+      },
+    });
 
     return await this.sendOnStarRequest(request);
   }
 
-  async diagnosticsRequest(authToken?: OAuthToken): Promise<AxiosResponse> {
+  async diagnosticsRequest(): Promise<AxiosResponse> {
     const request = new OnStarRequest(
       `/account/vehicles/${this.config.vin}/commands/diagnostics`,
-    )
-      .setAuthToken(authToken)
-      .setRequestBody({
-        diagnosticsRequest: {
-          diagnosticItem: [
-            "ENGINE COOLANT TEMP",
-            "ENGINE RPM",
-            "LAST TRIP FUEL ECONOMY",
-            "EV ESTIMATED CHARGE END",
-            "EV BATTERY LEVEL",
-            "OIL LIFE",
-            "EV PLUG VOLTAGE",
-            "LIFETIME FUEL ECON",
-            "HOTSPOT CONFIG",
-            "LIFETIME FUEL USED",
-            "ODOMETER",
-            "HOTSPOT STATUS",
-            "LIFETIME EV ODOMETER",
-            "EV PLUG STATE",
-            "EV CHARGE STATE",
-            "TIRE PRESSURE",
-            "AMBIENT AIR TEMPERATURE",
-            "LAST TRIP DISTANCE",
-            "INTERM VOLT BATT VOLT",
-            "GET COMMUTE SCHEDULE",
-            "GET CHARGE MODE",
-            "EV SCHEDULED CHARGE START",
-            "FUEL TANK INFO",
-            "VEHICLE RANGE",
-          ],
-        },
-      });
+    ).setRequestBody({
+      diagnosticsRequest: {
+        diagnosticItem: [
+          "ENGINE COOLANT TEMP",
+          "ENGINE RPM",
+          "LAST TRIP FUEL ECONOMY",
+          "EV ESTIMATED CHARGE END",
+          "EV BATTERY LEVEL",
+          "OIL LIFE",
+          "EV PLUG VOLTAGE",
+          "LIFETIME FUEL ECON",
+          "HOTSPOT CONFIG",
+          "LIFETIME FUEL USED",
+          "ODOMETER",
+          "HOTSPOT STATUS",
+          "LIFETIME EV ODOMETER",
+          "EV PLUG STATE",
+          "EV CHARGE STATE",
+          "TIRE PRESSURE",
+          "AMBIENT AIR TEMPERATURE",
+          "LAST TRIP DISTANCE",
+          "INTERM VOLT BATT VOLT",
+          "GET COMMUTE SCHEDULE",
+          "GET CHARGE MODE",
+          "EV SCHEDULED CHARGE START",
+          "FUEL TANK INFO",
+          "VEHICLE RANGE",
+        ],
+      },
+    });
 
     return await this.sendOnStarRequest(request);
   }
@@ -194,7 +186,7 @@ class RequestService {
     }
   */
 
-  private getHeaders(request: OnStarRequest): any {
+  private async getHeaders(request: OnStarRequest): any {
     const headers: any = {
       Accept: "application/json",
       "Accept-Language": "en-US",
@@ -205,20 +197,51 @@ class RequestService {
       "User-Agent": "okhttp/3.9.0",
     };
 
-    const authToken = request.getAuthToken();
+    if (request.isAuthRequired()) {
+      const authToken = await this.getAuthToken();
 
-    if (authToken) {
-      headers["Authorization"] = `Bearer ${authToken.access_token}`;
+      if (authToken) {
+        headers["Authorization"] = `Bearer ${authToken.access_token}`;
+      }
     }
 
     return headers;
+  }
+
+  private async getAuthToken(): Promise<OAuthToken> {
+    if (!this.authToken || !TokenHandler.authTokenIsValid(this.authToken)) {
+      this.authToken = await this.createAndInitializeAuthToken();
+    }
+
+    if (!this.authToken.upgraded) {
+      await this.connectAndUpgradeAuthToken();
+    }
+
+    return this.authToken;
+  }
+
+  private async createAndInitializeAuthToken(): Promise<OAuthToken> {
+    const jwt = this.tokenHandler.createAuthJWT();
+
+    const authRequestResponse = await this.authTokenRequest(jwt);
+
+    return this.tokenHandler.decodeAuthRequestResponse(authRequestResponse);
+  }
+
+  private async connectAndUpgradeAuthToken() {
+    await this.connectRequest();
+    await this.upgradeRequest();
+
+    if (this.authToken) {
+      this.authToken.upgraded = true;
+    }
   }
 
   private async sendOnStarRequest(
     request: OnStarRequest,
   ): Promise<AxiosResponse> {
     const onStarUrl = `https://api.gm.com/api/v1${request.getPath()}`;
-    const headers = this.getHeaders(request);
+    const headers = await this.getHeaders(request);
 
     return await this.client.post(onStarUrl, request.getRequestBody(), {
       headers,
