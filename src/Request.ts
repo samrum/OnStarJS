@@ -3,7 +3,7 @@ import { OAuthToken } from "./types";
 class Request {
   private path: string;
   private requestBody: string = "{}";
-  private contentType: string = "text/plain";
+  private contentType: string = "application/json; charset=UTF-8";
   private authToken?: OAuthToken;
 
   constructor(path: string) {
@@ -18,8 +18,14 @@ class Request {
     return this.requestBody;
   }
 
-  setRequestBody(body: string) {
-    this.requestBody = body;
+  setRequestBody(body: string | object) {
+    let requestBody = body;
+
+    if (typeof requestBody === "object") {
+      requestBody = JSON.stringify(requestBody);
+    }
+
+    this.requestBody = requestBody;
 
     return this;
   }

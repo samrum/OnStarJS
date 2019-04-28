@@ -26,14 +26,22 @@ class OnStar {
     this.tokenHandler = tokenHandler;
   }
 
-  async remoteStart(): Promise<AxiosResponse> {
+  async start(): Promise<AxiosResponse> {
+    return await this.authRequestDecorator(this.startRequest.bind(this));
+  }
+
+  async cancelStart(): Promise<AxiosResponse> {
+    return await this.authRequestDecorator(this.cancelStartRequest.bind(this));
+  }
+
+  private async authRequestDecorator(request: Function) {
     this.authToken = await this.tokenHandler.refreshAuthToken(this.authToken);
 
     if (this.authToken && !this.authToken.upgraded) {
       await this.connectAndUpgradeAuthToken();
     }
 
-    return await this.remoteStartRequest();
+    return await request();
   }
 
   private async connectAndUpgradeAuthToken() {
@@ -58,8 +66,15 @@ class OnStar {
     return await this.requestService.upgradeRequest(jwt, this.authToken);
   }
 
-  private async remoteStartRequest(): Promise<AxiosResponse> {
-    return await this.requestService.remoteStartRequest(
+  private async startRequest(): Promise<AxiosResponse> {
+    return await this.requestService.startRequest(
+      this.config.vin,
+      this.authToken,
+    );
+  }
+
+  private async cancelStartRequest(): Promise<AxiosResponse> {
+    return await this.requestService.cancelStartRequest(
       this.config.vin,
       this.authToken,
     );
