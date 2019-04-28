@@ -1,14 +1,14 @@
 import { AxiosResponse, AxiosPromise } from "axios";
 
 import OnStarRequest from "./Request";
-import { OAuthToken } from "./types";
+import { OAuthToken, OnStarConfig } from "./types";
 
 interface httpClient {
   post(url: string, data: any, config: any): AxiosPromise<any>;
 }
 
 class RequestService {
-  constructor(private client: httpClient) {}
+  constructor(private config: OnStarConfig, private client: httpClient) {}
 
   async authTokenRequest(jwt: string): Promise<AxiosResponse> {
     const request = new OnStarRequest("/oauth/token")
@@ -18,12 +18,9 @@ class RequestService {
     return await this.sendOnStarRequest(request);
   }
 
-  async connectRequest(
-    vin: string,
-    authToken?: OAuthToken,
-  ): Promise<AxiosResponse> {
+  async connectRequest(authToken?: OAuthToken): Promise<AxiosResponse> {
     const request = new OnStarRequest(
-      `/account/vehicles/${vin}/commands/connect`,
+      `/account/vehicles/${this.config.vin}/commands/connect`,
     ).setAuthToken(authToken);
 
     return await this.sendOnStarRequest(request);
@@ -41,34 +38,25 @@ class RequestService {
     return await this.sendOnStarRequest(request);
   }
 
-  async startRequest(
-    vin: string,
-    authToken?: OAuthToken,
-  ): Promise<AxiosResponse> {
+  async startRequest(authToken?: OAuthToken): Promise<AxiosResponse> {
     const request = new OnStarRequest(
-      `/account/vehicles/${vin}/commands/start`,
+      `/account/vehicles/${this.config.vin}/commands/start`,
     ).setAuthToken(authToken);
 
     return await this.sendOnStarRequest(request);
   }
 
-  async cancelStartRequest(
-    vin: string,
-    authToken?: OAuthToken,
-  ): Promise<AxiosResponse> {
+  async cancelStartRequest(authToken?: OAuthToken): Promise<AxiosResponse> {
     const request = new OnStarRequest(
-      `/account/vehicles/${vin}/commands/cancelStart`,
+      `/account/vehicles/${this.config.vin}/commands/cancelStart`,
     ).setAuthToken(authToken);
 
     return await this.sendOnStarRequest(request);
   }
 
-  async lockDoorRequest(
-    vin: string,
-    authToken?: OAuthToken,
-  ): Promise<AxiosResponse> {
+  async lockDoorRequest(authToken?: OAuthToken): Promise<AxiosResponse> {
     const request = new OnStarRequest(
-      `/account/vehicles/${vin}/commands/lockDoor`,
+      `/account/vehicles/${this.config.vin}/commands/lockDoor`,
     )
       .setAuthToken(authToken)
       .setRequestBody({
@@ -80,12 +68,9 @@ class RequestService {
     return await this.sendOnStarRequest(request);
   }
 
-  async unlockDoorRequest(
-    vin: string,
-    authToken?: OAuthToken,
-  ): Promise<AxiosResponse> {
+  async unlockDoorRequest(authToken?: OAuthToken): Promise<AxiosResponse> {
     const request = new OnStarRequest(
-      `/account/vehicles/${vin}/commands/unlockDoor`,
+      `/account/vehicles/${this.config.vin}/commands/unlockDoor`,
     )
       .setAuthToken(authToken)
       .setRequestBody({
@@ -97,11 +82,10 @@ class RequestService {
     return await this.sendOnStarRequest(request);
   }
 
-  async alertRequest(
-    vin: string,
-    authToken?: OAuthToken,
-  ): Promise<AxiosResponse> {
-    const request = new OnStarRequest(`/account/vehicles/${vin}/commands/alert`)
+  async alertRequest(authToken?: OAuthToken): Promise<AxiosResponse> {
+    const request = new OnStarRequest(
+      `/account/vehicles/${this.config.vin}/commands/alert`,
+    )
       .setAuthToken(authToken)
       .setRequestBody({
         alertRequest: {
@@ -115,34 +99,29 @@ class RequestService {
     return await this.sendOnStarRequest(request);
   }
 
-  async cancelAlertRequest(
-    vin: string,
-    authToken?: OAuthToken,
-  ): Promise<AxiosResponse> {
+  async cancelAlertRequest(authToken?: OAuthToken): Promise<AxiosResponse> {
     const request = new OnStarRequest(
-      `/account/vehicles/${vin}/commands/cancelAlert`,
+      `/account/vehicles/${this.config.vin}/commands/cancelAlert`,
     ).setAuthToken(authToken);
 
     return await this.sendOnStarRequest(request);
   }
 
   async getChargingProfileRequest(
-    vin: string,
     authToken?: OAuthToken,
   ): Promise<AxiosResponse> {
     const request = new OnStarRequest(
-      `/account/vehicles/${vin}/commands/getChargingProfile`,
+      `/account/vehicles/${this.config.vin}/commands/getChargingProfile`,
     ).setAuthToken(authToken);
 
     return await this.sendOnStarRequest(request);
   }
 
   async setChargingProfileRequest(
-    vin: string,
     authToken?: OAuthToken,
   ): Promise<AxiosResponse> {
     const request = new OnStarRequest(
-      `/account/vehicles/${vin}/commands/setChargingProfile`,
+      `/account/vehicles/${this.config.vin}/commands/setChargingProfile`,
     )
       .setAuthToken(authToken)
       .setRequestBody({
@@ -155,12 +134,9 @@ class RequestService {
     return await this.sendOnStarRequest(request);
   }
 
-  async diagnosticsRequest(
-    vin: string,
-    authToken?: OAuthToken,
-  ): Promise<AxiosResponse> {
+  async diagnosticsRequest(authToken?: OAuthToken): Promise<AxiosResponse> {
     const request = new OnStarRequest(
-      `/account/vehicles/${vin}/commands/diagnostics`,
+      `/account/vehicles/${this.config.vin}/commands/diagnostics`,
     )
       .setAuthToken(authToken)
       .setRequestBody({

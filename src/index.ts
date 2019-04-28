@@ -15,10 +15,12 @@ class OnStar {
   ) {}
 
   static create(config: OnStarConfig): OnStar {
+    const requestService = new RequestService(config, axios);
+
     return new OnStar(
       config,
-      new TokenHandler(config, new RequestService(axios)),
-      new RequestService(axios),
+      new TokenHandler(config, requestService),
+      requestService,
     );
   }
 
@@ -54,10 +56,7 @@ class OnStar {
   }
 
   private async connectRequest(): Promise<AxiosResponse> {
-    return await this.requestService.connectRequest(
-      this.config.vin,
-      this.authToken,
-    );
+    return await this.requestService.connectRequest(this.authToken);
   }
 
   private async upgradeRequest(): Promise<AxiosResponse> {
@@ -67,17 +66,11 @@ class OnStar {
   }
 
   private async startRequest(): Promise<AxiosResponse> {
-    return await this.requestService.startRequest(
-      this.config.vin,
-      this.authToken,
-    );
+    return await this.requestService.startRequest(this.authToken);
   }
 
   private async cancelStartRequest(): Promise<AxiosResponse> {
-    return await this.requestService.cancelStartRequest(
-      this.config.vin,
-      this.authToken,
-    );
+    return await this.requestService.cancelStartRequest(this.authToken);
   }
 }
 
