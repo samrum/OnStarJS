@@ -1,3 +1,8 @@
+export interface HttpClient {
+  post(url: string, data: any, config: any): Promise<any>;
+  get(url: string, config: any): Promise<any>;
+}
+
 export interface OnStarConfig {
   deviceId: string;
   vin: string;
@@ -28,10 +33,22 @@ interface UserInfo {
   country: string;
 }
 
-export interface CreateTokenResponse {
-  token: OAuthToken;
+export interface RequestResponse {
+  commandResponse?: CommandResponse;
 }
 
-export interface RemoteStartResponse {
-  success: boolean;
+export interface CommandResponse {
+  body?: object;
+  completionTime?: string;
+  requestTime: string;
+  status: string;
+  type: string;
+  url: string;
+}
+
+export interface Result {
+  status: string;
+  originalResponse: object;
+  data?: any;
+  message?: string;
 }

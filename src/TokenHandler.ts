@@ -43,10 +43,8 @@ class TokenHandler {
     return jwt.sign(payload, SECRET_KEY, { noTimestamp: true });
   }
 
-  decodeAuthRequestResponse(requestResponse: any): OAuthToken {
-    const { data } = requestResponse;
-
-    const authToken = this.decodeToken(data);
+  decodeAuthRequestResponse(encodedToken: string): OAuthToken {
+    const authToken = this.decodeToken(encodedToken);
     authToken.expiration = Date.now() + authToken.expires_in * 1000;
 
     return authToken;

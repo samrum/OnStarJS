@@ -1,30 +1,46 @@
-import { AxiosResponse, AxiosPromise } from "axios";
-
 import TokenHandler from "./TokenHandler";
 import Request from "./Request";
-import { OAuthToken, OnStarConfig } from "./types";
+import RequestResult from "./RequestResult";
+import {
+  HttpClient,
+  OAuthToken,
+  OnStarConfig,
+  RequestResponse,
+  Result,
+} from "./types";
 
 const ONSTAR_API_BASE = "https://api.gm.com/api/v1";
 
-interface httpClient {
-  post(url: string, data: any, config: any): AxiosPromise<any>;
-}
-
 class RequestService {
   private authToken?: OAuthToken;
+  private checkRequestTimeout = 6000;
 
   constructor(
     private config: OnStarConfig,
     private tokenHandler: TokenHandler,
-    private client: httpClient,
+    private client: HttpClient,
   ) {}
+
+  setClient(client: HttpClient) {
+    this.client = client;
+
+    return this;
+  }
 
   setAuthToken(authToken: OAuthToken) {
     this.authToken = authToken;
+
+    return this;
   }
 
-  async authTokenRequest(jwt: string): Promise<AxiosResponse> {
-    const request = new Request("/oauth/token")
+  setCheckRequestTimeout(timeoutMs: number) {
+    this.checkRequestTimeout = timeoutMs;
+
+    return this;
+  }
+
+  async authTokenRequest(jwt: string): Promise<Result> {
+    const request = new Request(this.getApiUrlForPath("/oauth/token"))
       .setContentType("text/plain")
       .setAuthRequired(false)
       .setBody(jwt);
@@ -32,18 +48,18 @@ class RequestService {
     return await this.sendRequest(request);
   }
 
-  async connectRequest(): Promise<AxiosResponse> {
+  async connectRequest(): Promise<Result> {
     const request = new Request(
-      this.getCommandPath("connect"),
+      this.getCommandUrl("connect"),
     ).setUpgradeRequired(false);
 
     return await this.sendRequest(request);
   }
 
-  async upgradeRequest(): Promise<AxiosResponse> {
+  async upgradeRequest(): Promise<Result> {
     const jwt = this.tokenHandler.createUpgradeJWT();
 
-    const request = new Request("/oauth/token/upgrade")
+    const request = new Request(this.getApiUrlForPath("/oauth/token/upgrade"))
       .setContentType("text/plain")
       .setUpgradeRequired(false)
       .setBody(jwt);
@@ -51,20 +67,20 @@ class RequestService {
     return await this.sendRequest(request);
   }
 
-  async startRequest(): Promise<AxiosResponse> {
-    const request = new Request(this.getCommandPath("start"));
+  async startRequest(): Promise<Result> {
+    const request = new Request(this.getCommandUrl("start"));
 
     return await this.sendRequest(request);
   }
 
-  async cancelStartRequest(): Promise<AxiosResponse> {
-    const request = new Request(this.getCommandPath("cancelStart"));
+  async cancelStartRequest(): Promise<Result> {
+    const request = new Request(this.getCommandUrl("cancelStart"));
 
     return await this.sendRequest(request);
   }
 
-  async lockDoorRequest(): Promise<AxiosResponse> {
-    const request = new Request(this.getCommandPath("lockDoor")).setBody({
+  async lockDoorRequest(): Promise<Result> {
+    const request = new Request(this.getCommandUrl("lockDoor")).setBody({
       lockDoorRequest: {
         delay: 0,
       },
@@ -73,8 +89,8 @@ class RequestService {
     return await this.sendRequest(request);
   }
 
-  async unlockDoorRequest(): Promise<AxiosResponse> {
-    const request = new Request(this.getCommandPath("unlockDoor")).setBody({
+  async unlockDoorRequest(): Promise<Result> {
+    const request = new Request(this.getCommandUrl("unlockDoor")).setBody({
       unlockDoorRequest: {
         delay: 0,
       },
@@ -83,8 +99,8 @@ class RequestService {
     return await this.sendRequest(request);
   }
 
-  async alertRequest(): Promise<AxiosResponse> {
-    const request = new Request(this.getCommandPath("alert")).setBody({
+  async alertRequest(): Promise<Result> {
+    const request = new Request(this.getCommandUrl("alert")).setBody({
       alertRequest: {
         action: ["Honk", "Flash"],
         delay: 0,
@@ -96,21 +112,21 @@ class RequestService {
     return await this.sendRequest(request);
   }
 
-  async cancelAlertRequest(): Promise<AxiosResponse> {
-    const request = new Request(this.getCommandPath("cancelAlert"));
+  async cancelAlertRequest(): Promise<Result> {
+    const request = new Request(this.getCommandUrl("cancelAlert"));
 
     return await this.sendRequest(request);
   }
 
-  async getChargingProfileRequest(): Promise<AxiosResponse> {
-    const request = new Request(this.getCommandPath("getChargingProfile"));
+  async getChargingProfileRequest(): Promise<Result> {
+    const request = new Request(this.getCommandUrl("getChargingProfile"));
 
     return await this.sendRequest(request);
   }
 
-  async setChargingProfileRequest(): Promise<AxiosResponse> {
+  async setChargingProfileRequest(): Promise<Result> {
     const request = new Request(
-      this.getCommandPath("setChargingProfile"),
+      this.getCommandUrl("setChargingProfile"),
     ).setBody({
       chargingProfile: {
         chargeMode: "IMMEDIATE",
@@ -121,8 +137,8 @@ class RequestService {
     return await this.sendRequest(request);
   }
 
-  async diagnosticsRequest(): Promise<AxiosResponse> {
-    const request = new Request(this.getCommandPath("diagnostics")).setBody({
+  async diagnosticsRequest(): Promise<Result> {
+    const request = new Request(this.getCommandUrl("diagnostics")).setBody({
       diagnosticsRequest: {
         diagnosticItem: [
           "ENGINE COOLANT TEMP",
@@ -156,29 +172,14 @@ class RequestService {
     return await this.sendRequest(request);
   }
 
-  // handle response
-  // sample
-  /*
-      "commandResponse": {
-        "requestTime": "<TIME>",
-        "status": "inProgress",
-        "type": "getChargingProfile",
-        "url": "https://api.gm.com/api/v1/account/vehicles/<VIN>>/requests/<REQUEST_ID>>"
-    }
-  */
+  private getApiUrlForPath(path: string): string {
+    return `${ONSTAR_API_BASE}${path}`;
+  }
 
-  /*
-    "commandResponse": {
-        "completionTime": "<TIME>",
-        "requestTime": "<TIME>",
-        "status": "success",
-        "type": "lockDoor",
-        "url": "https://api.gm.com/api/v1/account/vehicles/<VIN>>/requests/<ID>"
-    }
-  */
-
-  private getCommandPath(command: string): string {
-    return `/account/vehicles/${this.config.vin}/commands/${command}`;
+  private getCommandUrl(command: string): string {
+    return `${ONSTAR_API_BASE}/account/vehicles/${
+      this.config.vin
+    }/commands/${command}`;
   }
 
   private async getHeaders(request: Request): Promise<any> {
@@ -216,9 +217,9 @@ class RequestService {
   private async createNewAuthToken(): Promise<OAuthToken> {
     const jwt = this.tokenHandler.createAuthJWT();
 
-    const authRequestResponse = await this.authTokenRequest(jwt);
+    const { data } = await this.authTokenRequest(jwt);
 
-    return this.tokenHandler.decodeAuthRequestResponse(authRequestResponse);
+    return this.tokenHandler.decodeAuthRequestResponse(data);
   }
 
   private async connectAndUpgradeAuthToken() {
@@ -230,13 +231,77 @@ class RequestService {
     }
   }
 
-  private async sendRequest(request: Request): Promise<AxiosResponse> {
-    const onStarUrl = `${ONSTAR_API_BASE}${request.getPath()}`;
-    const headers = await this.getHeaders(request);
+  private async sendRequest(request: Request): Promise<Result> {
+    try {
+      const response = await this.makeClientRequest(request);
+      const { data } = response;
 
-    return await this.client.post(onStarUrl, request.getBody(), {
+      if (request.getContentType().includes("json")) {
+        const requestResponse = JSON.parse(data) as RequestResponse;
+
+        const { commandResponse } = requestResponse;
+
+        if (commandResponse) {
+          const { status, url } = commandResponse;
+
+          if (status === "inProgress") {
+            await this.checkRequestPause();
+
+            const request = new Request(url)
+              .setMethod("get")
+              .setUpgradeRequired(false);
+            return await this.sendRequest(request);
+          }
+
+          return new RequestResult(status)
+            .setOriginalResponse(response)
+            .setData(data)
+            .getResult();
+        }
+      }
+
+      return new RequestResult("success")
+        .setOriginalResponse(response)
+        .setData(data)
+        .getResult();
+    } catch (error) {
+      const requestResult = new RequestResult("error");
+
+      if (error.response) {
+        requestResult
+          .setData(error.response.data)
+          .setOriginalResponse(error.response);
+      } else if (error.request) {
+        requestResult.setMessage("No response for request");
+      } else {
+        requestResult.setMessage(error.message);
+      }
+
+      return requestResult.getResult();
+    }
+  }
+
+  private async makeClientRequest(request: Request): Promise<any> {
+    const headers = await this.getHeaders(request);
+    const requestOptions = {
       headers,
-    });
+    };
+
+    if (request.getMethod() === "post") {
+      return await this.client.post(
+        request.getUrl(),
+        request.getBody(),
+        requestOptions,
+      );
+    } else {
+      return await this.client.get(request.getUrl(), requestOptions);
+    }
+  }
+
+  private checkRequestPause() {
+    return new Promise(resolve =>
+      setTimeout(resolve, this.checkRequestTimeout),
+    );
   }
 }
 

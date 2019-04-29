@@ -5,6 +5,7 @@ import OnStar from "../src/index";
 import TokenHandler from "../src/TokenHandler";
 import Request from "../src/Request";
 import RequestService from "../src/RequestService";
+import RequestResult from "../src/RequestResult";
 
 const config = {
   deviceId: "742249ce-18e0-4c82-8bb2-9975367a7631",
@@ -37,11 +38,6 @@ const expiredToken: OAuthToken = {
   expiration: Date.now() - 24 * 60 * 60 * 1000,
 };
 
-const upgradedToken: OAuthToken = {
-  ...authToken,
-  upgraded: true,
-};
-
 let onStar: OnStar;
 
 describe("OnStar", () => {
@@ -66,22 +62,20 @@ describe("OnStar", () => {
 
 describe("Request", () => {
   test("Access Methods Work", () => {
-    const request = new Request("/secret/path");
+    const requestUrl = "https://foo.bar/secret/path";
+    const request = new Request(requestUrl);
+    const method = "get";
     const contentType = "text/html";
     const body = `{"username":"Ayaya"}`;
-    const objectBody = {
+    const bodyObject = {
       username: "Ayaya",
     };
 
-    expect(request.getPath()).toEqual("/secret/path");
+    expect(request.getUrl()).toEqual(requestUrl);
 
-    expect(request.isAuthRequired()).toBeTruthy();
-    request.setAuthRequired(false);
-    expect(request.isAuthRequired()).toBeFalsy();
-
-    expect(request.isUpgradeRequired()).toBeTruthy();
-    request.setUpgradeRequired(false);
-    expect(request.isUpgradeRequired()).toBeFalsy();
+    expect(request.getMethod()).toEqual("post");
+    request.setMethod(method);
+    expect(request.getMethod()).toEqual(method);
 
     expect(request.getContentType()).toEqual("application/json; charset=UTF-8");
     request.setContentType(contentType);
@@ -90,25 +84,82 @@ describe("Request", () => {
     expect(request.getBody()).toEqual("{}");
     request.setBody(body);
     expect(request.getBody()).toEqual(body);
-    request.setBody(objectBody);
+    request.setBody(bodyObject);
     expect(request.getBody()).toEqual(body);
+
+    expect(request.isAuthRequired()).toBeTruthy();
+    request.setAuthRequired(false);
+    expect(request.isAuthRequired()).toBeFalsy();
+
+    expect(request.isUpgradeRequired()).toBeTruthy();
+    request.setUpgradeRequired(false);
+    expect(request.isUpgradeRequired()).toBeFalsy();
+  });
+});
+
+describe("RequestResult", () => {
+  test("Access Methods Work", () => {
+    const status = "success";
+    const requestResult = new RequestResult(status);
+    const originalResponse = { original: "response" };
+    const message = "message";
+    const data = "data";
+
+    expect(requestResult.getResult()).toEqual({
+      status,
+    });
+
+    requestResult.setOriginalResponse(originalResponse);
+    requestResult.setMessage(message);
+    requestResult.setData(data);
+
+    expect(requestResult.getResult()).toEqual({
+      status,
+      originalResponse,
+      message,
+      data,
+    });
   });
 });
 
 let requestService: RequestService;
+let httpClient = {
+  post: jest.fn(),
+  get: jest.fn(),
+};
 
 describe("RequestService", () => {
   beforeEach(() => {
     const tokenHandler = mock(TokenHandler);
-    when(tokenHandler.createUpgradeJWT()).thenReturn("upgradeJWT");
-    when(tokenHandler.createAuthJWT()).thenReturn("authJWT");
     when(tokenHandler.decodeAuthRequestResponse(anything())).thenReturn(
       authToken,
     );
 
-    requestService = new RequestService(config, instance(tokenHandler), {
-      post: jest.fn(),
+    httpClient.post.mockResolvedValue({
+      data: JSON.stringify({
+        commandResponse: {
+          status: "inProgress",
+        },
+      }),
+      headers: [],
     });
+
+    httpClient.get.mockResolvedValue({
+      data: JSON.stringify({
+        commandResponse: {
+          status: "success",
+        },
+      }),
+      headers: [],
+    });
+
+    requestService = new RequestService(
+      config,
+      instance(tokenHandler),
+      httpClient,
+    );
+
+    requestService.setCheckRequestTimeout(1);
   });
 
   test("authTokenRequest", async () => {
@@ -162,7 +213,38 @@ describe("RequestService", () => {
   test("expiredAuthTokenReplacedWithNewToken", async () => {
     requestService.setAuthToken(expiredToken);
 
+    // spy auth token created here
+
     await requestService.startRequest();
+  });
+
+  test("requestResponseError", async () => {
+    httpClient.post.mockRejectedValue({
+      response: {
+        status: "responseStatus",
+      },
+      data: "data",
+    });
+
+    await requestService.setClient(httpClient).startRequest();
+  });
+
+  test("requestNoResponseError", async () => {
+    httpClient.post.mockRejectedValue({
+      request: {
+        body: "requestBody",
+      },
+    });
+
+    await requestService.setClient(httpClient).startRequest();
+  });
+
+  test("requestStandardError", async () => {
+    httpClient.post.mockRejectedValue({
+      message: "errorMessage",
+    });
+
+    await requestService.setClient(httpClient).startRequest();
   });
 });
 
@@ -187,13 +269,11 @@ describe("TokenHandler", () => {
   });
 
   test("decodeAuthRequestResponse", () => {
-    const response = {
-      data:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOiJPTUJfQ1ZZX0FORF8zRjEiLCJjcmVkZW50aWFsIjoiMTIzNCIsImNyZWRlbnRpYWxfdHlwZSI6IlBJTiIsImRldmljZV9pZCI6ImRldmljZS1pZC1mYWtlIiwiZ3JhbnRfdHlwZSI6InBhc3N3b3JkIiwibm9uY2UiOiJZekpsTTJSaU1tWmpObVJsTURZek1EVmlOaiIsInRpbWVzdGFtcCI6IjIwMTktMDQtMDhUMDQ6NDY6MDcuMDAxWiJ9.Yi9QANYYzX2XNz5u4_D7tKqAgVk9pZ5FSwJt5jdZvrQ",
-    };
+    const encodedToken =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOiJPTUJfQ1ZZX0FORF8zRjEiLCJjcmVkZW50aWFsIjoiMTIzNCIsImNyZWRlbnRpYWxfdHlwZSI6IlBJTiIsImRldmljZV9pZCI6ImRldmljZS1pZC1mYWtlIiwiZ3JhbnRfdHlwZSI6InBhc3N3b3JkIiwibm9uY2UiOiJZekpsTTJSaU1tWmpObVJsTURZek1EVmlOaiIsInRpbWVzdGFtcCI6IjIwMTktMDQtMDhUMDQ6NDY6MDcuMDAxWiJ9.Yi9QANYYzX2XNz5u4_D7tKqAgVk9pZ5FSwJt5jdZvrQ";
 
-    expect(tokenHandler.decodeAuthRequestResponse(response)).not.toEqual(
-      authToken,
+    expect(tokenHandler.decodeAuthRequestResponse(encodedToken)).toHaveProperty(
+      "timestamp",
     );
   });
 });

@@ -1,16 +1,27 @@
 class Request {
-  private path: string;
+  private url: string;
+  private method: string = "post";
   private body: string = "{}";
   private contentType: string = "application/json; charset=UTF-8";
   private authRequired: boolean = true;
   private upgradeRequired: boolean = true;
 
-  constructor(path: string) {
-    this.path = path;
+  constructor(url: string) {
+    this.url = url;
   }
 
-  getPath(): string {
-    return this.path;
+  getUrl(): string {
+    return this.url;
+  }
+
+  getMethod(): string {
+    return this.method;
+  }
+
+  setMethod(method: string) {
+    this.method = method;
+
+    return this;
   }
 
   getBody(): string {
