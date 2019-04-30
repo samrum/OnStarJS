@@ -48,7 +48,10 @@ export interface CommandResponse {
 
 export interface Result {
   status: string;
-  originalResponse: object;
-  data?: any;
+  response: ResultResponse;
   message?: string;
+}
+
+export interface ResultResponse {
+  data: any;
 }

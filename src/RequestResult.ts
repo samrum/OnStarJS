@@ -1,14 +1,13 @@
-import { Result } from "./types";
+import { Result, ResultResponse } from "./types";
 
 class RequestResult {
-  private originalResponse?: object;
+  private response?: ResultResponse;
   private message?: string;
-  private data?: any;
 
   constructor(private status: string) {}
 
-  setOriginalResponse(originalResponse: object) {
-    this.originalResponse = originalResponse;
+  setResponse(response: ResultResponse) {
+    this.response = response;
 
     return this;
   }
@@ -19,27 +18,17 @@ class RequestResult {
     return this;
   }
 
-  setData(data: any) {
-    this.data = data;
-
-    return this;
-  }
-
   getResult(): Result {
     const result = {
       status: this.status,
     } as Result;
 
-    if (this.originalResponse) {
-      result.originalResponse = this.originalResponse;
+    if (this.response) {
+      result.response = this.response;
     }
 
     if (this.message) {
       result.message = this.message;
-    }
-
-    if (this.data) {
-      result.data = this.data;
     }
 
     return result;

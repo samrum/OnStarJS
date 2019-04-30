@@ -1,6 +1,7 @@
 import TokenHandler from "./TokenHandler";
 import Request from "./Request";
 import RequestResult from "./RequestResult";
+import RequestError from "./RequestError";
 import {
   HttpClient,
   OAuthToken,
@@ -217,9 +218,9 @@ class RequestService {
   private async createNewAuthToken(): Promise<OAuthToken> {
     const jwt = this.tokenHandler.createAuthJWT();
 
-    const { data } = await this.authTokenRequest(jwt);
+    const { response } = await this.authTokenRequest(jwt);
 
-    return this.tokenHandler.decodeAuthRequestResponse(data);
+    return this.tokenHandler.decodeAuthRequestResponse(response.data);
   }
 
   private async connectAndUpgradeAuthToken() {
@@ -253,31 +254,26 @@ class RequestService {
             return await this.sendRequest(request);
           }
 
-          return new RequestResult(status)
-            .setOriginalResponse(response)
-            .setData(data)
-            .getResult();
+          return new RequestResult(status).setResponse(response).getResult();
         }
       }
 
-      return new RequestResult("success")
-        .setOriginalResponse(response)
-        .setData(data)
-        .getResult();
+      return new RequestResult("success").setResponse(response).getResult();
     } catch (error) {
-      const requestResult = new RequestResult("error");
+      let errorObj = new RequestError();
 
       if (error.response) {
-        requestResult
-          .setData(error.response.data)
-          .setOriginalResponse(error.response);
+        errorObj.message = "Error response";
+        errorObj.setResponse(error.response);
+        errorObj.setRequest(error.request);
       } else if (error.request) {
-        requestResult.setMessage("No response for request");
+        errorObj.message = "No response";
+        errorObj.setRequest(error.request);
       } else {
-        requestResult.setMessage(error.message);
+        errorObj.message = error.message;
       }
 
-      return requestResult.getResult();
+      throw errorObj;
     }
   }
 

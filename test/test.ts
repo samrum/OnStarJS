@@ -6,6 +6,7 @@ import TokenHandler from "../src/TokenHandler";
 import Request from "../src/Request";
 import RequestService from "../src/RequestService";
 import RequestResult from "../src/RequestResult";
+import RequestError from "../src/RequestError";
 
 const config = {
   deviceId: "742249ce-18e0-4c82-8bb2-9975367a7631",
@@ -101,23 +102,20 @@ describe("RequestResult", () => {
   test("Access Methods Work", () => {
     const status = "success";
     const requestResult = new RequestResult(status);
-    const originalResponse = { original: "response" };
+    const response = { data: "responseData" };
     const message = "message";
-    const data = "data";
 
     expect(requestResult.getResult()).toEqual({
       status,
     });
 
-    requestResult.setOriginalResponse(originalResponse);
+    requestResult.setResponse(response);
     requestResult.setMessage(message);
-    requestResult.setData(data);
 
     expect(requestResult.getResult()).toEqual({
       status,
-      originalResponse,
+      response,
       message,
-      data,
     });
   });
 });
@@ -163,7 +161,13 @@ describe("RequestService", () => {
   });
 
   test("authTokenRequest", async () => {
-    await requestService.authTokenRequest("jwt");
+    expect(await requestService.authTokenRequest("jwt")).toEqual({
+      status: "success",
+      response: {
+        data: `{"commandResponse":{"status":"inProgress"}}`,
+        headers: [],
+      },
+    });
   });
 
   test("connectRequest", async () => {
@@ -210,23 +214,21 @@ describe("RequestService", () => {
     await requestService.diagnosticsRequest();
   });
 
-  test("expiredAuthTokenReplacedWithNewToken", async () => {
+  test("setAuthToken", async () => {
     requestService.setAuthToken(expiredToken);
-
-    // spy auth token created here
-
-    await requestService.startRequest();
   });
 
   test("requestResponseError", async () => {
     httpClient.post.mockRejectedValue({
       response: {
         status: "responseStatus",
+        data: "data",
       },
-      data: "data",
     });
 
-    await requestService.setClient(httpClient).startRequest();
+    await expect(
+      requestService.setClient(httpClient).startRequest(),
+    ).rejects.toThrow(/^Error response$/);
   });
 
   test("requestNoResponseError", async () => {
@@ -236,7 +238,9 @@ describe("RequestService", () => {
       },
     });
 
-    await requestService.setClient(httpClient).startRequest();
+    await expect(
+      requestService.setClient(httpClient).startRequest(),
+    ).rejects.toThrow(/^No response$/);
   });
 
   test("requestStandardError", async () => {
@@ -244,7 +248,9 @@ describe("RequestService", () => {
       message: "errorMessage",
     });
 
-    await requestService.setClient(httpClient).startRequest();
+    await expect(
+      requestService.setClient(httpClient).startRequest(),
+    ).rejects.toThrow(/^errorMessage$/);
   });
 });
 
