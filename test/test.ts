@@ -6,7 +6,6 @@ import TokenHandler from "../src/TokenHandler";
 import Request from "../src/Request";
 import RequestService from "../src/RequestService";
 import RequestResult from "../src/RequestResult";
-import RequestError from "../src/RequestError";
 
 const config = {
   deviceId: "742249ce-18e0-4c82-8bb2-9975367a7631",
@@ -158,24 +157,6 @@ describe("RequestService", () => {
     );
 
     requestService.setCheckRequestTimeout(1);
-  });
-
-  test("authTokenRequest", async () => {
-    expect(await requestService.authTokenRequest("jwt")).toEqual({
-      status: "success",
-      response: {
-        data: `{"commandResponse":{"status":"inProgress"}}`,
-        headers: [],
-      },
-    });
-  });
-
-  test("connectRequest", async () => {
-    await requestService.connectRequest();
-  });
-
-  test("upgradeRequest", async () => {
-    await requestService.upgradeRequest();
   });
 
   test("startRequest", async () => {

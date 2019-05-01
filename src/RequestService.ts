@@ -40,34 +40,6 @@ class RequestService {
     return this;
   }
 
-  async authTokenRequest(jwt: string): Promise<Result> {
-    const request = new Request(this.getApiUrlForPath("/oauth/token"))
-      .setContentType("text/plain")
-      .setAuthRequired(false)
-      .setBody(jwt);
-
-    return await this.sendRequest(request);
-  }
-
-  async connectRequest(): Promise<Result> {
-    const request = new Request(
-      this.getCommandUrl("connect"),
-    ).setUpgradeRequired(false);
-
-    return await this.sendRequest(request);
-  }
-
-  async upgradeRequest(): Promise<Result> {
-    const jwt = this.tokenHandler.createUpgradeJWT();
-
-    const request = new Request(this.getApiUrlForPath("/oauth/token/upgrade"))
-      .setContentType("text/plain")
-      .setUpgradeRequired(false)
-      .setBody(jwt);
-
-    return await this.sendRequest(request);
-  }
-
   async startRequest(): Promise<Result> {
     const request = new Request(this.getCommandUrl("start"));
 
@@ -205,6 +177,34 @@ class RequestService {
     }
 
     return headers;
+  }
+
+  private async connectRequest(): Promise<Result> {
+    const request = new Request(
+      this.getCommandUrl("connect"),
+    ).setUpgradeRequired(false);
+
+    return await this.sendRequest(request);
+  }
+
+  private async upgradeRequest(): Promise<Result> {
+    const jwt = this.tokenHandler.createUpgradeJWT();
+
+    const request = new Request(this.getApiUrlForPath("/oauth/token/upgrade"))
+      .setContentType("text/plain")
+      .setUpgradeRequired(false)
+      .setBody(jwt);
+
+    return await this.sendRequest(request);
+  }
+
+  private async authTokenRequest(jwt: string): Promise<Result> {
+    const request = new Request(this.getApiUrlForPath("/oauth/token"))
+      .setContentType("text/plain")
+      .setAuthRequired(false)
+      .setBody(jwt);
+
+    return await this.sendRequest(request);
   }
 
   private async getAuthToken(): Promise<OAuthToken> {
