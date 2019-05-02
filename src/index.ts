@@ -1,9 +1,9 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 
 import TokenHandler from "./TokenHandler";
 import RequestService from "./RequestService";
 
-import { OnStarConfig } from "./types";
+import { OnStarConfig, Result } from "./types";
 
 class OnStar {
   constructor(
@@ -21,12 +21,20 @@ class OnStar {
     return new OnStar(config, requestService);
   }
 
-  async start(): Promise<AxiosResponse> {
-    return await this.requestService.startRequest();
+  async start(): Promise<Result> {
+    return this.requestService.startRequest();
   }
 
-  async cancelStart(): Promise<AxiosResponse> {
-    return await this.requestService.cancelStartRequest();
+  async cancelStart(): Promise<Result> {
+    return this.requestService.cancelStartRequest();
+  }
+
+  async lockDoor(): Promise<Result> {
+    return this.requestService.lockDoorRequest();
+  }
+
+  async unlockDoor(): Promise<Result> {
+    return this.requestService.unlockDoorRequest();
   }
 }
 

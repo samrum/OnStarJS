@@ -1,11 +1,12 @@
 import { mock, instance, when, anyString, anything } from "ts-mockito";
 
-import { OAuthToken } from "../src/types";
+import { OAuthToken, HttpClient } from "../src/types";
 import OnStar from "../src/index";
 import TokenHandler from "../src/TokenHandler";
 import Request from "../src/Request";
 import RequestService from "../src/RequestService";
 import RequestResult from "../src/RequestResult";
+import RequestError from "../src/RequestError";
 
 const config = {
   deviceId: "742249ce-18e0-4c82-8bb2-9975367a7631",
@@ -58,10 +59,18 @@ describe("OnStar", () => {
   test("cancelStart", async () => {
     await onStar.cancelStart();
   });
+
+  test("lockDoor", async () => {
+    await onStar.lockDoor();
+  });
+
+  test("unlockDoor", async () => {
+    await onStar.unlockDoor();
+  });
 });
 
 describe("Request", () => {
-  test("Access Methods Work", () => {
+  test("Property Methods", () => {
     const requestUrl = "https://foo.bar/secret/path";
     const request = new Request(requestUrl);
     const method = "get";
@@ -98,7 +107,7 @@ describe("Request", () => {
 });
 
 describe("RequestResult", () => {
-  test("Access Methods Work", () => {
+  test("Property Methods", () => {
     const status = "success";
     const requestResult = new RequestResult(status);
     const response = { data: "responseData" };
@@ -119,11 +128,29 @@ describe("RequestResult", () => {
   });
 });
 
+describe("RequestError", () => {
+  test("Property Methods", () => {
+    const requestError = new RequestError("Error Message");
+    const response = {
+      commandResponse: {
+        requestTime: "time",
+        status: "success",
+        type: "unlockDoor",
+        url: "https://foo.bar",
+      },
+    };
+    const request = new Request("https://foo.bar");
+
+    requestError.setResponse(response);
+    expect(requestError.getResponse()).toEqual(response);
+
+    requestError.setRequest(request);
+    expect(requestError.getRequest()).toEqual(request);
+  });
+});
+
 let requestService: RequestService;
-let httpClient = {
-  post: jest.fn(),
-  get: jest.fn(),
-};
+let httpClient: HttpClient;
 
 describe("RequestService", () => {
   beforeEach(() => {
@@ -132,23 +159,39 @@ describe("RequestService", () => {
       authToken,
     );
 
-    httpClient.post.mockResolvedValue({
-      data: JSON.stringify({
-        commandResponse: {
-          status: "inProgress",
-        },
-      }),
-      headers: [],
-    });
+    const requestTime = Date.now() + 1000;
 
-    httpClient.get.mockResolvedValue({
-      data: JSON.stringify({
-        commandResponse: {
-          status: "success",
+    httpClient = {
+      post: jest
+        .fn()
+        .mockResolvedValue({
+          data: {
+            commandResponse: {
+              requestTime,
+              status: "success",
+              url: "requestCheckUrl",
+            },
+          },
+        })
+        .mockResolvedValueOnce({
+          data: {
+            commandResponse: {
+              requestTime,
+              status: "inProgress",
+              url: "requestCheckUrl",
+            },
+          },
+        }),
+      get: jest.fn().mockResolvedValue({
+        data: {
+          commandResponse: {
+            requestTime,
+            status: "success",
+            url: "requestCheckUrl",
+          },
         },
       }),
-      headers: [],
-    });
+    };
 
     requestService = new RequestService(
       config,
@@ -156,6 +199,7 @@ describe("RequestService", () => {
       httpClient,
     );
 
+    requestService.setAuthToken(authToken);
     requestService.setCheckRequestTimeout(1);
   });
 
@@ -195,12 +239,60 @@ describe("RequestService", () => {
     await requestService.diagnosticsRequest();
   });
 
-  test("setAuthToken", async () => {
+  test("requestWithExpiredAuthToken", async () => {
+    httpClient.post = jest
+      .fn()
+      .mockResolvedValue({
+        data: {
+          commandResponse: {
+            requestTime: Date.now() + 1000,
+            status: "success",
+            url: "requestCheckUrl",
+          },
+        },
+      })
+      .mockResolvedValueOnce({
+        data: "encodedToken",
+      });
+
     requestService.setAuthToken(expiredToken);
+
+    requestService.setClient(httpClient).startRequest();
+  });
+
+  test("requestCheckExceedsTimeoutError", async () => {
+    httpClient.post = jest.fn().mockResolvedValue({
+      data: {
+        commandResponse: {
+          requestTime: Date.now() - 1000,
+          status: "inProgress",
+          url: "requestCheckUrl",
+        },
+      },
+    });
+
+    await expect(
+      requestService.setClient(httpClient).startRequest(),
+    ).rejects.toThrow(/^Command Timeout$/);
+  });
+
+  test("requestStatusFailureError", async () => {
+    httpClient.post = jest.fn().mockResolvedValue({
+      data: {
+        commandResponse: {
+          requestTime: Date.now() + 1000,
+          status: "failure",
+        },
+      },
+    });
+
+    await expect(
+      requestService.setClient(httpClient).startRequest(),
+    ).rejects.toThrow(/^Command Failure$/);
   });
 
   test("requestResponseError", async () => {
-    httpClient.post.mockRejectedValue({
+    httpClient.post = jest.fn().mockRejectedValue({
       response: {
         status: "responseStatus",
         data: "data",
@@ -213,7 +305,7 @@ describe("RequestService", () => {
   });
 
   test("requestNoResponseError", async () => {
-    httpClient.post.mockRejectedValue({
+    httpClient.post = jest.fn().mockRejectedValue({
       request: {
         body: "requestBody",
       },
@@ -225,7 +317,7 @@ describe("RequestService", () => {
   });
 
   test("requestStandardError", async () => {
-    httpClient.post.mockRejectedValue({
+    httpClient.post = jest.fn().mockRejectedValue({
       message: "errorMessage",
     });
 

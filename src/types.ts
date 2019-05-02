@@ -38,12 +38,16 @@ export interface RequestResponse {
 }
 
 export interface CommandResponse {
-  body?: object;
+  body?: CommandResponseBody;
   completionTime?: string;
   requestTime: string;
   status: string;
   type: string;
   url: string;
+}
+
+export interface CommandResponseBody {
+  error?: object;
 }
 
 export interface Result {

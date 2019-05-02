@@ -2,13 +2,7 @@ import TokenHandler from "./TokenHandler";
 import Request from "./Request";
 import RequestResult from "./RequestResult";
 import RequestError from "./RequestError";
-import {
-  HttpClient,
-  OAuthToken,
-  OnStarConfig,
-  RequestResponse,
-  Result,
-} from "./types";
+import { HttpClient, OAuthToken, OnStarConfig, Result } from "./types";
 
 const ONSTAR_API_BASE = "https://api.gm.com/api/v1";
 
@@ -237,15 +231,27 @@ class RequestService {
       const response = await this.makeClientRequest(request);
       const { data } = response;
 
-      if (request.getContentType().includes("json")) {
-        const requestResponse = JSON.parse(data) as RequestResponse;
-
-        const { commandResponse } = requestResponse;
+      if (typeof data === "object") {
+        const { commandResponse } = data;
 
         if (commandResponse) {
-          const { status, url } = commandResponse;
+          const { requestTime, status, url, type } = commandResponse;
 
-          if (status === "inProgress") {
+          const requestTimestamp = new Date(requestTime).getTime();
+
+          const requestGiveup = this.checkRequestTimeout * 10;
+
+          if (Date.now() >= requestTimestamp + requestGiveup) {
+            throw new RequestError("Command Timeout")
+              .setResponse(response)
+              .setRequest(request);
+          }
+
+          if (status === "failure") {
+            throw new RequestError("Command Failure")
+              .setResponse(response)
+              .setRequest(request);
+          } else if (status === "inProgress" && type !== "connect") {
             await this.checkRequestPause();
 
             const request = new Request(url)
@@ -260,6 +266,10 @@ class RequestService {
 
       return new RequestResult("success").setResponse(response).getResult();
     } catch (error) {
+      if (error instanceof RequestError) {
+        throw error;
+      }
+
       let errorObj = new RequestError();
 
       if (error.response) {

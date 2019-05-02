@@ -1,26 +1,33 @@
+import Request from "./Request";
+import { RequestResponse } from "./types";
+
 class RequestError extends Error {
-  private response?: object;
-  private request?: object;
+  private response?: RequestResponse;
+  private request?: Request;
 
   constructor(...args: any[]) {
     super(...args);
     Error.captureStackTrace(this, RequestError);
   }
 
-  getResponse(): object | undefined {
+  getResponse(): RequestResponse | undefined {
     return this.response;
   }
 
-  setResponse(response: object) {
+  setResponse(response: RequestResponse) {
     this.response = response;
+
+    return this;
   }
 
-  getRequest(): object | undefined {
+  getRequest(): Request | undefined {
     return this.request;
   }
 
-  setRequest(request: object) {
+  setRequest(request: Request) {
     this.request = request;
+
+    return this;
   }
 }
 
