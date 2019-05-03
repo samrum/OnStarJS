@@ -3,7 +3,14 @@ import axios from "axios";
 import TokenHandler from "./TokenHandler";
 import RequestService from "./RequestService";
 
-import { OnStarConfig, Result } from "./types";
+import {
+  OnStarConfig,
+  Result,
+  AlertRequestOptions,
+  DiagnosticsRequestOptions,
+  SetChargingProfileRequestOptions,
+  DoorRequestOptions,
+} from "./types";
 
 class OnStar {
   constructor(
@@ -29,12 +36,34 @@ class OnStar {
     return this.requestService.cancelStartRequest();
   }
 
-  async lockDoor(): Promise<Result> {
-    return this.requestService.lockDoorRequest();
+  async lockDoor(options?: DoorRequestOptions): Promise<Result> {
+    return this.requestService.lockDoorRequest(options);
   }
 
-  async unlockDoor(): Promise<Result> {
-    return this.requestService.unlockDoorRequest();
+  async unlockDoor(options?: DoorRequestOptions): Promise<Result> {
+    return this.requestService.unlockDoorRequest(options);
+  }
+
+  async alert(options?: AlertRequestOptions): Promise<Result> {
+    return this.requestService.alertRequest(options);
+  }
+
+  async cancelAlert(): Promise<Result> {
+    return this.requestService.cancelAlertRequest();
+  }
+
+  async getChargingProfile(): Promise<Result> {
+    return this.requestService.getChargingProfileRequest();
+  }
+
+  async setChargingProfile(
+    options?: SetChargingProfileRequestOptions,
+  ): Promise<Result> {
+    return this.requestService.setChargingProfileRequest(options);
+  }
+
+  async diagnostics(options?: DiagnosticsRequestOptions): Promise<Result> {
+    return this.requestService.diagnosticsRequest(options);
   }
 }
 

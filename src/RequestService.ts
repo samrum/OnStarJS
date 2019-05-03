@@ -2,7 +2,16 @@ import TokenHandler from "./TokenHandler";
 import Request from "./Request";
 import RequestResult from "./RequestResult";
 import RequestError from "./RequestError";
-import { HttpClient, OAuthToken, OnStarConfig, Result } from "./types";
+import {
+  HttpClient,
+  OAuthToken,
+  OnStarConfig,
+  Result,
+  AlertRequestOptions,
+  DiagnosticsRequestOptions,
+  SetChargingProfileRequestOptions,
+  DoorRequestOptions,
+} from "./types";
 
 const ONSTAR_API_BASE = "https://api.gm.com/api/v1";
 
@@ -46,33 +55,42 @@ class RequestService {
     return await this.sendRequest(request);
   }
 
-  async lockDoorRequest(): Promise<Result> {
+  async lockDoorRequest(options?: DoorRequestOptions): Promise<Result> {
+    const userOptions = options || {};
+
     const request = new Request(this.getCommandUrl("lockDoor")).setBody({
       lockDoorRequest: {
         delay: 0,
+        ...userOptions,
       },
     });
 
     return await this.sendRequest(request);
   }
 
-  async unlockDoorRequest(): Promise<Result> {
+  async unlockDoorRequest(options?: DoorRequestOptions): Promise<Result> {
+    const userOptions = options || {};
+
     const request = new Request(this.getCommandUrl("unlockDoor")).setBody({
       unlockDoorRequest: {
         delay: 0,
+        ...userOptions,
       },
     });
 
     return await this.sendRequest(request);
   }
 
-  async alertRequest(): Promise<Result> {
+  async alertRequest(options?: AlertRequestOptions): Promise<Result> {
+    const userOptions = options || {};
+
     const request = new Request(this.getCommandUrl("alert")).setBody({
       alertRequest: {
         action: ["Honk", "Flash"],
         delay: 0,
         duration: 1,
         override: ["DoorOpen", "IgnitionOn"],
+        ...userOptions,
       },
     });
 
@@ -91,20 +109,29 @@ class RequestService {
     return await this.sendRequest(request);
   }
 
-  async setChargingProfileRequest(): Promise<Result> {
+  async setChargingProfileRequest(
+    options?: SetChargingProfileRequestOptions,
+  ): Promise<Result> {
+    const userOptions = options || {};
+
     const request = new Request(
       this.getCommandUrl("setChargingProfile"),
     ).setBody({
       chargingProfile: {
         chargeMode: "IMMEDIATE",
         rateType: "MIDPEAK",
+        ...userOptions,
       },
     });
 
     return await this.sendRequest(request);
   }
 
-  async diagnosticsRequest(): Promise<Result> {
+  async diagnosticsRequest(
+    options?: DiagnosticsRequestOptions,
+  ): Promise<Result> {
+    const userOptions = options || {};
+
     const request = new Request(this.getCommandUrl("diagnostics")).setBody({
       diagnosticsRequest: {
         diagnosticItem: [
@@ -133,6 +160,7 @@ class RequestService {
           "FUEL TANK INFO",
           "VEHICLE RANGE",
         ],
+        ...userOptions,
       },
     });
 

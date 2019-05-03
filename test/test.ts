@@ -67,6 +67,26 @@ describe("OnStar", () => {
   test("unlockDoor", async () => {
     await onStar.unlockDoor();
   });
+
+  test("alert", async () => {
+    await onStar.alert();
+  });
+
+  test("cancelAlert", async () => {
+    await onStar.cancelAlert();
+  });
+
+  test("getChargingProfile", async () => {
+    await onStar.getChargingProfile();
+  });
+
+  test("setChargingProfile", async () => {
+    await onStar.setChargingProfile();
+  });
+
+  test("diagnostics", async () => {
+    await onStar.diagnostics();
+  });
 });
 
 describe("Request", () => {

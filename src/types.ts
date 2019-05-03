@@ -59,3 +59,23 @@ export interface Result {
 export interface ResultResponse {
   data: any;
 }
+
+export interface AlertRequestOptions {
+  action?: string[];
+  delay?: number;
+  duration?: number;
+  override?: string[];
+}
+
+export interface DiagnosticsRequestOptions {
+  diagnosticItem?: string[];
+}
+
+export interface SetChargingProfileRequestOptions {
+  chargeMode?: string;
+  rateType?: string;
+}
+
+export interface DoorRequestOptions {
+  delay?: number;
+}
