@@ -1,6 +1,11 @@
+export enum RequestMethod {
+  Get,
+  Post,
+}
+
 class Request {
   private url: string;
-  private method: string = "post";
+  private method: RequestMethod = RequestMethod.Post;
   private body: string = "{}";
   private contentType: string = "application/json; charset=UTF-8";
   private authRequired: boolean = true;
@@ -14,11 +19,11 @@ class Request {
     return this.url;
   }
 
-  getMethod(): string {
+  getMethod(): RequestMethod {
     return this.method;
   }
 
-  setMethod(method: string) {
+  setMethod(method: RequestMethod) {
     this.method = method;
 
     return this;

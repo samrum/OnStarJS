@@ -29,6 +29,10 @@ class OnStar {
     return new OnStar(config, requestService);
   }
 
+  async getAccountVehicles(): Promise<Result> {
+    return this.requestService.getAccountVehicles();
+  }
+
   async start(): Promise<Result> {
     return this.requestService.startRequest();
   }

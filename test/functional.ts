@@ -6,6 +6,17 @@ const onStar = OnStar.create(config);
 (async () => {
   try {
     let result;
+
+    result = await onStar.getAccountVehicles();
+    console.log(`Account Info Completed. Status: ${result.status}`);
+
+    if (result.status === "success") {
+      console.log(
+        `Account Info Response`,
+        JSON.stringify(result.response.data),
+      );
+    }
+
     result = await onStar.lockDoor();
     console.log(`LockDoor Completed. Status: ${result.status}`);
 
@@ -18,7 +29,10 @@ const onStar = OnStar.create(config);
     console.log(`Diagnostics Completed. Status: ${result.status}`);
 
     if (result.status === "success") {
-      console.log(`Result Response`, JSON.stringify(result.response.data));
+      console.log(
+        `Diagnostics Result Response`,
+        JSON.stringify(result.response.data),
+      );
     }
   } catch (e) {
     console.error(e.message);

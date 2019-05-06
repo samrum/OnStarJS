@@ -1,5 +1,5 @@
 import TokenHandler from "./TokenHandler";
-import Request from "./Request";
+import Request, { RequestMethod } from "./Request";
 import RequestResult from "./RequestResult";
 import RequestError from "./RequestError";
 import {
@@ -183,6 +183,16 @@ class RequestService {
     return await this.sendRequest(request);
   }
 
+  async getAccountVehicles(): Promise<Result> {
+    const request = new Request(
+      `${ONSTAR_API_BASE}/account/vehicles?includeCommands=true&includeEntit%20lements=true&includeModules=true`,
+    )
+      .setUpgradeRequired(false)
+      .setMethod(RequestMethod.Get);
+
+    return await this.sendRequest(request);
+  }
+
   private getApiUrlForPath(path: string): string {
     return `${ONSTAR_API_BASE}${path}`;
   }
@@ -299,7 +309,7 @@ class RequestService {
             await this.checkRequestPause();
 
             const request = new Request(url)
-              .setMethod("get")
+              .setMethod(RequestMethod.Get)
               .setUpgradeRequired(false);
             return await this.sendRequest(request);
           }
@@ -337,7 +347,7 @@ class RequestService {
       headers,
     };
 
-    if (request.getMethod() === "post") {
+    if (request.getMethod() === RequestMethod.Post) {
       return await this.client.post(
         request.getUrl(),
         request.getBody(),
