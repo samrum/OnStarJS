@@ -3,7 +3,7 @@ import { mock, instance, when, anyString, anything } from "ts-mockito";
 import { OAuthToken, HttpClient } from "../src/types";
 import OnStar from "../src/index";
 import TokenHandler from "../src/TokenHandler";
-import Request from "../src/Request";
+import Request, { RequestMethod } from "../src/Request";
 import RequestService from "../src/RequestService";
 import RequestResult from "../src/RequestResult";
 import RequestError from "../src/RequestError";
@@ -76,6 +76,10 @@ describe("OnStar", () => {
     await onStar.cancelAlert();
   });
 
+  test("chargeOverride", async () => {
+    await onStar.chargeOverride();
+  });
+
   test("getChargingProfile", async () => {
     await onStar.getChargingProfile();
   });
@@ -87,13 +91,17 @@ describe("OnStar", () => {
   test("diagnostics", async () => {
     await onStar.diagnostics();
   });
+
+  test("getAccountVehicles", async () => {
+    await onStar.getAccountVehicles();
+  });
 });
 
 describe("Request", () => {
   test("Property Methods", () => {
     const requestUrl = "https://foo.bar/secret/path";
     const request = new Request(requestUrl);
-    const method = "get";
+    const method = RequestMethod.Get;
     const contentType = "text/html";
     const body = `{"username":"Ayaya"}`;
     const bodyObject = {
@@ -102,7 +110,7 @@ describe("Request", () => {
 
     expect(request.getUrl()).toEqual(requestUrl);
 
-    expect(request.getMethod()).toEqual("post");
+    expect(request.getMethod()).toEqual(RequestMethod.Post);
     request.setMethod(method);
     expect(request.getMethod()).toEqual(method);
 
@@ -247,6 +255,10 @@ describe("RequestService", () => {
     await requestService.cancelAlertRequest();
   });
 
+  test("chargeOverride", async () => {
+    await requestService.chargeOverride();
+  });
+
   test("getChargingProfileRequest", async () => {
     await requestService.getChargingProfileRequest();
   });
@@ -257,6 +269,10 @@ describe("RequestService", () => {
 
   test("diagnosticsRequest", async () => {
     await requestService.diagnosticsRequest();
+  });
+
+  test("getAccountVehicles", async () => {
+    await requestService.getAccountVehicles();
   });
 
   test("requestWithExpiredAuthToken", async () => {
