@@ -10,6 +10,7 @@ import {
   DiagnosticsRequestOptions,
   SetChargingProfileRequestOptions,
   DoorRequestOptions,
+  ChargeOverrideOptions,
 } from "./types";
 
 class OnStar {
@@ -50,6 +51,10 @@ class OnStar {
 
   async cancelAlert(): Promise<Result> {
     return this.requestService.cancelAlertRequest();
+  }
+
+  async chargeOverride(options?: ChargeOverrideOptions): Promise<Result> {
+    return this.requestService.chargeOverride(options);
   }
 
   async getChargingProfile(): Promise<Result> {

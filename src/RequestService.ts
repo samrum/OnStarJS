@@ -11,6 +11,7 @@ import {
   DiagnosticsRequestOptions,
   SetChargingProfileRequestOptions,
   DoorRequestOptions,
+  ChargeOverrideOptions,
 } from "./types";
 
 const ONSTAR_API_BASE = "https://api.gm.com/api/v1";
@@ -103,6 +104,19 @@ class RequestService {
     return await this.sendRequest(request);
   }
 
+  async chargeOverride(options?: ChargeOverrideOptions): Promise<Result> {
+    const userOptions = options || {};
+
+    const request = new Request(this.getCommandUrl("chargeOverride")).setBody({
+      chargeOverrideRequest: {
+        mode: "CHARGE_NOW",
+        ...userOptions,
+      },
+    });
+
+    return await this.sendRequest(request);
+  }
+
   async getChargingProfileRequest(): Promise<Result> {
     const request = new Request(this.getCommandUrl("getChargingProfile"));
 
@@ -158,6 +172,8 @@ class RequestService {
           "GET CHARGE MODE",
           "EV SCHEDULED CHARGE START",
           "FUEL TANK INFO",
+          "HANDS FREE CALLING",
+          "ENERGY EFFICIENCY",
           "VEHICLE RANGE",
         ],
         ...userOptions,

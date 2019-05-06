@@ -3,20 +3,24 @@ import config from "../testCredentials.json";
 
 const onStar = OnStar.create(config);
 
-onStar
-  .lockDoor()
-  .then(result => {
+(async () => {
+  try {
+    let result;
+    result = await onStar.lockDoor();
     console.log(`LockDoor Completed. Status: ${result.status}`);
 
-    onStar
-      .alert({
-        action: ["Flash"],
-      })
-      .then(result => {
-        console.log(`Alert Completed. Status: ${result.status}`);
-      });
-  })
-  .catch(e => {
+    result = await onStar.alert({
+      action: ["Flash"],
+    });
+    console.log(`Alert Completed. Status: ${result.status}`);
+
+    result = await onStar.diagnostics();
+    console.log(`Diagnostics Completed. Status: ${result.status}`);
+
+    if (result.status === "success") {
+      console.log(`Result Response`, JSON.stringify(result.response.data));
+    }
+  } catch (e) {
     console.error(e.message);
 
     if (e.request) {
@@ -25,7 +29,10 @@ onStar
 
     if (e.response) {
       console.error(
-        `Status: ${e.response.status},  Status Text: ${e.response.statusText}`,
+        `Status: ${e.response.status},  Status Text: ${
+          e.response.statusText
+        }, Data: ${JSON.stringify(e.response.data)}`,
       );
     }
-  });
+  }
+})();

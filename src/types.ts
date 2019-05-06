@@ -60,22 +60,62 @@ export interface ResultResponse {
   data: any;
 }
 
+type AlertAction = "Honk" | "Flash";
+type AlertOverride = "DoorOpen" | "IgnitionOn";
+
 export interface AlertRequestOptions {
-  action?: string[];
+  action?: AlertAction[];
   delay?: number;
   duration?: number;
-  override?: string[];
+  override?: AlertOverride[];
 }
 
+type DiagnosticItem =
+  | "ENGINE COOLANT TEMP"
+  | "ENGINE RPM"
+  | "LAST TRIP FUEL ECONOMY"
+  | "EV ESTIMATED CHARGE END"
+  | "EV BATTERY LEVEL"
+  | "OIL LIFE"
+  | "EV PLUG VOLTAGE"
+  | "LIFETIME FUEL ECON"
+  | "HOTSPOT CONFIG"
+  | "LIFETIME FUEL USED"
+  | "ODOMETER"
+  | "HOTSPOT STATUS"
+  | "LIFETIME EV ODOMETER"
+  | "EV PLUG STATE"
+  | "EV CHARGE STATE"
+  | "TIRE PRESSURE"
+  | "AMBIENT AIR TEMPERATURE"
+  | "LAST TRIP DISTANCE"
+  | "INTERM VOLT BATT VOLT"
+  | "GET COMMUTE SCHEDULE"
+  | "GET CHARGE MODE"
+  | "EV SCHEDULED CHARGE START"
+  | "FUEL TANK INFO"
+  | "HANDS FREE CALLING"
+  | "ENERGY EFFICIENCY"
+  | "VEHICLE RANGE";
+
 export interface DiagnosticsRequestOptions {
-  diagnosticItem?: string[];
+  diagnosticItem?: DiagnosticItem[];
 }
 
 export interface SetChargingProfileRequestOptions {
-  chargeMode?: string;
-  rateType?: string;
+  chargeMode?:
+    | "DEFAULT_IMMEDIATE"
+    | "IMMEDIATE"
+    | "DEPARTURE_BASED"
+    | "RATE_BASED"
+    | "PHEV_AFTER_MIDNIGHT";
+  rateType?: "OFFPEAK" | "MIDPEAK" | "PEAK";
 }
 
 export interface DoorRequestOptions {
   delay?: number;
+}
+
+export interface ChargeOverrideOptions {
+  mode?: "CHARGE_NOW" | "CANCEL_OVERRIDE";
 }
