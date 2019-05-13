@@ -31,27 +31,27 @@ class OnStar {
   }
 
   async start(): Promise<Result> {
-    return this.requestService.startRequest();
+    return this.requestService.start();
   }
 
   async cancelStart(): Promise<Result> {
-    return this.requestService.cancelStartRequest();
+    return this.requestService.cancelStart();
   }
 
   async lockDoor(options?: DoorRequestOptions): Promise<Result> {
-    return this.requestService.lockDoorRequest(options);
+    return this.requestService.lockDoor(options);
   }
 
   async unlockDoor(options?: DoorRequestOptions): Promise<Result> {
-    return this.requestService.unlockDoorRequest(options);
+    return this.requestService.unlockDoor(options);
   }
 
   async alert(options?: AlertRequestOptions): Promise<Result> {
-    return this.requestService.alertRequest(options);
+    return this.requestService.alert(options);
   }
 
   async cancelAlert(): Promise<Result> {
-    return this.requestService.cancelAlertRequest();
+    return this.requestService.cancelAlert();
   }
 
   async chargeOverride(options?: ChargeOverrideOptions): Promise<Result> {
@@ -59,17 +59,17 @@ class OnStar {
   }
 
   async getChargingProfile(): Promise<Result> {
-    return this.requestService.getChargingProfileRequest();
+    return this.requestService.getChargingProfile();
   }
 
   async setChargingProfile(
     options?: SetChargingProfileRequestOptions,
   ): Promise<Result> {
-    return this.requestService.setChargingProfileRequest(options);
+    return this.requestService.setChargingProfile(options);
   }
 
   async diagnostics(options?: DiagnosticsRequestOptions): Promise<Result> {
-    return this.requestService.diagnosticsRequest(options);
+    return this.requestService.diagnostics(options);
   }
 }
 

@@ -11,12 +11,12 @@ Use the Get Account Vehicles request to see which requests your vehicle supports
 # Usage
 
 ## Sample
-Use a random version 4 uuid as a deviceId.
+Use a random version 4 uuid (there are online generators) as a deviceId.
 
     import OnStar from "onstarjs";
 
     const config = {
-      deviceId: "742249ce-18e0-4c82-8bb2-9975367a7631",
+      deviceId: "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
       vin: "1G2ZF58B774109863",
       username: "foo@bar.com",
       password: "p@ssw0rd",

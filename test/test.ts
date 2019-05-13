@@ -231,44 +231,44 @@ describe("RequestService", () => {
     requestService.setCheckRequestTimeout(1);
   });
 
-  test("startRequest", async () => {
-    await requestService.startRequest();
+  test("start", async () => {
+    await requestService.start();
   });
 
-  test("cancelStartRequest", async () => {
-    await requestService.cancelStartRequest();
+  test("cancelStart", async () => {
+    await requestService.cancelStart();
   });
 
-  test("lockDoorRequest", async () => {
-    await requestService.lockDoorRequest();
+  test("lockDoor", async () => {
+    await requestService.lockDoor();
   });
 
-  test("unlockDoorRequest", async () => {
-    await requestService.unlockDoorRequest();
+  test("unlockDoor", async () => {
+    await requestService.unlockDoor();
   });
 
-  test("alertRequest", async () => {
-    await requestService.alertRequest();
+  test("alert", async () => {
+    await requestService.alert();
   });
 
-  test("cancelAlertRequest", async () => {
-    await requestService.cancelAlertRequest();
+  test("cancelAlert", async () => {
+    await requestService.cancelAlert();
   });
 
   test("chargeOverride", async () => {
     await requestService.chargeOverride();
   });
 
-  test("getChargingProfileRequest", async () => {
-    await requestService.getChargingProfileRequest();
+  test("getChargingProfile", async () => {
+    await requestService.getChargingProfile();
   });
 
-  test("setChargingProfileRequest", async () => {
-    await requestService.setChargingProfileRequest();
+  test("setChargingProfile", async () => {
+    await requestService.setChargingProfile();
   });
 
-  test("diagnosticsRequest", async () => {
-    await requestService.diagnosticsRequest();
+  test("diagnostics", async () => {
+    await requestService.diagnostics();
   });
 
   test("getAccountVehicles", async () => {
@@ -293,7 +293,7 @@ describe("RequestService", () => {
 
     requestService.setAuthToken(expiredToken);
 
-    requestService.setClient(httpClient).startRequest();
+    requestService.setClient(httpClient).start();
   });
 
   test("requestCheckExceedsTimeoutError", async () => {
@@ -307,9 +307,9 @@ describe("RequestService", () => {
       },
     });
 
-    await expect(
-      requestService.setClient(httpClient).startRequest(),
-    ).rejects.toThrow(/^Command Timeout$/);
+    await expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+      /^Command Timeout$/,
+    );
   });
 
   test("requestStatusFailureError", async () => {
@@ -322,9 +322,9 @@ describe("RequestService", () => {
       },
     });
 
-    await expect(
-      requestService.setClient(httpClient).startRequest(),
-    ).rejects.toThrow(/^Command Failure$/);
+    await expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+      /^Command Failure$/,
+    );
   });
 
   test("requestResponseError", async () => {
@@ -335,9 +335,9 @@ describe("RequestService", () => {
       },
     });
 
-    await expect(
-      requestService.setClient(httpClient).startRequest(),
-    ).rejects.toThrow(/^Error response$/);
+    await expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+      /^Error response$/,
+    );
   });
 
   test("requestNoResponseError", async () => {
@@ -347,9 +347,9 @@ describe("RequestService", () => {
       },
     });
 
-    await expect(
-      requestService.setClient(httpClient).startRequest(),
-    ).rejects.toThrow(/^No response$/);
+    await expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+      /^No response$/,
+    );
   });
 
   test("requestStandardError", async () => {
@@ -357,9 +357,9 @@ describe("RequestService", () => {
       message: "errorMessage",
     });
 
-    await expect(
-      requestService.setClient(httpClient).startRequest(),
-    ).rejects.toThrow(/^errorMessage$/);
+    await expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+      /^errorMessage$/,
+    );
   });
 });
 

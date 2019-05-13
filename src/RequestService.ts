@@ -44,19 +44,19 @@ class RequestService {
     return this;
   }
 
-  async startRequest(): Promise<Result> {
+  async start(): Promise<Result> {
     const request = new Request(this.getCommandUrl("start"));
 
     return await this.sendRequest(request);
   }
 
-  async cancelStartRequest(): Promise<Result> {
+  async cancelStart(): Promise<Result> {
     const request = new Request(this.getCommandUrl("cancelStart"));
 
     return await this.sendRequest(request);
   }
 
-  async lockDoorRequest(options?: DoorRequestOptions): Promise<Result> {
+  async lockDoor(options?: DoorRequestOptions): Promise<Result> {
     const userOptions = options || {};
 
     const request = new Request(this.getCommandUrl("lockDoor")).setBody({
@@ -69,7 +69,7 @@ class RequestService {
     return await this.sendRequest(request);
   }
 
-  async unlockDoorRequest(options?: DoorRequestOptions): Promise<Result> {
+  async unlockDoor(options?: DoorRequestOptions): Promise<Result> {
     const userOptions = options || {};
 
     const request = new Request(this.getCommandUrl("unlockDoor")).setBody({
@@ -82,7 +82,7 @@ class RequestService {
     return await this.sendRequest(request);
   }
 
-  async alertRequest(options?: AlertRequestOptions): Promise<Result> {
+  async alert(options?: AlertRequestOptions): Promise<Result> {
     const userOptions = options || {};
 
     const request = new Request(this.getCommandUrl("alert")).setBody({
@@ -98,7 +98,7 @@ class RequestService {
     return await this.sendRequest(request);
   }
 
-  async cancelAlertRequest(): Promise<Result> {
+  async cancelAlert(): Promise<Result> {
     const request = new Request(this.getCommandUrl("cancelAlert"));
 
     return await this.sendRequest(request);
@@ -117,13 +117,13 @@ class RequestService {
     return await this.sendRequest(request);
   }
 
-  async getChargingProfileRequest(): Promise<Result> {
+  async getChargingProfile(): Promise<Result> {
     const request = new Request(this.getCommandUrl("getChargingProfile"));
 
     return await this.sendRequest(request);
   }
 
-  async setChargingProfileRequest(
+  async setChargingProfile(
     options?: SetChargingProfileRequestOptions,
   ): Promise<Result> {
     const userOptions = options || {};
@@ -141,9 +141,7 @@ class RequestService {
     return await this.sendRequest(request);
   }
 
-  async diagnosticsRequest(
-    options?: DiagnosticsRequestOptions,
-  ): Promise<Result> {
+  async diagnostics(options?: DiagnosticsRequestOptions): Promise<Result> {
     const userOptions = options || {};
 
     const request = new Request(this.getCommandUrl("diagnostics")).setBody({
