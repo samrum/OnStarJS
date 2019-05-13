@@ -45,7 +45,7 @@ describe("OnStar", () => {
   beforeEach(() => {
     const requestService = mock(RequestService);
 
-    onStar = new OnStar(config, instance(requestService));
+    onStar = new OnStar(instance(requestService));
   });
 
   test("create", () => {

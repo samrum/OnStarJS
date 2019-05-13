@@ -14,10 +14,7 @@ import {
 } from "./types";
 
 class OnStar {
-  constructor(
-    private config: OnStarConfig,
-    private requestService: RequestService,
-  ) {}
+  constructor(private requestService: RequestService) {}
 
   static create(config: OnStarConfig): OnStar {
     const requestService = new RequestService(
@@ -26,7 +23,7 @@ class OnStar {
       axios,
     );
 
-    return new OnStar(config, requestService);
+    return new OnStar(requestService);
   }
 
   async getAccountVehicles(): Promise<Result> {
