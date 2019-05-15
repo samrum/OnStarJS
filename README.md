@@ -31,7 +31,8 @@ Use a random version 4 uuid (there are online generators) as a deviceId.
       })
       .then(() => {
         onStar.start();
-      });
+      })
+      .catch(e => console.log(e));
 
 ## Get Account Vehicles
     onStar.getAccountVehicles();
