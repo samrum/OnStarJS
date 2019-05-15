@@ -1,68 +1,75 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 
 import TokenHandler from "./TokenHandler";
 import RequestService from "./RequestService";
 
-import { OAuthToken, OnStarConfig } from "./types";
+import {
+  OnStarConfig,
+  Result,
+  AlertRequestOptions,
+  DiagnosticsRequestOptions,
+  SetChargingProfileRequestOptions,
+  DoorRequestOptions,
+  ChargeOverrideOptions,
+} from "./types";
 
 class OnStar {
-  private authToken?: OAuthToken;
-
-  constructor(
-    private config: OnStarConfig,
-    private tokenHandler: TokenHandler,
-    private requestService: RequestService,
-  ) {}
+  constructor(private requestService: RequestService) {}
 
   static create(config: OnStarConfig): OnStar {
-    return new OnStar(
+    const requestService = new RequestService(
       config,
-      new TokenHandler(config, new RequestService(axios)),
-      new RequestService(axios),
+      new TokenHandler(config),
+      axios,
     );
+
+    return new OnStar(requestService);
   }
 
-  setTokenHandler(tokenHandler: TokenHandler) {
-    this.tokenHandler = tokenHandler;
+  async getAccountVehicles(): Promise<Result> {
+    return this.requestService.getAccountVehicles();
   }
 
-  async remoteStart(): Promise<AxiosResponse> {
-    this.authToken = await this.tokenHandler.refreshAuthToken(this.authToken);
-
-    if (this.authToken && !this.authToken.upgraded) {
-      await this.connectAndUpgradeAuthToken();
-    }
-
-    return await this.remoteStartRequest();
+  async start(): Promise<Result> {
+    return this.requestService.start();
   }
 
-  private async connectAndUpgradeAuthToken() {
-    await this.connectRequest();
-    await this.upgradeRequest();
-
-    if (this.authToken) {
-      this.authToken.upgraded = true;
-    }
+  async cancelStart(): Promise<Result> {
+    return this.requestService.cancelStart();
   }
 
-  private async connectRequest(): Promise<AxiosResponse> {
-    return await this.requestService.connectRequest(
-      this.config.vin,
-      this.authToken,
-    );
+  async lockDoor(options?: DoorRequestOptions): Promise<Result> {
+    return this.requestService.lockDoor(options);
   }
 
-  private async upgradeRequest(): Promise<AxiosResponse> {
-    const jwt = this.tokenHandler.createUpgradeJWT();
-
-    return await this.requestService.upgradeRequest(jwt, this.authToken);
+  async unlockDoor(options?: DoorRequestOptions): Promise<Result> {
+    return this.requestService.unlockDoor(options);
   }
 
-  private async remoteStartRequest(): Promise<AxiosResponse> {
-    return await this.requestService.remoteStartRequest(
-      this.config.vin,
-      this.authToken,
-    );
+  async alert(options?: AlertRequestOptions): Promise<Result> {
+    return this.requestService.alert(options);
+  }
+
+  async cancelAlert(): Promise<Result> {
+    return this.requestService.cancelAlert();
+  }
+
+  async chargeOverride(options?: ChargeOverrideOptions): Promise<Result> {
+    return this.requestService.chargeOverride(options);
+  }
+
+  async getChargingProfile(): Promise<Result> {
+    return this.requestService.getChargingProfile();
+  }
+
+  async setChargingProfile(
+    options?: SetChargingProfileRequestOptions,
+  ): Promise<Result> {
+    return this.requestService.setChargingProfile(options);
+  }
+
+  async diagnostics(options?: DiagnosticsRequestOptions): Promise<Result> {
+    return this.requestService.diagnostics(options);
   }
 }
 

@@ -1,11 +1,12 @@
 import { mock, instance, when, anyString, anything } from "ts-mockito";
-import { AxiosResponse } from "axios";
 
-import { OAuthToken } from "../src/types";
+import { OAuthToken, HttpClient } from "../src/types";
 import OnStar from "../src/index";
 import TokenHandler from "../src/TokenHandler";
-import Request from "../src/Request";
+import Request, { RequestMethod } from "../src/Request";
 import RequestService from "../src/RequestService";
+import RequestResult from "../src/RequestResult";
+import RequestError from "../src/RequestError";
 
 const config = {
   deviceId: "742249ce-18e0-4c82-8bb2-9975367a7631",
@@ -42,84 +43,323 @@ let onStar: OnStar;
 
 describe("OnStar", () => {
   beforeEach(() => {
-    const tokenHandler = mock(TokenHandler);
-    when(tokenHandler.createUpgradeJWT()).thenReturn("upgradeJWT");
-    when(tokenHandler.refreshAuthToken(anything())).thenResolve(authToken);
-
     const requestService = mock(RequestService);
 
-    onStar = new OnStar(
-      config,
-      instance(tokenHandler),
-      instance(requestService),
-    );
+    onStar = new OnStar(instance(requestService));
   });
 
   test("create", () => {
     expect(OnStar.create(config)).toBeInstanceOf(OnStar);
   });
 
-  test("remoteStart", async () => {
-    await onStar.remoteStart();
+  test("start", async () => {
+    await onStar.start();
   });
 
-  test("remoteStartWithUpgradedToken", async () => {
-    const upgradedToken = { ...authToken, upgraded: true };
+  test("cancelStart", async () => {
+    await onStar.cancelStart();
+  });
 
-    const tokenHandler = mock(TokenHandler);
-    when(tokenHandler.refreshAuthToken(anything())).thenResolve(upgradedToken);
+  test("lockDoor", async () => {
+    await onStar.lockDoor();
+  });
 
-    onStar.setTokenHandler(instance(tokenHandler));
+  test("unlockDoor", async () => {
+    await onStar.unlockDoor();
+  });
 
-    await onStar.remoteStart();
+  test("alert", async () => {
+    await onStar.alert();
+  });
+
+  test("cancelAlert", async () => {
+    await onStar.cancelAlert();
+  });
+
+  test("chargeOverride", async () => {
+    await onStar.chargeOverride();
+  });
+
+  test("getChargingProfile", async () => {
+    await onStar.getChargingProfile();
+  });
+
+  test("setChargingProfile", async () => {
+    await onStar.setChargingProfile();
+  });
+
+  test("diagnostics", async () => {
+    await onStar.diagnostics();
+  });
+
+  test("getAccountVehicles", async () => {
+    await onStar.getAccountVehicles();
   });
 });
 
 describe("Request", () => {
-  test("Access Methods Work", () => {
-    const request = new Request("/secret/path");
+  test("Property Methods", () => {
+    const requestUrl = "https://foo.bar/secret/path";
+    const request = new Request(requestUrl);
+    const method = RequestMethod.Get;
     const contentType = "text/html";
-    const requestBody = `{username: "Ayaya"}`;
+    const body = `{"username":"Ayaya"}`;
+    const bodyObject = {
+      username: "Ayaya",
+    };
 
-    expect(request.getPath()).toEqual("/secret/path");
+    expect(request.getUrl()).toEqual(requestUrl);
 
-    expect(request.getAuthToken()).toBeUndefined();
-    request.setAuthToken(authToken);
-    expect(request.getAuthToken()).toEqual(authToken);
+    expect(request.getMethod()).toEqual(RequestMethod.Post);
+    request.setMethod(method);
+    expect(request.getMethod()).toEqual(method);
 
-    expect(request.getContentType()).toEqual("text/plain");
+    expect(request.getContentType()).toEqual("application/json; charset=UTF-8");
     request.setContentType(contentType);
     expect(request.getContentType()).toEqual(contentType);
 
-    expect(request.getRequestBody()).toEqual("{}");
-    request.setRequestBody(requestBody);
-    expect(request.getRequestBody()).toEqual(requestBody);
+    expect(request.getBody()).toEqual("{}");
+    request.setBody(body);
+    expect(request.getBody()).toEqual(body);
+    request.setBody(bodyObject);
+    expect(request.getBody()).toEqual(body);
+
+    expect(request.isAuthRequired()).toBeTruthy();
+    request.setAuthRequired(false);
+    expect(request.isAuthRequired()).toBeFalsy();
+
+    expect(request.isUpgradeRequired()).toBeTruthy();
+    request.setUpgradeRequired(false);
+    expect(request.isUpgradeRequired()).toBeFalsy();
+  });
+});
+
+describe("RequestResult", () => {
+  test("Property Methods", () => {
+    const status = "success";
+    const requestResult = new RequestResult(status);
+    const response = { data: "responseData" };
+    const message = "message";
+
+    expect(requestResult.getResult()).toEqual({
+      status,
+    });
+
+    requestResult.setResponse(response);
+    requestResult.setMessage(message);
+
+    expect(requestResult.getResult()).toEqual({
+      status,
+      response,
+      message,
+    });
+  });
+});
+
+describe("RequestError", () => {
+  test("Property Methods", () => {
+    const requestError = new RequestError("Error Message");
+    const response = {
+      commandResponse: {
+        requestTime: "time",
+        status: "success",
+        type: "unlockDoor",
+        url: "https://foo.bar",
+      },
+    };
+    const request = new Request("https://foo.bar");
+
+    requestError.setResponse(response);
+    expect(requestError.getResponse()).toEqual(response);
+
+    requestError.setRequest(request);
+    expect(requestError.getRequest()).toEqual(request);
   });
 });
 
 let requestService: RequestService;
+let httpClient: HttpClient;
 
 describe("RequestService", () => {
   beforeEach(() => {
-    requestService = new RequestService({
-      post: jest.fn(),
+    const tokenHandler = mock(TokenHandler);
+    when(tokenHandler.decodeAuthRequestResponse(anything())).thenReturn(
+      authToken,
+    );
+
+    const requestTime = Date.now() + 1000;
+
+    httpClient = {
+      post: jest
+        .fn()
+        .mockResolvedValue({
+          data: {
+            commandResponse: {
+              requestTime,
+              status: "success",
+              url: "requestCheckUrl",
+            },
+          },
+        })
+        .mockResolvedValueOnce({
+          data: {
+            commandResponse: {
+              requestTime,
+              status: "inProgress",
+              url: "requestCheckUrl",
+            },
+          },
+        }),
+      get: jest.fn().mockResolvedValue({
+        data: {
+          commandResponse: {
+            requestTime,
+            status: "success",
+            url: "requestCheckUrl",
+          },
+        },
+      }),
+    };
+
+    requestService = new RequestService(
+      config,
+      instance(tokenHandler),
+      httpClient,
+    );
+
+    requestService.setAuthToken(authToken);
+    requestService.setCheckRequestTimeout(1);
+  });
+
+  test("start", async () => {
+    await requestService.start();
+  });
+
+  test("cancelStart", async () => {
+    await requestService.cancelStart();
+  });
+
+  test("lockDoor", async () => {
+    await requestService.lockDoor();
+  });
+
+  test("unlockDoor", async () => {
+    await requestService.unlockDoor();
+  });
+
+  test("alert", async () => {
+    await requestService.alert();
+  });
+
+  test("cancelAlert", async () => {
+    await requestService.cancelAlert();
+  });
+
+  test("chargeOverride", async () => {
+    await requestService.chargeOverride();
+  });
+
+  test("getChargingProfile", async () => {
+    await requestService.getChargingProfile();
+  });
+
+  test("setChargingProfile", async () => {
+    await requestService.setChargingProfile();
+  });
+
+  test("diagnostics", async () => {
+    await requestService.diagnostics();
+  });
+
+  test("getAccountVehicles", async () => {
+    await requestService.getAccountVehicles();
+  });
+
+  test("requestWithExpiredAuthToken", async () => {
+    httpClient.post = jest
+      .fn()
+      .mockResolvedValue({
+        data: {
+          commandResponse: {
+            requestTime: Date.now() + 1000,
+            status: "success",
+            url: "requestCheckUrl",
+          },
+        },
+      })
+      .mockResolvedValueOnce({
+        data: "encodedToken",
+      });
+
+    requestService.setAuthToken(expiredToken);
+
+    requestService.setClient(httpClient).start();
+  });
+
+  test("requestCheckExceedsTimeoutError", async () => {
+    httpClient.post = jest.fn().mockResolvedValue({
+      data: {
+        commandResponse: {
+          requestTime: Date.now() - 1000,
+          status: "inProgress",
+          url: "requestCheckUrl",
+        },
+      },
     });
+
+    await expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+      /^Command Timeout$/,
+    );
   });
 
-  test("authTokenRequest", async () => {
-    await requestService.authTokenRequest("jwt");
+  test("requestStatusFailureError", async () => {
+    httpClient.post = jest.fn().mockResolvedValue({
+      data: {
+        commandResponse: {
+          requestTime: Date.now() + 1000,
+          status: "failure",
+        },
+      },
+    });
+
+    await expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+      /^Command Failure$/,
+    );
   });
 
-  test("connectRequest", async () => {
-    await requestService.connectRequest("vin", authToken);
+  test("requestResponseError", async () => {
+    httpClient.post = jest.fn().mockRejectedValue({
+      response: {
+        status: "responseStatus",
+        data: "data",
+      },
+    });
+
+    await expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+      /^Error response$/,
+    );
   });
 
-  test("upgradeRequest", async () => {
-    await requestService.upgradeRequest("vin", authToken);
+  test("requestNoResponseError", async () => {
+    httpClient.post = jest.fn().mockRejectedValue({
+      request: {
+        body: "requestBody",
+      },
+    });
+
+    await expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+      /^No response$/,
+    );
   });
 
-  test("remoteStartRequest", async () => {
-    await requestService.remoteStartRequest("vin", authToken);
+  test("requestStandardError", async () => {
+    httpClient.post = jest.fn().mockRejectedValue({
+      message: "errorMessage",
+    });
+
+    await expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+      /^errorMessage$/,
+    );
   });
 });
 
@@ -127,13 +367,7 @@ let tokenHandler: TokenHandler;
 
 describe("TokenHandler", () => {
   beforeEach(() => {
-    const mockRequestService = mock(RequestService);
-    when(mockRequestService.authTokenRequest(anyString())).thenResolve({
-      data:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOiJPTUJfQ1ZZX0FORF8zRjEiLCJjcmVkZW50aWFsIjoiMTIzNCIsImNyZWRlbnRpYWxfdHlwZSI6IlBJTiIsImRldmljZV9pZCI6ImRldmljZS1pZC1mYWtlIiwiZ3JhbnRfdHlwZSI6InBhc3N3b3JkIiwibm9uY2UiOiJZekpsTTJSaU1tWmpObVJsTURZek1EVmlOaiIsInRpbWVzdGFtcCI6IjIwMTktMDQtMDhUMDQ6NDY6MDcuMDAxWiJ9.Yi9QANYYzX2XNz5u4_D7tKqAgVk9pZ5FSwJt5jdZvrQ",
-    } as AxiosResponse);
-
-    tokenHandler = new TokenHandler(config, instance(mockRequestService));
+    tokenHandler = new TokenHandler(config);
   });
 
   test("authTokenIsValid", () => {
@@ -141,15 +375,20 @@ describe("TokenHandler", () => {
     expect(TokenHandler.authTokenIsValid(expiredToken)).toBeFalsy();
   });
 
-  test("refreshAuthToken", async () => {
-    expect(await tokenHandler.refreshAuthToken(authToken)).toEqual(authToken);
-
-    expect(await tokenHandler.refreshAuthToken(expiredToken)).not.toEqual(
-      authToken,
-    );
-  });
-
   test("createUpgradeJWT", () => {
     expect(tokenHandler.createUpgradeJWT().split(".").length - 1).toEqual(2);
+  });
+
+  test("createAuthJWT", () => {
+    expect(tokenHandler.createAuthJWT().split(".").length - 1).toEqual(2);
+  });
+
+  test("decodeAuthRequestResponse", () => {
+    const encodedToken =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOiJPTUJfQ1ZZX0FORF8zRjEiLCJjcmVkZW50aWFsIjoiMTIzNCIsImNyZWRlbnRpYWxfdHlwZSI6IlBJTiIsImRldmljZV9pZCI6ImRldmljZS1pZC1mYWtlIiwiZ3JhbnRfdHlwZSI6InBhc3N3b3JkIiwibm9uY2UiOiJZekpsTTJSaU1tWmpObVJsTURZek1EVmlOaiIsInRpbWVzdGFtcCI6IjIwMTktMDQtMDhUMDQ6NDY6MDcuMDAxWiJ9.Yi9QANYYzX2XNz5u4_D7tKqAgVk9pZ5FSwJt5jdZvrQ";
+
+    expect(tokenHandler.decodeAuthRequestResponse(encodedToken)).toHaveProperty(
+      "timestamp",
+    );
   });
 });

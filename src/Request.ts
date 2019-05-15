@@ -1,35 +1,64 @@
-import { OAuthToken } from "./types";
+export enum RequestMethod {
+  Get,
+  Post,
+}
 
 class Request {
-  private path: string;
-  private requestBody: string = "{}";
-  private contentType: string = "text/plain";
-  private authToken?: OAuthToken;
+  private url: string;
+  private method: RequestMethod = RequestMethod.Post;
+  private body: string = "{}";
+  private contentType: string = "application/json; charset=UTF-8";
+  private authRequired: boolean = true;
+  private upgradeRequired: boolean = true;
 
-  constructor(path: string) {
-    this.path = path;
+  constructor(url: string) {
+    this.url = url;
   }
 
-  getPath(): string {
-    return this.path;
+  getUrl(): string {
+    return this.url;
   }
 
-  getRequestBody(): string {
-    return this.requestBody;
+  getMethod(): RequestMethod {
+    return this.method;
   }
 
-  setRequestBody(body: string) {
-    this.requestBody = body;
+  setMethod(method: RequestMethod) {
+    this.method = method;
 
     return this;
   }
 
-  getAuthToken(): OAuthToken | undefined {
-    return this.authToken;
+  getBody(): string {
+    return this.body;
   }
 
-  setAuthToken(token?: OAuthToken) {
-    this.authToken = token;
+  setBody(body: string | object) {
+    if (typeof body === "object") {
+      body = JSON.stringify(body);
+    }
+
+    this.body = body;
+
+    return this;
+  }
+
+  isAuthRequired(): boolean {
+    return this.authRequired;
+  }
+
+  setAuthRequired(authRequired: boolean) {
+    this.authRequired = authRequired;
+
+    return this;
+  }
+
+  isUpgradeRequired(): boolean {
+    return this.upgradeRequired;
+  }
+
+  setUpgradeRequired(upgradeRequired: boolean) {
+    this.upgradeRequired = upgradeRequired;
 
     return this;
   }
