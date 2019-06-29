@@ -17,14 +17,20 @@ import {
 const ONSTAR_API_BASE = "https://api.gm.com/api/v1";
 
 class RequestService {
+  private config: OnStarConfig;
   private authToken?: OAuthToken;
   private checkRequestTimeout = 6000;
 
   constructor(
-    private config: OnStarConfig,
+    config: OnStarConfig,
     private tokenHandler: TokenHandler,
     private client: HttpClient,
-  ) {}
+  ) {
+    this.config = {
+      checkRequestStatus: true,
+      ...config,
+    };
+  }
 
   setClient(client: HttpClient) {
     this.client = client;
@@ -265,7 +271,7 @@ class RequestService {
       const response = await this.makeClientRequest(request);
       const { data } = response;
 
-      if (typeof data === "object") {
+      if (this.config.checkRequestStatus && typeof data === "object") {
         const { commandResponse } = data;
 
         if (commandResponse) {

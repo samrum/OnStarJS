@@ -9,6 +9,7 @@ export interface OnStarConfig {
   username: string;
   password: string;
   onStarPin: string;
+  checkRequestStatus?: boolean;
 }
 
 export interface OAuthToken {
