@@ -10,6 +10,7 @@ class Request {
   private contentType: string = "application/json; charset=UTF-8";
   private authRequired: boolean = true;
   private upgradeRequired: boolean = true;
+  private headers: object = {};
 
   constructor(url: string) {
     this.url = url;
@@ -25,6 +26,16 @@ class Request {
 
   setMethod(method: RequestMethod) {
     this.method = method;
+
+    return this;
+  }
+
+  getHeaders(): object {
+    return this.headers;
+  }
+
+  setHeaders(headers: object) {
+    this.headers = headers;
 
     return this;
   }

@@ -107,6 +107,9 @@ describe("Request", () => {
     const bodyObject = {
       username: "Ayaya",
     };
+    const headers = {
+      fooHead: "barValue",
+    };
 
     expect(request.getUrl()).toEqual(requestUrl);
 
@@ -131,6 +134,10 @@ describe("Request", () => {
     expect(request.isUpgradeRequired()).toBeTruthy();
     request.setUpgradeRequired(false);
     expect(request.isUpgradeRequired()).toBeFalsy();
+
+    expect(request.getHeaders()).toEqual({});
+    request.setHeaders(headers);
+    expect(request.getHeaders()).toEqual(headers);
   });
 });
 
@@ -384,8 +391,7 @@ describe("TokenHandler", () => {
   });
 
   test("decodeAuthRequestResponse", () => {
-    const encodedToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOiJPTUJfQ1ZZX0FORF8zRjEiLCJjcmVkZW50aWFsIjoiMTIzNCIsImNyZWRlbnRpYWxfdHlwZSI6IlBJTiIsImRldmljZV9pZCI6ImRldmljZS1pZC1mYWtlIiwiZ3JhbnRfdHlwZSI6InBhc3N3b3JkIiwibm9uY2UiOiJZekpsTTJSaU1tWmpObVJsTURZek1EVmlOaiIsInRpbWVzdGFtcCI6IjIwMTktMDQtMDhUMDQ6NDY6MDcuMDAxWiJ9.Yi9QANYYzX2XNz5u4_D7tKqAgVk9pZ5FSwJt5jdZvrQ";
+    const encodedToken = tokenHandler.createAuthJWT();
 
     expect(tokenHandler.decodeAuthRequestResponse(encodedToken)).toHaveProperty(
       "timestamp",

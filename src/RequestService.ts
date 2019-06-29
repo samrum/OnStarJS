@@ -185,9 +185,9 @@ class RequestService {
       "Accept-Language": "en-US",
       "Content-Type": request.getContentType(),
       Host: "api.gm.com",
-      Connection: "Keep-Alive",
-      "Accept-Encoding": "gzip",
-      "User-Agent": "okhttp/3.9.0",
+      Connection: "keep-alive",
+      "Accept-Encoding": "br, gzip, deflate",
+      "User-Agent": "myChevrolet/3.17.0 (iPhone; iOS 12.1.1; Scale/2.00)",
     };
 
     if (request.isAuthRequired()) {
@@ -226,7 +226,11 @@ class RequestService {
     const request = new Request(this.getApiUrlForPath("/oauth/token"))
       .setContentType("text/plain")
       .setAuthRequired(false)
-      .setBody(jwt);
+      .setBody(jwt)
+      .setHeaders({
+        "Accept-Language": "en",
+        "User-Agent": "myChevrolet/246 CFNetwork/976 Darwin/18.2.0",
+      });
 
     return await this.sendRequest(request);
   }
@@ -319,11 +323,19 @@ class RequestService {
 
   private async makeClientRequest(request: Request): Promise<any> {
     const headers = await this.getHeaders(request);
-    const requestOptions = {
-      headers,
+    let requestOptions = {
+      headers: {
+        ...headers,
+        ...request.getHeaders(),
+      },
     };
 
     if (request.getMethod() === RequestMethod.Post) {
+      requestOptions.headers = {
+        ...requestOptions.headers,
+        "Content-Length": request.getBody().length,
+      };
+
       return await this.client.post(
         request.getUrl(),
         request.getBody(),
