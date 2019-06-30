@@ -1,6 +1,6 @@
 {
   "name": "onstarjs",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Unofficial package for making OnStar API requests",
   "main": "dist/index.js",
   "types": "dist/src/index.d.ts",
@@ -16,7 +16,7 @@
     "test": "jest",
     "coverage": "jest --coverage",
     "functional": "ts-node test/functional.ts",
-    "prepublish": "yarn run test && yarn run build"
+    "prepublishOnly": "yarn run test && yarn run build"
   },
   "repository": {
     "type": "git",

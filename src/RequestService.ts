@@ -313,7 +313,9 @@ class RequestService {
       let errorObj = new RequestError();
 
       if (error.response) {
-        errorObj.message = "Error response";
+        errorObj.message = `Request Failed with status ${
+          error.response.status
+        } - ${error.response.statusText}`;
         errorObj.setResponse(error.response);
         errorObj.setRequest(error.request);
       } else if (error.request) {
