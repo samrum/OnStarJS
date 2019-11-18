@@ -20,6 +20,8 @@ class RequestService {
   private config: OnStarConfig;
   private authToken?: OAuthToken;
   private checkRequestTimeout = 6000;
+  private tokenRefreshPromise?: Promise<OAuthToken>;
+  private tokenUpgradePromise?: Promise<OAuthToken>;
 
   constructor(
     config: OnStarConfig,
@@ -180,9 +182,7 @@ class RequestService {
   }
 
   private getCommandUrl(command: string): string {
-    return `${ONSTAR_API_BASE}/account/vehicles/${
-      this.config.vin
-    }/commands/${command}`;
+    return `${ONSTAR_API_BASE}/account/vehicles/${this.config.vin}/commands/${command}`;
   }
 
   private async getHeaders(request: Request): Promise<any> {
@@ -243,10 +243,23 @@ class RequestService {
 
   private async getAuthToken(): Promise<OAuthToken> {
     if (!this.authToken || !TokenHandler.authTokenIsValid(this.authToken)) {
-      this.authToken = await this.createNewAuthToken();
+      this.authToken = await this.refreshAuthToken();
     }
 
     return this.authToken;
+  }
+
+  private async refreshAuthToken(): Promise<OAuthToken> {
+    if (!this.tokenRefreshPromise) {
+      this.tokenRefreshPromise = new Promise(async resolve => {
+        const token = await this.createNewAuthToken();
+
+        this.tokenRefreshPromise = undefined;
+        resolve(token);
+      });
+    }
+
+    return this.tokenRefreshPromise;
   }
 
   private async createNewAuthToken(): Promise<OAuthToken> {
@@ -257,13 +270,22 @@ class RequestService {
     return this.tokenHandler.decodeAuthRequestResponse(response.data);
   }
 
-  private async connectAndUpgradeAuthToken() {
-    await this.connectRequest();
-    await this.upgradeRequest();
+  private async connectAndUpgradeAuthToken(): Promise<OAuthToken> {
+    if (!this.tokenUpgradePromise) {
+      this.tokenUpgradePromise = new Promise(async resolve => {
+        await this.connectRequest();
+        await this.upgradeRequest();
 
-    if (this.authToken) {
-      this.authToken.upgraded = true;
+        if (this.authToken) {
+          this.authToken.upgraded = true;
+        }
+
+        this.tokenUpgradePromise = undefined;
+        resolve(this.authToken);
+      });
     }
+
+    return this.tokenUpgradePromise;
   }
 
   private async sendRequest(request: Request): Promise<Result> {
@@ -313,9 +335,7 @@ class RequestService {
       let errorObj = new RequestError();
 
       if (error.response) {
-        errorObj.message = `Request Failed with status ${
-          error.response.status
-        } - ${error.response.statusText}`;
+        errorObj.message = `Request Failed with status ${error.response.status} - ${error.response.statusText}`;
         errorObj.setResponse(error.response);
         errorObj.setRequest(error.request);
       } else if (error.request) {

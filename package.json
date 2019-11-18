@@ -1,6 +1,6 @@
 {
   "name": "onstarjs",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Unofficial package for making OnStar API requests",
   "main": "dist/index.js",
   "types": "dist/src/index.d.ts",
@@ -25,7 +25,11 @@
   "keywords": [
     "onstar",
     "chevrolet",
-    "gm"
+    "chevy",
+    "gm",
+    "gmc",
+    "buick",
+    "cadillac"
   ],
   "author": "Ruben Medina <dev@rubenmedina.com> (https://rubenmedina.com)",
   "license": "MIT",
