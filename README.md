@@ -21,7 +21,7 @@ Use a random version 4 uuid (there are online generators) as a deviceId.
       username: "foo@bar.com",
       password: "p@ssw0rd",
       onStarPin: "1234",
-      checkRequestStatus: true, // When false, requests are complete when 'In Progress'.
+      checkRequestStatus: true, // When false, requests are complete when 'In Progress' (Much faster).
     };
 
     const onStar = OnStar.create(config);
