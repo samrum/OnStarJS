@@ -77,7 +77,7 @@ class RequestService {
     return this.sendRequest(request);
   }
 
-  unlockDoor(options?: DoorRequestOptions): Promise<Result> {
+  async unlockDoor(options?: DoorRequestOptions): Promise<Result> {
     const userOptions = options || {};
 
     const request = new Request(this.getCommandUrl("unlockDoor")).setBody({
