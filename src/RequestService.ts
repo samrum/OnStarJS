@@ -55,13 +55,13 @@ class RequestService {
   async start(): Promise<Result> {
     const request = new Request(this.getCommandUrl("start"));
 
-    return await this.sendRequest(request);
+    return this.sendRequest(request);
   }
 
   async cancelStart(): Promise<Result> {
     const request = new Request(this.getCommandUrl("cancelStart"));
 
-    return await this.sendRequest(request);
+    return this.sendRequest(request);
   }
 
   async lockDoor(options?: DoorRequestOptions): Promise<Result> {
@@ -74,10 +74,10 @@ class RequestService {
       },
     });
 
-    return await this.sendRequest(request);
+    return this.sendRequest(request);
   }
 
-  async unlockDoor(options?: DoorRequestOptions): Promise<Result> {
+  unlockDoor(options?: DoorRequestOptions): Promise<Result> {
     const userOptions = options || {};
 
     const request = new Request(this.getCommandUrl("unlockDoor")).setBody({
@@ -87,7 +87,7 @@ class RequestService {
       },
     });
 
-    return await this.sendRequest(request);
+    return this.sendRequest(request);
   }
 
   async alert(options?: AlertRequestOptions): Promise<Result> {
@@ -103,13 +103,13 @@ class RequestService {
       },
     });
 
-    return await this.sendRequest(request);
+    return this.sendRequest(request);
   }
 
   async cancelAlert(): Promise<Result> {
     const request = new Request(this.getCommandUrl("cancelAlert"));
 
-    return await this.sendRequest(request);
+    return this.sendRequest(request);
   }
 
   async chargeOverride(options?: ChargeOverrideOptions): Promise<Result> {
@@ -122,13 +122,13 @@ class RequestService {
       },
     });
 
-    return await this.sendRequest(request);
+    return this.sendRequest(request);
   }
 
   async getChargingProfile(): Promise<Result> {
     const request = new Request(this.getCommandUrl("getChargingProfile"));
 
-    return await this.sendRequest(request);
+    return this.sendRequest(request);
   }
 
   async setChargingProfile(
@@ -146,7 +146,7 @@ class RequestService {
       },
     });
 
-    return await this.sendRequest(request);
+    return this.sendRequest(request);
   }
 
   async diagnostics(options?: DiagnosticsRequestOptions): Promise<Result> {
@@ -164,7 +164,7 @@ class RequestService {
       },
     });
 
-    return await this.sendRequest(request);
+    return this.sendRequest(request);
   }
 
   async getAccountVehicles(): Promise<Result> {
@@ -174,7 +174,7 @@ class RequestService {
       .setUpgradeRequired(false)
       .setMethod(RequestMethod.Get);
 
-    return await this.sendRequest(request);
+    return this.sendRequest(request);
   }
 
   private getApiUrlForPath(path: string): string {
@@ -214,7 +214,7 @@ class RequestService {
       this.getCommandUrl("connect"),
     ).setUpgradeRequired(false);
 
-    return await this.sendRequest(request);
+    return this.sendRequest(request);
   }
 
   private async upgradeRequest(): Promise<Result> {
@@ -225,7 +225,7 @@ class RequestService {
       .setUpgradeRequired(false)
       .setBody(jwt);
 
-    return await this.sendRequest(request);
+    return this.sendRequest(request);
   }
 
   private async authTokenRequest(jwt: string): Promise<Result> {
@@ -238,7 +238,7 @@ class RequestService {
         "User-Agent": "myChevrolet/246 CFNetwork/976 Darwin/18.2.0",
       });
 
-    return await this.sendRequest(request);
+    return this.sendRequest(request);
   }
 
   private async getAuthToken(): Promise<OAuthToken> {
@@ -319,7 +319,7 @@ class RequestService {
             const request = new Request(url)
               .setMethod(RequestMethod.Get)
               .setUpgradeRequired(false);
-            return await this.sendRequest(request);
+            return this.sendRequest(request);
           }
 
           return new RequestResult(status).setResponse(response).getResult();
@@ -364,13 +364,13 @@ class RequestService {
         "Content-Length": request.getBody().length,
       };
 
-      return await this.client.post(
+      return this.client.post(
         request.getUrl(),
         request.getBody(),
         requestOptions,
       );
     } else {
-      return await this.client.get(request.getUrl(), requestOptions);
+      return this.client.get(request.getUrl(), requestOptions);
     }
   }
 
