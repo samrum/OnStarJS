@@ -1,9 +1,10 @@
 {
   "name": "onstarjs",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "Unofficial package for making OnStar API requests",
   "main": "dist/index.js",
-  "types": "dist/src/index.d.ts",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -11,13 +12,14 @@
     "test": "test"
   },
   "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c -w",
+    "build": "rm -rf dist && rollup -c",
+    "dev": "rm -rf dist && rollup -c -w",
     "test": "jest",
     "coverage": "jest --coverage",
     "functional": "ts-node test/functional.ts",
     "prepublishOnly": "yarn run test && yarn run build"
   },
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/samrum/OnStarJS.git"
