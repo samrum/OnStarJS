@@ -1,4 +1,5 @@
 # OnStarJS
+[![npm version](https://badge.fury.io/js/onstarjs.svg)](https://badge.fury.io/js/onstarjs)
 [![Build Status](https://travis-ci.org/samrum/OnStarJS.svg?branch=master)](https://travis-ci.org/samrum/OnStarJS)
 [![Coverage Status](https://coveralls.io/repos/github/samrum/OnStarJS/badge.svg?branch=master)](https://coveralls.io/github/samrum/OnStarJS?branch=master)
 
