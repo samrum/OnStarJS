@@ -277,16 +277,21 @@ class RequestService {
 
   private async connectAndUpgradeAuthToken(): Promise<OAuthToken> {
     if (!this.tokenUpgradePromise) {
-      this.tokenUpgradePromise = new Promise(async resolve => {
-        await this.connectRequest();
-        await this.upgradeRequest();
+      this.tokenUpgradePromise = new Promise(async (resolve, reject) => {
+        try {
+          await this.connectRequest();
+          await this.upgradeRequest();
 
-        if (this.authToken) {
-          this.authToken.upgraded = true;
+          if (this.authToken) {
+            this.authToken.upgraded = true;
+          }
+
+          resolve(this.authToken);
+        } catch (e) {
+          reject(e);
         }
 
         this.tokenUpgradePromise = undefined;
-        resolve(this.authToken);
       });
     }
 
