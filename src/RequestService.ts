@@ -251,11 +251,16 @@ class RequestService {
 
   private async refreshAuthToken(): Promise<OAuthToken> {
     if (!this.tokenRefreshPromise) {
-      this.tokenRefreshPromise = new Promise(async resolve => {
-        const token = await this.createNewAuthToken();
+      this.tokenRefreshPromise = new Promise(async (resolve, reject) => {
+        try {
+          const token = await this.createNewAuthToken();
+
+          resolve(token);
+        } catch (e) {
+          reject(e);
+        }
 
         this.tokenRefreshPromise = undefined;
-        resolve(token);
       });
     }
 
