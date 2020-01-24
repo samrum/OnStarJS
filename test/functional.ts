@@ -35,7 +35,7 @@ const onStar = OnStar.create(config);
       );
     }
   } catch (e) {
-    console.error(e.message);
+    console.error("Functional Test Error", e.message);
 
     if (e.request) {
       console.error(`Request: ${e.request.path}`);
