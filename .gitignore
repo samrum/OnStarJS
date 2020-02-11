@@ -4,3 +4,4 @@ dist
 coverage
 .rpt2_cache
 testCredentials.json
+.env
