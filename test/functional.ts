@@ -1,7 +1,14 @@
+import dotenv from "dotenv";
+dotenv.config();
 import OnStar from "../src/index";
-import config from "../testCredentials.json";
 
-const onStar = OnStar.create(config);
+const onStar = OnStar.create({
+  deviceId: process.env.DEVICEID || "",
+  vin: process.env.VIN || "",
+  username: process.env.USERNAME || "",
+  password: process.env.PASSWORD || "",
+  onStarPin: process.env.ONSTARPIN || "",
+});
 
 (async () => {
   try {
