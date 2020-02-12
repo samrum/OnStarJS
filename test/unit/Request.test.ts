@@ -1,4 +1,4 @@
-import Request, { RequestMethod } from "../src/Request";
+import Request, { RequestMethod } from "../../src/Request";
 
 describe("Request", () => {
   test("Property Methods", () => {

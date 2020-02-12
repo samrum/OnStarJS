@@ -1,4 +1,4 @@
-import RequestResult from "../src/RequestResult";
+import RequestResult from "../../src/RequestResult";
 
 describe("RequestResult", () => {
   test("Property Methods", () => {

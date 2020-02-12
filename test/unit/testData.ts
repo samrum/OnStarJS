@@ -1,4 +1,4 @@
-import { OAuthToken } from "../src/types";
+import { OAuthToken } from "../../src/types";
 
 const testConfig = {
   deviceId: "742249ce-18e0-4c82-8bb2-9975367a7631",

@@ -1,6 +1,6 @@
 {
   "name": "onstarjs",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "Unofficial package for making OnStar API requests",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -14,9 +14,10 @@
   "scripts": {
     "build": "rm -rf dist && rollup -c",
     "dev": "rm -rf dist && rollup -c -w",
-    "test": "jest",
-    "coverage": "jest --coverage",
-    "functional": "ts-node test/functional.ts",
+    "test": "jest test/unit",
+    "test:unit": "jest test/unit",
+    "test:coverage": "jest test/unit --coverage",
+    "test:functional": "jest test/functional",
     "prepublishOnly": "yarn run test && yarn run build"
   },
   "sideEffects": false,
@@ -49,6 +50,7 @@
     "@types/jsonwebtoken": "^8.3.2",
     "@types/uuid": "^3.4.4",
     "coveralls": "^3.0.3",
+    "dotenv": "^8.2.0",
     "jest": "^24.7.1",
     "prettier": "^1.16.4",
     "rollup": "^1.9.0",
