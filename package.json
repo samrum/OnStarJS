@@ -14,9 +14,10 @@
   "scripts": {
     "build": "rm -rf dist && rollup -c",
     "dev": "rm -rf dist && rollup -c -w",
-    "test": "jest",
-    "coverage": "jest --coverage",
-    "functional": "ts-node test/functional.ts",
+    "test": "jest test/unit",
+    "test:unit": "jest test/unit",
+    "test:coverage": "jest test/unit --coverage",
+    "test:functional": "jest test/functional",
     "prepublishOnly": "yarn run test && yarn run build"
   },
   "sideEffects": false,

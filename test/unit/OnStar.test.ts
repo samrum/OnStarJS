@@ -1,7 +1,7 @@
 import { mock, instance } from "ts-mockito";
 
-import OnStar from "../src/index";
-import RequestService from "../src/RequestService";
+import OnStar from "../../src/index";
+import RequestService from "../../src/RequestService";
 import { testConfig } from "./testData";
 
 let onStar: OnStar;

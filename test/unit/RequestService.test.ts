@@ -1,7 +1,7 @@
 import { mock, instance, when, anything } from "ts-mockito";
-import TokenHandler from "../src/TokenHandler";
-import { HttpClient } from "../src/types";
-import RequestService from "../src/RequestService";
+import TokenHandler from "../../src/TokenHandler";
+import { HttpClient } from "../../src/types";
+import RequestService from "../../src/RequestService";
 import { testConfig, authToken, expiredAuthToken } from "./testData";
 
 let requestService: RequestService;

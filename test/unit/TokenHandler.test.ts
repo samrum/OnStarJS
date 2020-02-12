@@ -1,4 +1,4 @@
-import TokenHandler from "../src/TokenHandler";
+import TokenHandler from "../../src/TokenHandler";
 import { testConfig, authToken, expiredAuthToken } from "./testData";
 
 let tokenHandler: TokenHandler;

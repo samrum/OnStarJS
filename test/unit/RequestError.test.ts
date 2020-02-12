@@ -1,5 +1,5 @@
-import Request from "../src/Request";
-import RequestError from "../src/RequestError";
+import Request from "../../src/Request";
+import RequestError from "../../src/RequestError";
 
 describe("RequestError", () => {
   test("Property Methods", () => {
