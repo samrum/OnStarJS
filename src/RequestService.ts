@@ -10,6 +10,7 @@ import {
   ChargeOverrideOptions,
   ChargingProfileChargeMode,
   ChargingProfileRateType,
+  CommandResponse,
   DiagnosticRequestItem,
   DiagnosticsRequestOptions,
   DoorRequestOptions,
@@ -18,6 +19,7 @@ import {
   OnStarConfig,
   Result,
   SetChargingProfileRequestOptions,
+  CommandResponseStatus,
 } from "./types";
 
 const ONSTAR_API_BASE = "https://api.gm.com/api/v1";
@@ -328,7 +330,7 @@ class RequestService {
         const { commandResponse } = data;
 
         if (commandResponse) {
-          const { requestTime, status, url, type } = commandResponse;
+          const { requestTime, status, url, type } = commandResponse as CommandResponse;
 
           const requestTimestamp = new Date(requestTime).getTime();
 
@@ -340,11 +342,11 @@ class RequestService {
               .setRequest(request);
           }
 
-          if (status === "failure") {
+          if (status === CommandResponseStatus.failure) {
             throw new RequestError("Command Failure")
               .setResponse(response)
               .setRequest(request);
-          } else if (status === "inProgress" && type !== "connect") {
+          } else if (status === CommandResponseStatus.inProgress && type !== "connect") {
             await this.checkRequestPause();
 
             const request = new Request(url)
@@ -357,7 +359,7 @@ class RequestService {
         }
       }
 
-      return new RequestResult("success").setResponse(response).getResult();
+      return new RequestResult(CommandResponseStatus.success).setResponse(response).getResult();
     } catch (error) {
       if (error instanceof RequestError) {
         throw error;

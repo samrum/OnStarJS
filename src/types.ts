@@ -38,11 +38,17 @@ export interface RequestResponse {
   commandResponse?: CommandResponse;
 }
 
+export enum CommandResponseStatus {
+  success = "success",
+  failure = "failure",
+  inProgress = "inProgress",
+}
+
 export interface CommandResponse {
   body?: CommandResponseBody;
   completionTime?: string;
   requestTime: string;
-  status: string;
+  status: CommandResponseStatus;
   type: string;
   url: string;
 }
