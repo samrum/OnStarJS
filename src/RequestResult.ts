@@ -1,12 +1,12 @@
-import { Result, ResultResponse } from "./types";
+import { Result, RequestResponse } from "./types";
 
 class RequestResult {
-  private response?: ResultResponse;
+  private response?: RequestResponse;
   private message?: string;
 
   constructor(private status: string) {}
 
-  setResponse(response: ResultResponse) {
+  setResponse(response: RequestResponse) {
     this.response = response;
 
     return this;
@@ -19,9 +19,9 @@ class RequestResult {
   }
 
   getResult(): Result {
-    const result = {
+    const result: Result = {
       status: this.status,
-    } as Result;
+    };
 
     if (this.response) {
       result.response = this.response;

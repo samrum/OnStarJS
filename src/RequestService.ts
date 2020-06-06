@@ -10,13 +10,13 @@ import {
   ChargeOverrideOptions,
   ChargingProfileChargeMode,
   ChargingProfileRateType,
-  CommandResponse,
   DiagnosticRequestItem,
   DiagnosticsRequestOptions,
   DoorRequestOptions,
   HttpClient,
   OAuthToken,
   OnStarConfig,
+  RequestResponse,
   Result,
   SetChargingProfileRequestOptions,
   CommandResponseStatus,
@@ -295,6 +295,10 @@ class RequestService {
 
     const { response } = await this.authTokenRequest(jwt);
 
+    if (typeof response?.data !== 'string') {
+      throw new Error('Failed to fetch token');
+    }
+
     return this.tokenHandler.decodeAuthRequestResponse(response.data);
   }
 
@@ -335,7 +339,7 @@ class RequestService {
             status,
             url,
             type,
-          } = commandResponse as CommandResponse;
+          } = commandResponse;
 
           const requestTimestamp = new Date(requestTime).getTime();
 
@@ -392,7 +396,7 @@ class RequestService {
     }
   }
 
-  private async makeClientRequest(request: Request): Promise<any> {
+  private async makeClientRequest(request: Request): Promise<RequestResponse> {
     const headers = await this.getHeaders(request);
     let requestOptions = {
       headers: {

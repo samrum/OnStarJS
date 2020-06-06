@@ -1,6 +1,12 @@
 export interface HttpClient {
-  post(url: string, data: any, config: any): Promise<any>;
-  get(url: string, config: any): Promise<any>;
+  post(url: string, data: any, config: any): Promise<RequestResponse>;
+  get(url: string, config: any): Promise<RequestResponse>;
+}
+
+export interface RequestResponse {
+  data: string | {
+    commandResponse?: CommandResponse;
+  };
 }
 
 export interface OnStarConfig {
@@ -34,10 +40,6 @@ interface UserInfo {
   country: string;
 }
 
-export interface RequestResponse {
-  commandResponse?: CommandResponse;
-}
-
 export enum CommandResponseStatus {
   success = "success",
   failure = "failure",
@@ -59,12 +61,8 @@ export interface CommandResponseBody {
 
 export interface Result {
   status: string;
-  response: ResultResponse;
+  response?: RequestResponse;
   message?: string;
-}
-
-export interface ResultResponse {
-  data: any;
 }
 
 export enum AlertRequestAction {
