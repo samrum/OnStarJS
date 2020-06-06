@@ -1,10 +1,10 @@
-import { Result, ResultResponse, CommandResponseStatus } from "./types";
+import { Result, ResultResponse } from "./types";
 
 class RequestResult {
   private response?: ResultResponse;
   private message?: string;
 
-  constructor(private status: CommandResponseStatus) {}
+  constructor(private status: string) {}
 
   setResponse(response: ResultResponse) {
     this.response = response;
