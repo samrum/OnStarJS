@@ -155,8 +155,8 @@ class RequestService {
   async setChargingProfile(
     options: SetChargingProfileRequestOptions = {},
   ): Promise<Result> {
-    const request = new Request(
-      this.getCommandUrl(OnStarApiCommand.setChargingProfile),
+    const request = this.getCommandRequest(
+      OnStarApiCommand.setChargingProfile,
     ).setBody({
       chargingProfile: {
         chargeMode: ChargingProfileChargeMode.Immediate,
@@ -233,8 +233,8 @@ class RequestService {
   }
 
   private async connectRequest(): Promise<Result> {
-    const request = new Request(
-      this.getCommandUrl(OnStarApiCommand.connect),
+    const request = this.getCommandRequest(
+      OnStarApiCommand.connect,
     ).setUpgradeRequired(false);
 
     return this.sendRequest(request);
@@ -330,7 +330,12 @@ class RequestService {
         const { commandResponse } = data;
 
         if (commandResponse) {
-          const { requestTime, status, url, type } = commandResponse as CommandResponse;
+          const {
+            requestTime,
+            status,
+            url,
+            type,
+          } = commandResponse as CommandResponse;
 
           const requestTimestamp = new Date(requestTime).getTime();
 
@@ -346,7 +351,10 @@ class RequestService {
             throw new RequestError("Command Failure")
               .setResponse(response)
               .setRequest(request);
-          } else if (status === CommandResponseStatus.inProgress && type !== "connect") {
+          } else if (
+            status === CommandResponseStatus.inProgress &&
+            type !== "connect"
+          ) {
             await this.checkRequestPause();
 
             const request = new Request(url)
@@ -359,7 +367,9 @@ class RequestService {
         }
       }
 
-      return new RequestResult(CommandResponseStatus.success).setResponse(response).getResult();
+      return new RequestResult(CommandResponseStatus.success)
+        .setResponse(response)
+        .getResult();
     } catch (error) {
       if (error instanceof RequestError) {
         throw error;
