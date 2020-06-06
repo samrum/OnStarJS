@@ -52,7 +52,7 @@
     "coveralls": "^3.0.3",
     "dotenv": "^8.2.0",
     "jest": "^24.7.1",
-    "prettier": "^1.16.4",
+    "prettier": "^2.0.5",
     "rollup": "^1.9.0",
     "rollup-plugin-typescript2": "^0.20.1",
     "ts-jest": "^24.0.2",
