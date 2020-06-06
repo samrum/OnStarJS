@@ -13,7 +13,7 @@ describe("RequestError", () => {
           type: "unlockDoor",
           url: "https://foo.bar",
         },
-      }
+      },
     };
     const request = new Request("https://foo.bar");
 

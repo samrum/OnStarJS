@@ -4,9 +4,11 @@ export interface HttpClient {
 }
 
 export interface RequestResponse {
-  data: string | {
-    commandResponse?: CommandResponse;
-  };
+  data?:
+    | string
+    | {
+        commandResponse?: CommandResponse;
+      };
 }
 
 export interface OnStarConfig {

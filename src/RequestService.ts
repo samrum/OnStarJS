@@ -295,8 +295,8 @@ class RequestService {
 
     const { response } = await this.authTokenRequest(jwt);
 
-    if (typeof response?.data !== 'string') {
-      throw new Error('Failed to fetch token');
+    if (typeof response?.data !== "string") {
+      throw new Error("Failed to fetch token");
     }
 
     return this.tokenHandler.decodeAuthRequestResponse(response.data);
@@ -334,12 +334,7 @@ class RequestService {
         const { commandResponse } = data;
 
         if (commandResponse) {
-          const {
-            requestTime,
-            status,
-            url,
-            type,
-          } = commandResponse;
+          const { requestTime, status, url, type } = commandResponse;
 
           const requestTimestamp = new Date(requestTime).getTime();
 
