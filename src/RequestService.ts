@@ -3,18 +3,38 @@ import Request, { RequestMethod } from "./Request";
 import RequestResult from "./RequestResult";
 import RequestError from "./RequestError";
 import {
+  AlertRequestAction,
+  AlertRequestOptions,
+  AlertRequestOverride,
+  ChargeOverrideMode,
+  ChargeOverrideOptions,
+  ChargingProfileChargeMode,
+  ChargingProfileRateType,
+  DiagnosticRequestItem,
+  DiagnosticsRequestOptions,
+  DoorRequestOptions,
   HttpClient,
   OAuthToken,
   OnStarConfig,
   Result,
-  AlertRequestOptions,
-  DiagnosticsRequestOptions,
   SetChargingProfileRequestOptions,
-  DoorRequestOptions,
-  ChargeOverrideOptions,
 } from "./types";
 
 const ONSTAR_API_BASE = "https://api.gm.com/api/v1";
+
+enum OnStarApiCommand {
+  alert = "alert",
+  cancelAlert = "cancelAlert",
+  cancelStart = "cancelStart",
+  chargeOverride = "chargeOverride",
+  connect = "connect",
+  diagnostics = "diagnostics",
+  getChargingProfile = "getChargingProfile",
+  lockDoor = "lockDoor",
+  setChargingProfile = "setChargingProfile",
+  start = "start",
+  unlockDoor = "unlockDoor",
+}
 
 class RequestService {
   private config: OnStarConfig;
@@ -53,53 +73,52 @@ class RequestService {
   }
 
   async start(): Promise<Result> {
-    const request = new Request(this.getCommandUrl("start"));
+    const request = this.getCommandRequest(OnStarApiCommand.start);
 
     return this.sendRequest(request);
   }
 
   async cancelStart(): Promise<Result> {
-    const request = new Request(this.getCommandUrl("cancelStart"));
+    const request = this.getCommandRequest(OnStarApiCommand.cancelStart);
 
     return this.sendRequest(request);
   }
 
-  async lockDoor(options?: DoorRequestOptions): Promise<Result> {
-    const userOptions = options || {};
-
-    const request = new Request(this.getCommandUrl("lockDoor")).setBody({
+  async lockDoor(options: DoorRequestOptions = {}): Promise<Result> {
+    const request = this.getCommandRequest(OnStarApiCommand.lockDoor).setBody({
       lockDoorRequest: {
         delay: 0,
-        ...userOptions,
+        ...options,
       },
     });
 
     return this.sendRequest(request);
   }
 
-  async unlockDoor(options?: DoorRequestOptions): Promise<Result> {
-    const userOptions = options || {};
-
-    const request = new Request(this.getCommandUrl("unlockDoor")).setBody({
-      unlockDoorRequest: {
-        delay: 0,
-        ...userOptions,
+  async unlockDoor(options: DoorRequestOptions = {}): Promise<Result> {
+    const request = this.getCommandRequest(OnStarApiCommand.unlockDoor).setBody(
+      {
+        unlockDoorRequest: {
+          delay: 0,
+          ...options,
+        },
       },
-    });
+    );
 
     return this.sendRequest(request);
   }
 
-  async alert(options?: AlertRequestOptions): Promise<Result> {
-    const userOptions = options || {};
-
-    const request = new Request(this.getCommandUrl("alert")).setBody({
+  async alert(options: AlertRequestOptions = {}): Promise<Result> {
+    const request = this.getCommandRequest(OnStarApiCommand.alert).setBody({
       alertRequest: {
-        action: ["Honk", "Flash"],
+        action: [AlertRequestAction.Honk, AlertRequestAction.Flash],
         delay: 0,
         duration: 1,
-        override: ["DoorOpen", "IgnitionOn"],
-        ...userOptions,
+        override: [
+          AlertRequestOverride.DoorOpen,
+          AlertRequestOverride.IgnitionOn,
+        ],
+        ...options,
       },
     });
 
@@ -107,18 +126,18 @@ class RequestService {
   }
 
   async cancelAlert(): Promise<Result> {
-    const request = new Request(this.getCommandUrl("cancelAlert"));
+    const request = this.getCommandRequest(OnStarApiCommand.cancelAlert);
 
     return this.sendRequest(request);
   }
 
-  async chargeOverride(options?: ChargeOverrideOptions): Promise<Result> {
-    const userOptions = options || {};
-
-    const request = new Request(this.getCommandUrl("chargeOverride")).setBody({
+  async chargeOverride(options: ChargeOverrideOptions = {}): Promise<Result> {
+    const request = this.getCommandRequest(
+      OnStarApiCommand.chargeOverride,
+    ).setBody({
       chargeOverrideRequest: {
-        mode: "CHARGE_NOW",
-        ...userOptions,
+        mode: ChargeOverrideMode.ChargeNow,
+        ...options,
       },
     });
 
@@ -126,41 +145,39 @@ class RequestService {
   }
 
   async getChargingProfile(): Promise<Result> {
-    const request = new Request(this.getCommandUrl("getChargingProfile"));
+    const request = this.getCommandRequest(OnStarApiCommand.getChargingProfile);
 
     return this.sendRequest(request);
   }
 
   async setChargingProfile(
-    options?: SetChargingProfileRequestOptions,
+    options: SetChargingProfileRequestOptions = {},
   ): Promise<Result> {
-    const userOptions = options || {};
-
     const request = new Request(
-      this.getCommandUrl("setChargingProfile"),
+      this.getCommandUrl(OnStarApiCommand.setChargingProfile),
     ).setBody({
       chargingProfile: {
-        chargeMode: "IMMEDIATE",
-        rateType: "MIDPEAK",
-        ...userOptions,
+        chargeMode: ChargingProfileChargeMode.Immediate,
+        rateType: ChargingProfileRateType.Midpeak,
+        ...options,
       },
     });
 
     return this.sendRequest(request);
   }
 
-  async diagnostics(options?: DiagnosticsRequestOptions): Promise<Result> {
-    const userOptions = options || {};
-
-    const request = new Request(this.getCommandUrl("diagnostics")).setBody({
+  async diagnostics(options: DiagnosticsRequestOptions = {}): Promise<Result> {
+    const request = this.getCommandRequest(
+      OnStarApiCommand.diagnostics,
+    ).setBody({
       diagnosticsRequest: {
         diagnosticItem: [
-          "ODOMETER",
-          "TIRE PRESSURE",
-          "AMBIENT AIR TEMPERATURE",
-          "LAST TRIP DISTANCE",
+          DiagnosticRequestItem.Odometer,
+          DiagnosticRequestItem.TirePressure,
+          DiagnosticRequestItem.AmbientAirTemperature,
+          DiagnosticRequestItem.LastTripDistance,
         ],
-        ...userOptions,
+        ...options,
       },
     });
 
@@ -175,6 +192,10 @@ class RequestService {
       .setMethod(RequestMethod.Get);
 
     return this.sendRequest(request);
+  }
+
+  private getCommandRequest(command: OnStarApiCommand): Request {
+    return new Request(this.getCommandUrl(command));
   }
 
   private getApiUrlForPath(path: string): string {
@@ -211,7 +232,7 @@ class RequestService {
 
   private async connectRequest(): Promise<Result> {
     const request = new Request(
-      this.getCommandUrl("connect"),
+      this.getCommandUrl(OnStarApiCommand.connect),
     ).setUpgradeRequired(false);
 
     return this.sendRequest(request);
@@ -385,7 +406,7 @@ class RequestService {
   }
 
   private checkRequestPause() {
-    return new Promise(resolve =>
+    return new Promise((resolve) =>
       setTimeout(resolve, this.checkRequestTimeout),
     );
   }

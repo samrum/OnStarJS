@@ -61,62 +61,84 @@ export interface ResultResponse {
   data: any;
 }
 
-type AlertAction = "Honk" | "Flash";
-type AlertOverride = "DoorOpen" | "IgnitionOn";
-
-export interface AlertRequestOptions {
-  action?: AlertAction[];
-  delay?: number;
-  duration?: number;
-  override?: AlertOverride[];
+export enum AlertRequestAction {
+  Honk = "Honk",
+  Flash = "Flash",
 }
 
-type DiagnosticItem =
-  | "ENGINE COOLANT TEMP"
-  | "ENGINE RPM"
-  | "LAST TRIP FUEL ECONOMY"
-  | "EV ESTIMATED CHARGE END"
-  | "EV BATTERY LEVEL"
-  | "OIL LIFE"
-  | "EV PLUG VOLTAGE"
-  | "LIFETIME FUEL ECON"
-  | "HOTSPOT CONFIG"
-  | "LIFETIME FUEL USED"
-  | "ODOMETER"
-  | "HOTSPOT STATUS"
-  | "LIFETIME EV ODOMETER"
-  | "EV PLUG STATE"
-  | "EV CHARGE STATE"
-  | "TIRE PRESSURE"
-  | "AMBIENT AIR TEMPERATURE"
-  | "LAST TRIP DISTANCE"
-  | "INTERM VOLT BATT VOLT"
-  | "GET COMMUTE SCHEDULE"
-  | "GET CHARGE MODE"
-  | "EV SCHEDULED CHARGE START"
-  | "FUEL TANK INFO"
-  | "HANDS FREE CALLING"
-  | "ENERGY EFFICIENCY"
-  | "VEHICLE RANGE";
+export enum AlertRequestOverride {
+  DoorOpen = "DoorOpen",
+  IgnitionOn = "IgnitionOn",
+}
+
+export interface AlertRequestOptions {
+  action?: AlertRequestAction[];
+  delay?: number;
+  duration?: number;
+  override?: AlertRequestOverride[];
+}
+
+export enum DiagnosticRequestItem {
+  EngineCoolantTemp = "ENGINE COOLANT TEMP",
+  EngineRpm = "ENGINE RPM",
+  LastTripFuelEconomy = "LAST TRIP FUEL ECONOMY",
+  EvEstimatedChargeEnd = "EV ESTIMATED CHARGE END",
+  EvBatteryLevel = "EV BATTERY LEVEL",
+  OilLife = "OIL LIFE",
+  EvPlugVoltage = "EV PLUG VOLTAGE",
+  LifetimeFuelEcon = "LIFETIME FUEL ECON",
+  HotspotConfig = "HOTSPOT CONFIG",
+  LifetimeFuelUsed = "LIFETIME FUEL USED",
+  Odometer = "ODOMETER",
+  HotspotStatus = "HOTSPOT STATUS",
+  LifetimeEvOdometer = "LIFETIME EV ODOMETER",
+  EvPlugState = "EV PLUG STATE",
+  EvChargeState = "EV CHARGE STATE",
+  TirePressure = "TIRE PRESSURE",
+  AmbientAirTemperature = "AMBIENT AIR TEMPERATURE",
+  LastTripDistance = "LAST TRIP DISTANCE",
+  IntermVoltBattVolt = "INTERM VOLT BATT VOLT",
+  GetCommuteSchedule = "GET COMMUTE SCHEDULE",
+  GetChargeMode = "GET CHARGE MODE",
+  EvScheduledChargeStart = "EV SCHEDULED CHARGE START",
+  FuelTankInfo = "FUEL TANK INFO",
+  HandsFreeCalling = "HANDS FREE CALLING",
+  EnergyEfficiency = "ENERGY EFFICIENCY",
+  VehicleRange = "VEHICLE RANGE",
+}
 
 export interface DiagnosticsRequestOptions {
-  diagnosticItem?: DiagnosticItem[];
+  diagnosticItem?: DiagnosticRequestItem[];
+}
+
+export enum ChargingProfileChargeMode {
+  DefaultImmediate = "DEFAULT_IMMEDIATE",
+  Immediate = "IMMEDIATE",
+  DepartureBased = "DEPARTURE_BASED",
+  RateBased = "RATE_BASED",
+  PhevAfterMidnight = "PHEV_AFTER_MIDNIGHT",
+}
+
+export enum ChargingProfileRateType {
+  Offpeak = "OFFPEAK",
+  Midpeak = "MIDPEAK",
+  Peak = "PEAK",
 }
 
 export interface SetChargingProfileRequestOptions {
-  chargeMode?:
-    | "DEFAULT_IMMEDIATE"
-    | "IMMEDIATE"
-    | "DEPARTURE_BASED"
-    | "RATE_BASED"
-    | "PHEV_AFTER_MIDNIGHT";
-  rateType?: "OFFPEAK" | "MIDPEAK" | "PEAK";
+  chargeMode?: ChargingProfileChargeMode;
+  rateType?: ChargingProfileRateType;
 }
 
 export interface DoorRequestOptions {
   delay?: number;
 }
 
+export enum ChargeOverrideMode {
+  ChargeNow = "CHARGE_NOW",
+  CancelOverride = "CANCEL_OVERRIDE",
+}
+
 export interface ChargeOverrideOptions {
-  mode?: "CHARGE_NOW" | "CANCEL_OVERRIDE";
+  mode?: ChargeOverrideMode;
 }
