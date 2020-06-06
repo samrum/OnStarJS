@@ -59,47 +59,69 @@ describe("RequestService", () => {
   });
 
   test("start", async () => {
-    await requestService.start();
+    const result = await requestService.start();
+
+    expect(result.status).toEqual("success");
   });
 
   test("cancelStart", async () => {
-    await requestService.cancelStart();
+    const result = await requestService.cancelStart();
+
+    expect(result.status).toEqual("success");
   });
 
   test("lockDoor", async () => {
-    await requestService.lockDoor();
+    const result = await requestService.lockDoor();
+
+    expect(result.status).toEqual("success");
   });
 
   test("unlockDoor", async () => {
-    await requestService.unlockDoor();
+    const result = await requestService.unlockDoor();
+
+    expect(result.status).toEqual("success");
   });
 
   test("alert", async () => {
-    await requestService.alert();
+    const result = await requestService.alert();
+
+    expect(result.status).toEqual("success");
   });
 
   test("cancelAlert", async () => {
-    await requestService.cancelAlert();
+    const result = await requestService.cancelAlert();
+
+    expect(result.status).toEqual("success");
   });
 
   test("chargeOverride", async () => {
-    await requestService.chargeOverride();
+    const result = await requestService.chargeOverride();
+
+    expect(result.status).toEqual("success");
   });
 
   test("getChargingProfile", async () => {
-    await requestService.getChargingProfile();
+    const result = await requestService.getChargingProfile();
+
+    expect(result.status).toEqual("success");
   });
 
   test("setChargingProfile", async () => {
-    await requestService.setChargingProfile();
+    const result = await requestService.setChargingProfile();
+
+    expect(result.status).toEqual("success");
   });
 
   test("diagnostics", async () => {
-    await requestService.diagnostics();
+    const result = await requestService.diagnostics();
+
+    expect(result.status).toEqual("success");
   });
 
   test("getAccountVehicles", async () => {
-    await requestService.getAccountVehicles();
+    const result = await requestService.getAccountVehicles();
+
+    expect(result.status).toEqual("success");
   });
 
   test("requestWithExpiredAuthToken", async () => {
