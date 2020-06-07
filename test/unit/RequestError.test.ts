@@ -1,15 +1,18 @@
 import Request from "../../src/Request";
 import RequestError from "../../src/RequestError";
+import { CommandResponseStatus } from "../../src/types";
 
 describe("RequestError", () => {
   test("Property Methods", () => {
     const requestError = new RequestError("Error Message");
     const response = {
-      commandResponse: {
-        requestTime: "time",
-        status: "success",
-        type: "unlockDoor",
-        url: "https://foo.bar",
+      data: {
+        commandResponse: {
+          requestTime: "time",
+          status: CommandResponseStatus.success,
+          type: "unlockDoor",
+          url: "https://foo.bar",
+        },
       },
     };
     const request = new Request("https://foo.bar");

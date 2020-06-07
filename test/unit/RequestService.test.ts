@@ -1,13 +1,15 @@
 import { mock, instance, when, anything } from "ts-mockito";
 import TokenHandler from "../../src/TokenHandler";
-import { HttpClient } from "../../src/types";
+import { HttpClient, CommandResponseStatus } from "../../src/types";
 import RequestService from "../../src/RequestService";
 import { testConfig, authToken, expiredAuthToken } from "./testData";
 
-let requestService: RequestService;
-let httpClient: HttpClient;
-
 describe("RequestService", () => {
+  let requestService: RequestService;
+  let httpClient: HttpClient;
+
+  const commandResponseUrl = "requestCheckUrl";
+
   beforeEach(() => {
     const tokenHandler = mock(TokenHandler);
     when(tokenHandler.decodeAuthRequestResponse(anything())).thenReturn(
@@ -23,8 +25,8 @@ describe("RequestService", () => {
           data: {
             commandResponse: {
               requestTime,
-              status: "success",
-              url: "requestCheckUrl",
+              status: CommandResponseStatus.success,
+              url: commandResponseUrl,
             },
           },
         })
@@ -32,8 +34,8 @@ describe("RequestService", () => {
           data: {
             commandResponse: {
               requestTime,
-              status: "inProgress",
-              url: "requestCheckUrl",
+              status: CommandResponseStatus.inProgress,
+              url: commandResponseUrl,
             },
           },
         }),
@@ -41,8 +43,8 @@ describe("RequestService", () => {
         data: {
           commandResponse: {
             requestTime,
-            status: "success",
-            url: "requestCheckUrl",
+            status: CommandResponseStatus.success,
+            url: commandResponseUrl,
           },
         },
       }),
@@ -59,47 +61,69 @@ describe("RequestService", () => {
   });
 
   test("start", async () => {
-    await requestService.start();
+    const result = await requestService.start();
+
+    expect(result.status).toEqual(CommandResponseStatus.success);
   });
 
   test("cancelStart", async () => {
-    await requestService.cancelStart();
+    const result = await requestService.cancelStart();
+
+    expect(result.status).toEqual(CommandResponseStatus.success);
   });
 
   test("lockDoor", async () => {
-    await requestService.lockDoor();
+    const result = await requestService.lockDoor();
+
+    expect(result.status).toEqual(CommandResponseStatus.success);
   });
 
   test("unlockDoor", async () => {
-    await requestService.unlockDoor();
+    const result = await requestService.unlockDoor();
+
+    expect(result.status).toEqual(CommandResponseStatus.success);
   });
 
   test("alert", async () => {
-    await requestService.alert();
+    const result = await requestService.alert();
+
+    expect(result.status).toEqual(CommandResponseStatus.success);
   });
 
   test("cancelAlert", async () => {
-    await requestService.cancelAlert();
+    const result = await requestService.cancelAlert();
+
+    expect(result.status).toEqual(CommandResponseStatus.success);
   });
 
   test("chargeOverride", async () => {
-    await requestService.chargeOverride();
+    const result = await requestService.chargeOverride();
+
+    expect(result.status).toEqual(CommandResponseStatus.success);
   });
 
   test("getChargingProfile", async () => {
-    await requestService.getChargingProfile();
+    const result = await requestService.getChargingProfile();
+
+    expect(result.status).toEqual(CommandResponseStatus.success);
   });
 
   test("setChargingProfile", async () => {
-    await requestService.setChargingProfile();
+    const result = await requestService.setChargingProfile();
+
+    expect(result.status).toEqual(CommandResponseStatus.success);
   });
 
   test("diagnostics", async () => {
-    await requestService.diagnostics();
+    const result = await requestService.diagnostics();
+
+    expect(result.status).toEqual(CommandResponseStatus.success);
   });
 
   test("getAccountVehicles", async () => {
-    await requestService.getAccountVehicles();
+    const result = await requestService.getAccountVehicles();
+
+    expect(result.status).toEqual(CommandResponseStatus.success);
   });
 
   test("requestWithExpiredAuthToken", async () => {
@@ -109,8 +133,8 @@ describe("RequestService", () => {
         data: {
           commandResponse: {
             requestTime: Date.now() + 1000,
-            status: "success",
-            url: "requestCheckUrl",
+            status: CommandResponseStatus.success,
+            url: commandResponseUrl,
           },
         },
       })
@@ -120,7 +144,29 @@ describe("RequestService", () => {
 
     requestService.setAuthToken(expiredAuthToken);
 
-    requestService.setClient(httpClient).start();
+    const result = await requestService.setClient(httpClient).start();
+
+    expect(result.status).toEqual(CommandResponseStatus.success);
+  });
+
+  test("requestWithExpiredAuthTokenAndFailedTokenFetch", async () => {
+    httpClient.post = jest
+      .fn()
+      .mockResolvedValue({
+        data: {
+          commandResponse: {
+            requestTime: Date.now() + 1000,
+            status: CommandResponseStatus.success,
+            url: commandResponseUrl,
+          },
+        },
+      });
+
+    requestService.setAuthToken(expiredAuthToken);
+
+    expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+      /^Failed to fetch token$/,
+    );
   });
 
   test("requestCheckExceedsTimeoutError", async () => {
@@ -128,13 +174,13 @@ describe("RequestService", () => {
       data: {
         commandResponse: {
           requestTime: Date.now() - 1000,
-          status: "inProgress",
-          url: "requestCheckUrl",
+          status: CommandResponseStatus.inProgress,
+          url: commandResponseUrl,
         },
       },
     });
 
-    await expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+    expect(requestService.setClient(httpClient).start()).rejects.toThrow(
       /^Command Timeout$/,
     );
   });
@@ -149,7 +195,7 @@ describe("RequestService", () => {
       },
     });
 
-    await expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+    expect(requestService.setClient(httpClient).start()).rejects.toThrow(
       /^Command Failure$/,
     );
   });
@@ -163,7 +209,7 @@ describe("RequestService", () => {
       },
     });
 
-    await expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+    expect(requestService.setClient(httpClient).start()).rejects.toThrow(
       /^Request Failed with status 400 - invalid_client$/,
     );
   });
@@ -175,7 +221,7 @@ describe("RequestService", () => {
       },
     });
 
-    await expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+    expect(requestService.setClient(httpClient).start()).rejects.toThrow(
       /^No response$/,
     );
   });
@@ -185,7 +231,7 @@ describe("RequestService", () => {
       message: "errorMessage",
     });
 
-    await expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+    expect(requestService.setClient(httpClient).start()).rejects.toThrow(
       /^errorMessage$/,
     );
   });

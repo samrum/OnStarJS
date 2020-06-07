@@ -69,15 +69,10 @@ class TokenHandler {
   private generateNonce(): string {
     const uuidHex = Buffer.from(uuidv4(), "utf8").toString("hex");
 
-    const shaHex = crypto
-      .createHash("sha256")
-      .update(uuidHex)
-      .digest("hex");
+    const shaHex = crypto.createHash("sha256").update(uuidHex).digest("hex");
 
     // base32 was used in gm-onstar-probe
-    return Buffer.from(shaHex)
-      .toString("base64")
-      .substring(0, 26);
+    return Buffer.from(shaHex).toString("base64").substring(0, 26);
   }
 }
 
