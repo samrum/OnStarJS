@@ -150,17 +150,15 @@ describe("RequestService", () => {
   });
 
   test("requestWithExpiredAuthTokenAndFailedTokenFetch", async () => {
-    httpClient.post = jest
-      .fn()
-      .mockResolvedValue({
-        data: {
-          commandResponse: {
-            requestTime: Date.now() + 1000,
-            status: CommandResponseStatus.success,
-            url: commandResponseUrl,
-          },
+    httpClient.post = jest.fn().mockResolvedValue({
+      data: {
+        commandResponse: {
+          requestTime: Date.now() + 1000,
+          status: CommandResponseStatus.success,
+          url: commandResponseUrl,
         },
-      });
+      },
+    });
 
     requestService.setAuthToken(expiredAuthToken);
 
