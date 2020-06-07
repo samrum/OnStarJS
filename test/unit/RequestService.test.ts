@@ -147,6 +147,25 @@ describe("RequestService", () => {
     requestService.setClient(httpClient).start();
   });
 
+
+  test("requestWithExpiredAuthTokenAndFailedTokenFetch", async () => {
+    httpClient.post = jest
+      .fn()
+      .mockResolvedValue({
+        data: {
+          commandResponse: {
+            requestTime: Date.now() + 1000,
+            status: CommandResponseStatus.success,
+            url: commandResponseUrl,
+          },
+        },
+      });
+
+    requestService.setAuthToken(expiredAuthToken);
+
+    requestService.setClient(httpClient).start();
+  });
+
   test("requestCheckExceedsTimeoutError", async () => {
     httpClient.post = jest.fn().mockResolvedValue({
       data: {
