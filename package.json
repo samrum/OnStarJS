@@ -20,6 +20,16 @@
     "test:functional": "jest test/functional",
     "prepublishOnly": "yarn run test && yarn run build"
   },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "sideEffects": false,
   "repository": {
     "type": "git",
@@ -51,7 +61,9 @@
     "@types/uuid": "^3.4.4",
     "coveralls": "^3.0.3",
     "dotenv": "^8.2.0",
+    "husky": "^4.2.5",
     "jest": "^26.0.1",
+    "lint-staged": "^10.2.9",
     "prettier": "^2.0.5",
     "rollup": "^1.9.0",
     "rollup-plugin-typescript2": "^0.20.1",
