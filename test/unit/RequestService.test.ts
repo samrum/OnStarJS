@@ -144,9 +144,10 @@ describe("RequestService", () => {
 
     requestService.setAuthToken(expiredAuthToken);
 
-    requestService.setClient(httpClient).start();
-  });
+    const result = await requestService.setClient(httpClient).start();
 
+    expect(result.status).toEqual(CommandResponseStatus.success);
+  });
 
   test("requestWithExpiredAuthTokenAndFailedTokenFetch", async () => {
     httpClient.post = jest
@@ -163,7 +164,9 @@ describe("RequestService", () => {
 
     requestService.setAuthToken(expiredAuthToken);
 
-    requestService.setClient(httpClient).start();
+    expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+      /^Failed to fetch token$/,
+    );
   });
 
   test("requestCheckExceedsTimeoutError", async () => {
@@ -177,7 +180,7 @@ describe("RequestService", () => {
       },
     });
 
-    await expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+    expect(requestService.setClient(httpClient).start()).rejects.toThrow(
       /^Command Timeout$/,
     );
   });
@@ -192,7 +195,7 @@ describe("RequestService", () => {
       },
     });
 
-    await expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+    expect(requestService.setClient(httpClient).start()).rejects.toThrow(
       /^Command Failure$/,
     );
   });
@@ -206,7 +209,7 @@ describe("RequestService", () => {
       },
     });
 
-    await expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+    expect(requestService.setClient(httpClient).start()).rejects.toThrow(
       /^Request Failed with status 400 - invalid_client$/,
     );
   });
@@ -218,7 +221,7 @@ describe("RequestService", () => {
       },
     });
 
-    await expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+    expect(requestService.setClient(httpClient).start()).rejects.toThrow(
       /^No response$/,
     );
   });
@@ -228,7 +231,7 @@ describe("RequestService", () => {
       message: "errorMessage",
     });
 
-    await expect(requestService.setClient(httpClient).start()).rejects.toThrow(
+    expect(requestService.setClient(httpClient).start()).rejects.toThrow(
       /^errorMessage$/,
     );
   });
