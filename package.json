@@ -21,7 +21,7 @@
     "prepublishOnly": "yarn run test && yarn run build"
   },
   "lint-staged": {
-    "*.ts": [
+    "*.{js,ts}": [
       "prettier --write"
     ]
   },
