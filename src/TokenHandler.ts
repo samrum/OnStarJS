@@ -4,8 +4,8 @@ import uuidv4 from "uuid/v4";
 
 import { OAuthToken, OnStarConfig } from "./types";
 
-const SECRET_KEY = "KVIZwNskbBdgpyuEalwv";
-const CLIENT_ID = "OMB_CVY_iOS_3P0";
+const SECRET_KEY = "PtztyqMgpYkcg1NifqRdjqU4m5XLKjv23cXD";
+const CLIENT_ID = "OMB_CVY_iOS_3U0";
 
 class TokenHandler {
   constructor(private config: OnStarConfig) {}
