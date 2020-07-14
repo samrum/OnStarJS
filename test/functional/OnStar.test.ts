@@ -22,13 +22,13 @@ describe("OnStarJs", () => {
     const result = await onStar.getAccountVehicles();
 
     expect(result.status).toEqual("success");
-    expect(result.response.data).toHaveProperty("vehicles");
+    expect(result.response?.data).toHaveProperty("vehicles");
   });
 
   test("Lock Door", async () => {
     const result = await onStar.lockDoor();
 
     expect(result.status).toEqual("success");
-    expect(result.response.data).toHaveProperty("commandResponse");
+    expect(result.response?.data).toHaveProperty("commandResponse");
   });
 });
