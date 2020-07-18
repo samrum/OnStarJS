@@ -1,18 +1,18 @@
-name: Tests
+name: tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   unit:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: yarn install, and test
-      run: |
-        yarn install
-        yarn test:unit
+      - uses: actions/checkout@v2
+      - name: yarn install, and test
+        run: |
+          yarn install
+          yarn test:unit
