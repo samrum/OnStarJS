@@ -1,0 +1,16 @@
+name: key check
+
+on:
+  schedule:
+    - cron: "37 5 * * *"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: yarn install, and test keys
+        run: |
+          yarn install
+          yarn test:keys
