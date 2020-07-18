@@ -20,3 +20,14 @@ jobs:
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+  functional:
+    if: github.actor == github.event.repository.owner.login
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: yarn install, and test
+        run: |
+          yarn install
+          yarn test:functional

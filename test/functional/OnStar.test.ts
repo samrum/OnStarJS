@@ -8,12 +8,18 @@ let onStar: OnStar;
 
 describe("OnStarJs", () => {
   beforeAll(() => {
+    const { DEVICEID, VIN, USERNAME, PASSWORD, ONSTARPIN } = process.env;
+
+    if (!DEVICEID || !VIN || !USERNAME || !PASSWORD || !ONSTARPIN) {
+      throw new Error("Missing environment config for functional tests");
+    }
+
     onStar = OnStar.create({
-      deviceId: process.env.DEVICEID || "",
-      vin: process.env.VIN || "",
-      username: process.env.USERNAME || "",
-      password: process.env.PASSWORD || "",
-      onStarPin: process.env.ONSTARPIN || "",
+      deviceId: DEVICEID,
+      vin: VIN,
+      username: USERNAME,
+      password: PASSWORD,
+      onStarPin: ONSTARPIN,
       checkRequestStatus: false,
     });
   });
