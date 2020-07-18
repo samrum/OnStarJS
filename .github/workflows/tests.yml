@@ -15,4 +15,8 @@ jobs:
       - name: yarn install, and test
         run: |
           yarn install
-          yarn test:unit
+          yarn test:coverage
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
