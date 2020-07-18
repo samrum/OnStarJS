@@ -1,0 +1,48 @@
+name: build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: yarn install, and build
+        run: |
+          yarn install
+          yarn build
+
+  test-unit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: yarn install, and test
+        run: |
+          yarn install
+          yarn test:coverage
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  test-functional:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: yarn install, and test
+        run: |
+          yarn install
+          yarn test:functional
+        env:
+          DEVICEID: ${{ secrets.FUNCTIONAL_TEST_DEVICEID }}
+          VIN: ${{ secrets.FUNCTIONAL_TEST_VIN }}
+          USERNAME: ${{ secrets.FUNCTIONAL_TEST_USERNAME }}
+          PASSWORD: ${{ secrets.FUNCTIONAL_TEST_PASSWORD }}
+          ONSTARPIN: ${{ secrets.FUNCTIONAL_TEST_ONSTARPIN }}
