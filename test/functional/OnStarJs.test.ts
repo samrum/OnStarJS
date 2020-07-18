@@ -4,8 +4,6 @@ import OnStar from "../../src/index";
 
 jest.setTimeout(15000);
 
-let onStar: OnStar;
-
 const { DEVICEID, VIN, USERNAME, PASSWORD, ONSTARPIN } = process.env;
 
 if (!DEVICEID || !VIN || !USERNAME || !PASSWORD || !ONSTARPIN) {
@@ -13,6 +11,8 @@ if (!DEVICEID || !VIN || !USERNAME || !PASSWORD || !ONSTARPIN) {
 }
 
 describe("OnStarJs", () => {
+  let onStar: OnStar;
+
   beforeAll(() => {
     onStar = OnStar.create({
       deviceId: DEVICEID,
@@ -24,15 +24,15 @@ describe("OnStarJs", () => {
     });
   });
 
-  test("Account Info", async () => {
+  test("Unupgraded Command Successful", async () => {
     const result = await onStar.getAccountVehicles();
 
     expect(result.status).toEqual("success");
     expect(result.response?.data).toHaveProperty("vehicles");
   });
 
-  test("Lock Door", async () => {
-    const result = await onStar.lockDoor();
+  test("Upgraded Command Successful", async () => {
+    const result = await onStar.cancelAlert();
 
     expect(result.status).toEqual("success");
     expect(result.response?.data).toHaveProperty("commandResponse");
