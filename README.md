@@ -1,7 +1,7 @@
 # OnStarJS
 
 [![npm version](https://badge.fury.io/js/onstarjs.svg)](https://badge.fury.io/js/onstarjs)
-![Test Status](https://github.com/samrum/OnStarJS/workflows/tests/badge.svg)
+![Build Status](https://github.com/samrum/OnStarJS/workflows/build/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/samrum/OnStarJS/badge.svg?branch=master)](https://coveralls.io/github/samrum/OnStarJS?branch=master)
 
 An unofficial NodeJS library to make OnStar requests.
@@ -120,9 +120,9 @@ Use a random version 4 uuid (there are online generators) as a deviceId.
 
 ### Functional
 
-These tests will execute actual requests to the OnStar API. They will perform a Get Account Vehicles request followed by a Lock Door request.
+These tests will execute actual requests to the OnStar API. They will perform a Get Account Vehicles request followed by a Cancel Alert request.
 
-Because of this, the test will require your actual OnStar credentials to run. To provide them, copy `.env.example` to `.env` and replace the placeholder information inside of it with your actual information.
+Because of this, the test will require actual OnStar credentials to run. To provide them, copy `.env.example` to `.env` and replace the placeholder values inside.
 
     yarn test:functional
 
