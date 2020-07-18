@@ -6,14 +6,14 @@ jest.setTimeout(15000);
 
 let onStar: OnStar;
 
+const { DEVICEID, VIN, USERNAME, PASSWORD, ONSTARPIN } = process.env;
+
+if (!DEVICEID || !VIN || !USERNAME || !PASSWORD || !ONSTARPIN) {
+  throw new Error("Missing environment config for functional tests");
+}
+
 describe("OnStarJs", () => {
   beforeAll(() => {
-    const { DEVICEID, VIN, USERNAME, PASSWORD, ONSTARPIN } = process.env;
-
-    if (!DEVICEID || !VIN || !USERNAME || !PASSWORD || !ONSTARPIN) {
-      throw new Error("Missing environment config for functional tests");
-    }
-
     onStar = OnStar.create({
       deviceId: DEVICEID,
       vin: VIN,
