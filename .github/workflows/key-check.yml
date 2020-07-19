@@ -2,10 +2,10 @@ name: key check
 
 on:
   schedule:
-    - cron: "37 5 * * *"
+    - cron: "37 12 * * *"
 
 jobs:
-  test:
+  test-keys:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,3 +14,9 @@ jobs:
         run: |
           yarn install
           yarn test:keys
+        env:
+          DEVICEID: ${{ secrets.FUNCTIONAL_TEST_DEVICEID }}
+          VIN: ${{ secrets.FUNCTIONAL_TEST_VIN }}
+          USERNAME: ${{ secrets.FUNCTIONAL_TEST_USERNAME }}
+          PASSWORD: ${{ secrets.FUNCTIONAL_TEST_PASSWORD }}
+          ONSTARPIN: ${{ secrets.FUNCTIONAL_TEST_ONSTARPIN }}
