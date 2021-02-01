@@ -3,9 +3,7 @@ import crypto from "crypto";
 import uuidv4 from "uuid/v4";
 
 import { OAuthToken, OnStarConfig } from "./types";
-
-const SECRET_KEY = "ELHgo1DUAyBSvtjF8BOJrrLiNpQD5uYuTChi";
-const CLIENT_ID = "OMB_CVY_iOS_4D0";
+import onStarClient from "./onStarClient.json";
 
 class TokenHandler {
   constructor(private config: OnStarConfig) {}
@@ -16,7 +14,7 @@ class TokenHandler {
 
   createUpgradeJWT(): string {
     const payload = {
-      client_id: CLIENT_ID,
+      client_id: onStarClient.clientId,
       credential: this.config.onStarPin,
       credential_type: "PIN",
       device_id: this.config.deviceId,
@@ -25,12 +23,12 @@ class TokenHandler {
       timestamp: this.generateTimestamp(),
     };
 
-    return jwt.sign(payload, SECRET_KEY, { noTimestamp: true });
+    return jwt.sign(payload, onStarClient.secretKey, { noTimestamp: true });
   }
 
   createAuthJWT(): string {
     const payload = {
-      client_id: CLIENT_ID,
+      client_id: onStarClient.clientId,
       device_id: this.config.deviceId,
       grant_type: "password",
       nonce: this.generateNonce(),
@@ -40,7 +38,7 @@ class TokenHandler {
       username: this.config.username,
     };
 
-    return jwt.sign(payload, SECRET_KEY, { noTimestamp: true });
+    return jwt.sign(payload, onStarClient.secretKey, { noTimestamp: true });
   }
 
   decodeAuthRequestResponse(encodedToken: string): OAuthToken {
@@ -51,7 +49,7 @@ class TokenHandler {
   }
 
   private decodeToken(token: string): OAuthToken {
-    const authToken = jwt.verify(token, SECRET_KEY) as OAuthToken;
+    const authToken = jwt.verify(token, onStarClient.secretKey) as OAuthToken;
 
     authToken.expiration = 0;
     authToken.upgraded = false;

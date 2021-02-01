@@ -21,6 +21,7 @@ import {
   SetChargingProfileRequestOptions,
   CommandResponseStatus,
 } from "./types";
+import onStarClient from "./onStarClient.json";
 
 const ONSTAR_API_BASE = "https://api.gm.com/api/v1";
 
@@ -216,7 +217,7 @@ class RequestService {
       Host: "api.gm.com",
       Connection: "keep-alive",
       "Accept-Encoding": "br, gzip, deflate",
-      "User-Agent": "myChevrolet/4.3.0 (iPhone; iOS 14.3.0; Scale/2.00)",
+      "User-Agent": onStarClient.userAgent,
     };
 
     if (request.isAuthRequired()) {
@@ -258,7 +259,7 @@ class RequestService {
       .setBody(jwt)
       .setHeaders({
         "Accept-Language": "en",
-        "User-Agent": "myChevrolet/246 CFNetwork/976 Darwin/18.2.0",
+        "User-Agent": onStarClient.userAgent,
       });
 
     return this.sendRequest(request);
