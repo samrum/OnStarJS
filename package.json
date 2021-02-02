@@ -15,6 +15,7 @@
     "build": "rm -rf dist && rollup -c",
     "dev": "rm -rf dist && rollup -c -w",
     "prepublishOnly": "yarn run test && yarn run build",
+    "prerelease": "yarn run test && yarn run build",
     "release": "standard-version",
     "test": "jest test/unit",
     "test:unit": "jest test/unit",
