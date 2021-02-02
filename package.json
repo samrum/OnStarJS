@@ -14,10 +14,11 @@
   "scripts": {
     "build": "rm -rf dist && rollup -c",
     "dev": "rm -rf dist && rollup -c -w",
-    "prepublishOnly": "yarn run test && yarn run build",
-    "prerelease": "yarn run test && yarn run build",
+    "prepublishOnly": "yarn run test:all && yarn run build",
+    "prerelease": "yarn run test:all && yarn run build",
     "release": "standard-version",
     "test": "jest test/unit",
+    "test:all": "yarn run test:unit && yarn run test:functional",
     "test:unit": "jest test/unit",
     "test:coverage": "jest test/unit --coverage",
     "test:functional": "jest test/functional",
