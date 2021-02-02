@@ -3,7 +3,7 @@ import crypto from "crypto";
 import uuidv4 from "uuid/v4";
 
 import { OAuthToken, OnStarConfig } from "./types";
-import onStarClient from "./onStarClient.json";
+import onStarAppConfig from "./onStarAppConfig.json";
 
 class TokenHandler {
   constructor(private config: OnStarConfig) {}
@@ -14,7 +14,7 @@ class TokenHandler {
 
   createUpgradeJWT(): string {
     const payload = {
-      client_id: onStarClient.clientId,
+      client_id: onStarAppConfig.appId,
       credential: this.config.onStarPin,
       credential_type: "PIN",
       device_id: this.config.deviceId,
@@ -23,22 +23,22 @@ class TokenHandler {
       timestamp: this.generateTimestamp(),
     };
 
-    return jwt.sign(payload, onStarClient.secretKey, { noTimestamp: true });
+    return jwt.sign(payload, onStarAppConfig.appSecret, { noTimestamp: true });
   }
 
   createAuthJWT(): string {
     const payload = {
-      client_id: onStarClient.clientId,
+      client_id: onStarAppConfig.appId,
       device_id: this.config.deviceId,
       grant_type: "password",
       nonce: this.generateNonce(),
       password: this.config.password,
-      scope: "onstar gmoc commerce msso",
+      scope: onStarAppConfig.requiredClientScope,
       timestamp: this.generateTimestamp(),
       username: this.config.username,
     };
 
-    return jwt.sign(payload, onStarClient.secretKey, { noTimestamp: true });
+    return jwt.sign(payload, onStarAppConfig.appSecret, { noTimestamp: true });
   }
 
   decodeAuthRequestResponse(encodedToken: string): OAuthToken {
@@ -49,7 +49,10 @@ class TokenHandler {
   }
 
   private decodeToken(token: string): OAuthToken {
-    const authToken = jwt.verify(token, onStarClient.secretKey) as OAuthToken;
+    const authToken = jwt.verify(
+      token,
+      onStarAppConfig.appSecret,
+    ) as OAuthToken;
 
     authToken.expiration = 0;
     authToken.upgraded = false;

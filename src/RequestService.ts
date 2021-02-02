@@ -21,9 +21,7 @@ import {
   SetChargingProfileRequestOptions,
   CommandResponseStatus,
 } from "./types";
-import onStarClient from "./onStarClient.json";
-
-const ONSTAR_API_BASE = "https://api.gm.com/api/v1";
+import onStarAppConfig from "./onStarAppConfig.json";
 
 enum OnStarApiCommand {
   alert = "alert",
@@ -189,7 +187,7 @@ class RequestService {
 
   async getAccountVehicles(): Promise<Result> {
     const request = new Request(
-      `${ONSTAR_API_BASE}/account/vehicles?includeCommands=true&includeEntit%20lements=true&includeModules=true`,
+      `${onStarAppConfig.serviceUrl}/account/vehicles?includeCommands=true&includeEntit%20lements=true&includeModules=true`,
     )
       .setUpgradeRequired(false)
       .setMethod(RequestMethod.Get);
@@ -202,11 +200,11 @@ class RequestService {
   }
 
   private getApiUrlForPath(path: string): string {
-    return `${ONSTAR_API_BASE}${path}`;
+    return `${onStarAppConfig.serviceUrl}${path}`;
   }
 
   private getCommandUrl(command: string): string {
-    return `${ONSTAR_API_BASE}/account/vehicles/${this.config.vin}/commands/${command}`;
+    return `${onStarAppConfig.serviceUrl}/account/vehicles/${this.config.vin}/commands/${command}`;
   }
 
   private async getHeaders(request: Request): Promise<any> {
@@ -217,7 +215,7 @@ class RequestService {
       Host: "api.gm.com",
       Connection: "keep-alive",
       "Accept-Encoding": "br, gzip, deflate",
-      "User-Agent": onStarClient.userAgent,
+      "User-Agent": onStarAppConfig.userAgent,
     };
 
     if (request.isAuthRequired()) {
@@ -259,7 +257,7 @@ class RequestService {
       .setBody(jwt)
       .setHeaders({
         "Accept-Language": "en",
-        "User-Agent": onStarClient.userAgent,
+        "User-Agent": onStarAppConfig.userAgent,
       });
 
     return this.sendRequest(request);
