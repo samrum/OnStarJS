@@ -42,7 +42,7 @@ class RequestService {
   private authToken?: OAuthToken;
   private checkRequestTimeout = 6000;
   private tokenRefreshPromise?: Promise<OAuthToken>;
-  private tokenUpgradePromise?: Promise<OAuthToken>;
+  private tokenUpgradePromise?: Promise<void>;
 
   constructor(
     config: OnStarConfig,
@@ -301,18 +301,19 @@ class RequestService {
     return this.tokenHandler.decodeAuthRequestResponse(response.data);
   }
 
-  private async connectAndUpgradeAuthToken(): Promise<OAuthToken> {
+  private async connectAndUpgradeAuthToken(): Promise<void> {
     if (!this.tokenUpgradePromise) {
       this.tokenUpgradePromise = new Promise(async (resolve, reject) => {
+        if (!this.authToken) {
+          return reject("Missing auth token");
+        }
+
         try {
           await this.connectRequest();
           await this.upgradeRequest();
 
-          if (this.authToken) {
-            this.authToken.upgraded = true;
-          }
-
-          resolve(this.authToken);
+          this.authToken.upgraded = true;
+          resolve();
         } catch (e) {
           reject(e);
         }
