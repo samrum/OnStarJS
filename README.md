@@ -126,6 +126,12 @@ Because of this, the test will require actual OnStar credentials to run. To prov
 
     yarn test:functional
 
+### All
+
+Run both unit and functional tests
+
+    yarn test
+
 # Credits
 
 Made possible by [mikenemat](https://github.com/mikenemat/)'s work in [gm-onstar-probe](https://github.com/mikenemat/gm-onstar-probe). Their work describing the process for remote start enabled the rest of the methods implemented here.
