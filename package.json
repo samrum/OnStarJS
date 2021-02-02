@@ -14,12 +14,13 @@
   "scripts": {
     "build": "rm -rf dist && rollup -c",
     "dev": "rm -rf dist && rollup -c -w",
+    "prepublishOnly": "yarn run test && yarn run build",
+    "release": "standard-version",
     "test": "jest test/unit",
     "test:unit": "jest test/unit",
     "test:coverage": "jest test/unit --coverage",
     "test:functional": "jest test/functional",
-    "test:keys": "jest test/functional -t 'Unupgraded Command Successful'",
-    "prepublishOnly": "yarn run test && yarn run build"
+    "test:keys": "jest test/functional -t 'Unupgraded Command Successful'"
   },
   "lint-staged": {
     "*.{js,ts}": [
@@ -68,6 +69,7 @@
     "prettier": "^2.0.5",
     "rollup": "^1.9.0",
     "rollup-plugin-typescript2": "^0.20.1",
+    "standard-version": "^9.1.0",
     "ts-jest": "^26.1.0",
     "ts-mockito": "^2.3.1",
     "tslib": "^1.9.3",
