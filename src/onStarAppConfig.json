@@ -1,8 +1,8 @@
 {
-  "appId": "OMB_CVY_iOS_4D0",
-  "appSecret": "ELHgo1DUAyBSvtjF8BOJrrLiNpQD5uYuTChi",
+  "appId": "OMB_CVY_iOS_4E0",
+  "appSecret": "LM9PweRPfazgjwCQ1pXRBaxFEZaHQ8Ntu214",
   "optionalClientScope": "commerce user_trailer",
   "requiredClientScope": "onstar gmoc",
   "serviceUrl": "https://api.gm.com/api/v1",
-  "userAgent": "myChevrolet/4.3.0 (iPhone; iOS 14.3; Scale/3.00)"
+  "userAgent": "myChevrolet/4.4.0 (iPhone; iOS 14.3; Scale/3.00)"
 }
