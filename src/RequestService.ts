@@ -24,17 +24,17 @@ import {
 import onStarAppConfig from "./onStarAppConfig.json";
 
 enum OnStarApiCommand {
-  alert = "alert",
-  cancelAlert = "cancelAlert",
-  cancelStart = "cancelStart",
-  chargeOverride = "chargeOverride",
-  connect = "connect",
-  diagnostics = "diagnostics",
-  getChargingProfile = "getChargingProfile",
-  lockDoor = "lockDoor",
-  setChargingProfile = "setChargingProfile",
-  start = "start",
-  unlockDoor = "unlockDoor",
+  Alert = "alert",
+  CancelAlert = "cancelAlert",
+  CancelStart = "cancelStart",
+  ChargeOverride = "chargeOverride",
+  Connect = "connect",
+  Diagnostics = "diagnostics",
+  GetChargingProfile = "getChargingProfile",
+  LockDoor = "lockDoor",
+  SetChargingProfile = "setChargingProfile",
+  Start = "start",
+  UnlockDoor = "unlockDoor",
 }
 
 class RequestService {
@@ -74,19 +74,19 @@ class RequestService {
   }
 
   async start(): Promise<Result> {
-    const request = this.getCommandRequest(OnStarApiCommand.start);
+    const request = this.getCommandRequest(OnStarApiCommand.Start);
 
     return this.sendRequest(request);
   }
 
   async cancelStart(): Promise<Result> {
-    const request = this.getCommandRequest(OnStarApiCommand.cancelStart);
+    const request = this.getCommandRequest(OnStarApiCommand.CancelStart);
 
     return this.sendRequest(request);
   }
 
   async lockDoor(options: DoorRequestOptions = {}): Promise<Result> {
-    const request = this.getCommandRequest(OnStarApiCommand.lockDoor).setBody({
+    const request = this.getCommandRequest(OnStarApiCommand.LockDoor).setBody({
       lockDoorRequest: {
         delay: 0,
         ...options,
@@ -97,7 +97,7 @@ class RequestService {
   }
 
   async unlockDoor(options: DoorRequestOptions = {}): Promise<Result> {
-    const request = this.getCommandRequest(OnStarApiCommand.unlockDoor).setBody(
+    const request = this.getCommandRequest(OnStarApiCommand.UnlockDoor).setBody(
       {
         unlockDoorRequest: {
           delay: 0,
@@ -110,7 +110,7 @@ class RequestService {
   }
 
   async alert(options: AlertRequestOptions = {}): Promise<Result> {
-    const request = this.getCommandRequest(OnStarApiCommand.alert).setBody({
+    const request = this.getCommandRequest(OnStarApiCommand.Alert).setBody({
       alertRequest: {
         action: [AlertRequestAction.Honk, AlertRequestAction.Flash],
         delay: 0,
@@ -127,14 +127,14 @@ class RequestService {
   }
 
   async cancelAlert(): Promise<Result> {
-    const request = this.getCommandRequest(OnStarApiCommand.cancelAlert);
+    const request = this.getCommandRequest(OnStarApiCommand.CancelAlert);
 
     return this.sendRequest(request);
   }
 
   async chargeOverride(options: ChargeOverrideOptions = {}): Promise<Result> {
     const request = this.getCommandRequest(
-      OnStarApiCommand.chargeOverride,
+      OnStarApiCommand.ChargeOverride,
     ).setBody({
       chargeOverrideRequest: {
         mode: ChargeOverrideMode.ChargeNow,
@@ -146,7 +146,7 @@ class RequestService {
   }
 
   async getChargingProfile(): Promise<Result> {
-    const request = this.getCommandRequest(OnStarApiCommand.getChargingProfile);
+    const request = this.getCommandRequest(OnStarApiCommand.GetChargingProfile);
 
     return this.sendRequest(request);
   }
@@ -155,7 +155,7 @@ class RequestService {
     options: SetChargingProfileRequestOptions = {},
   ): Promise<Result> {
     const request = this.getCommandRequest(
-      OnStarApiCommand.setChargingProfile,
+      OnStarApiCommand.SetChargingProfile,
     ).setBody({
       chargingProfile: {
         chargeMode: ChargingProfileChargeMode.Immediate,
@@ -169,7 +169,7 @@ class RequestService {
 
   async diagnostics(options: DiagnosticsRequestOptions = {}): Promise<Result> {
     const request = this.getCommandRequest(
-      OnStarApiCommand.diagnostics,
+      OnStarApiCommand.Diagnostics,
     ).setBody({
       diagnosticsRequest: {
         diagnosticItem: [
@@ -233,7 +233,7 @@ class RequestService {
 
   private async connectRequest(): Promise<Result> {
     const request = this.getCommandRequest(
-      OnStarApiCommand.connect,
+      OnStarApiCommand.Connect,
     ).setUpgradeRequired(false);
 
     return this.sendRequest(request);
