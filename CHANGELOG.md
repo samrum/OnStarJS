@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.14](https://github.com/samrum/OnStarJS/compare/v2.0.13...v2.0.14) (2021-04-14)
+
+
+### Bug Fixes
+
+* **appconfig:** update app config using myChevrolet 5.0.1 values ([#40](https://github.com/samrum/OnStarJS/issues/40)) ([c2b6970](https://github.com/samrum/OnStarJS/commit/c2b6970a042de95c4612d08dd1090020a0b9c5e8))
+
 ### [2.0.13](https://github.com/samrum/OnStarJS/compare/v2.0.12...v2.0.13) (2021-02-02)
 
 
