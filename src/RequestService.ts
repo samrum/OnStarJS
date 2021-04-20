@@ -187,7 +187,9 @@ class RequestService {
 
   async getAccountVehicles(): Promise<Result> {
     const request = new Request(
-      `${onStarAppConfig.serviceUrl}/account/vehicles?includeCommands=true&includeEntit%20lements=true&includeModules=true`,
+      `${this.getApiUrlForPath(
+        "/account/vehicles",
+      )}?includeCommands=true&includeEntit%20lements=true&includeModules=true`,
     )
       .setUpgradeRequired(false)
       .setMethod(RequestMethod.Get);
@@ -200,11 +202,13 @@ class RequestService {
   }
 
   private getApiUrlForPath(path: string): string {
-    return `${onStarAppConfig.serviceUrl}${path}`;
+    return `${onStarAppConfig.serviceUrl}/v1${path}`;
   }
 
   private getCommandUrl(command: string): string {
-    return `${onStarAppConfig.serviceUrl}/account/vehicles/${this.config.vin}/commands/${command}`;
+    return this.getApiUrlForPath(
+      `/account/vehicles/${this.config.vin}/commands/${command}`,
+    );
   }
 
   private async getHeaders(request: Request): Promise<any> {

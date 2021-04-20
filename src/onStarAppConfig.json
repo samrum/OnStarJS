@@ -3,6 +3,6 @@
   "appSecret": "6NRMiZ2iuW22P3KpVa9QdH2LKoXM8Cr8jSxW",
   "optionalClientScope": "commerce user_trailer",
   "requiredClientScope": "onstar gmoc",
-  "serviceUrl": "https://api.gm.com/api/v1",
+  "serviceUrl": "https://api.gm.com/api",
   "userAgent": "myChevrolet/5.0.1 (iPhone; iOS 14.3; Scale/3.00)"
 }
