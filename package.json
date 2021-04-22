@@ -64,7 +64,7 @@
     "@types/jsonwebtoken": "^8.3.2",
     "@types/uuid": "^3.4.4",
     "dotenv": "^8.2.0",
-    "husky": "^4.2.5",
+    "husky": "^6.0.0",
     "jest": "^26.0.1",
     "lint-staged": "^10.2.9",
     "prettier": "^2.0.5",
