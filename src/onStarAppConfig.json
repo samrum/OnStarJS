@@ -1,8 +1,8 @@
 {
-  "appId": "OMB_CVY_iOS_5A1",
-  "appSecret": "6NRMiZ2iuW22P3KpVa9QdH2LKoXM8Cr8jSxW",
-  "optionalClientScope": "commerce user_trailer",
-  "requiredClientScope": "onstar gmoc",
+  "appId": "OMB_CVY_AND_5A1",
+  "appSecret": "UGzw6PB8wpKANvnYewmSREXpxtbBkjjmGP6s",
+  "optionalClientScope": "",
+  "requiredClientScope": "onstar gmoc commerce user_trailer",
   "serviceUrl": "https://api.gm.com/api",
-  "userAgent": "myChevrolet/5.0.1 (iPhone; iOS 14.3; Scale/3.00)"
+  "userAgent": "Mozilla/5.0 (Linux; U; Android 9; en-US; Google Pixel 2 Build/PI)"
 }
