@@ -21,17 +21,13 @@
     "test:unit": "jest test/unit",
     "test:coverage": "jest test/unit --coverage",
     "test:functional": "jest test/functional",
-    "test:keys": "jest test/functional -t 'Unupgraded Command Successful'"
+    "test:keys": "jest test/functional -t 'Unupgraded Command Successful'",
+    "prepare": "husky install"
   },
   "lint-staged": {
     "*.{js,ts}": [
       "prettier --write"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "sideEffects": false,
   "repository": {
@@ -64,7 +60,7 @@
     "@types/jsonwebtoken": "^8.3.2",
     "@types/uuid": "^3.4.4",
     "dotenv": "^8.2.0",
-    "husky": "^4.2.5",
+    "husky": "^6.0.0",
     "jest": "^26.0.1",
     "lint-staged": "^10.2.9",
     "prettier": "^2.0.5",
