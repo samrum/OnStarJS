@@ -21,17 +21,13 @@
     "test:unit": "jest test/unit",
     "test:coverage": "jest test/unit --coverage",
     "test:functional": "jest test/functional",
-    "test:keys": "jest test/functional -t 'Unupgraded Command Successful'"
+    "test:keys": "jest test/functional -t 'Unupgraded Command Successful'",
+    "prepare": "husky install"
   },
   "lint-staged": {
     "*.{js,ts}": [
       "prettier --write"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "sideEffects": false,
   "repository": {
