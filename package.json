@@ -64,7 +64,7 @@
     "jest": "^26.0.1",
     "lint-staged": "^10.2.9",
     "prettier": "^2.0.5",
-    "rollup": "^1.9.0",
+    "rollup": "^2.45.2",
     "rollup-plugin-typescript2": "^0.30.0",
     "standard-version": "^9.1.0",
     "ts-jest": "^26.1.0",
