@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
-import uuidv4 from "uuid/v4";
+import { v4 as uuidv4 } from "uuid";
 
 import { OAuthToken, OnStarConfig } from "./types";
 import onStarAppConfig from "./onStarAppConfig.json";
