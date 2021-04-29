@@ -58,7 +58,7 @@
     "@rollup/plugin-json": "^4.1.0",
     "@types/jest": "^26.0.22",
     "@types/jsonwebtoken": "^8.3.2",
-    "@types/uuid": "^3.4.4",
+    "@types/uuid": "^8.3.0",
     "dotenv": "^8.2.0",
     "husky": "^6.0.0",
     "jest": "^26.0.1",
