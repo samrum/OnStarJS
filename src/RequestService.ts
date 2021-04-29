@@ -52,6 +52,7 @@ class RequestService {
     this.config = {
       checkRequestStatus: true,
       ...config,
+      vin: config.vin.toUpperCase(),
     };
   }
 
