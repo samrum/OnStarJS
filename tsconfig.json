@@ -1,11 +1,11 @@
 {
-    "compilerOptions": {
-        "target": "ES6",
-        "strict": true,
-        "esModuleInterop": true,
-        "declaration": true,
-        "moduleResolution": "node",
-        "resolveJsonModule": true,
-    },
-    "exclude": ["node_modules", "test"]
+  "compilerOptions": {
+    "target": "ES6",
+    "strict": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true
+  },
+  "exclude": ["node_modules", "test"]
 }
