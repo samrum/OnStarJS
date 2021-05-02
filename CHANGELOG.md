@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/samrum/OnStarJS/compare/v2.0.14...v2.1.0) (2021-05-02)
+
+
+### Features
+
+* **requests:** add support for toggling checkRequestStatus option ([#60](https://github.com/samrum/OnStarJS/issues/60)) ([4f75d55](https://github.com/samrum/OnStarJS/commit/4f75d555283d9a4a506bcf9f11438e10da64611c))
+
+
+### Bug Fixes
+
+* **deps:** bump uuid from 3.4.0 to 8.3.2 ([#54](https://github.com/samrum/OnStarJS/issues/54)) ([843709e](https://github.com/samrum/OnStarJS/commit/843709ed452b2110edd65663b7c25403ea469adc))
+* **request-service:** prevent api errors due to non-uppercase config vin ([#57](https://github.com/samrum/OnStarJS/issues/57)) ([d3e26b0](https://github.com/samrum/OnStarJS/commit/d3e26b03f950b411fee11dc8fa90e53f58f2eabf))
+* update app config values (2105716) ([#52](https://github.com/samrum/OnStarJS/issues/52)) ([d3f56ff](https://github.com/samrum/OnStarJS/commit/d3f56ffc3e573f19a1d476c5bf29ca385cd5d289))
+
 ### [2.0.14](https://github.com/samrum/OnStarJS/compare/v2.0.13...v2.0.14) (2021-04-14)
 
 
