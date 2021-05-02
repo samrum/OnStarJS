@@ -41,6 +41,7 @@ class RequestService {
   private config: OnStarConfig;
   private authToken?: OAuthToken;
   private checkRequestTimeout = 6000;
+  private checkRequestStatus: boolean;
   private tokenRefreshPromise?: Promise<OAuthToken>;
   private tokenUpgradePromise?: Promise<void>;
 
@@ -50,10 +51,11 @@ class RequestService {
     private client: HttpClient,
   ) {
     this.config = {
-      checkRequestStatus: true,
       ...config,
       vin: config.vin.toUpperCase(),
     };
+
+    this.checkRequestStatus = this.config.checkRequestStatus ?? true;
   }
 
   setClient(client: HttpClient) {
@@ -70,6 +72,12 @@ class RequestService {
 
   setCheckRequestTimeout(timeoutMs: number) {
     this.checkRequestTimeout = timeoutMs;
+
+    return this;
+  }
+
+  setCheckRequestStatus(checkStatus: boolean) {
+    this.checkRequestStatus = checkStatus;
 
     return this;
   }
@@ -335,7 +343,7 @@ class RequestService {
       const response = await this.makeClientRequest(request);
       const { data } = response;
 
-      if (this.config.checkRequestStatus && typeof data === "object") {
+      if (this.checkRequestStatus && typeof data === "object") {
         const { commandResponse } = data;
 
         if (commandResponse) {

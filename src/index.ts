@@ -71,6 +71,10 @@ class OnStar {
   async diagnostics(options?: DiagnosticsRequestOptions): Promise<Result> {
     return this.requestService.diagnostics(options);
   }
+
+  setCheckRequestStatus(checkStatus: boolean) {
+    this.requestService.setCheckRequestStatus(checkStatus);
+  }
 }
 
 export default OnStar;
