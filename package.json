@@ -3,7 +3,7 @@
   "version": "2.0.14",
   "description": "Unofficial package for making OnStar API requests",
   "main": "dist/index.js",
-  "module": "dist/index.esm.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
