@@ -11,11 +11,12 @@ export default {
     }),
   ],
   output: [
-    { file: pkg.main, format: "cjs" },
-    { file: pkg.module, format: "esm" },
+    { file: pkg.main, format: "cjs", exports: "default" },
+    { file: pkg.module, format: "esm", exports: "default" },
   ],
   external: [
     ...Object.keys(pkg.dependencies || {}),
     ...Object.keys(pkg.peerDependencies || {}),
+    "crypto",
   ],
 };
