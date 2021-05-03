@@ -10,6 +10,7 @@ class Request {
   private contentType: string = "application/json; charset=UTF-8";
   private authRequired: boolean = true;
   private upgradeRequired: boolean = true;
+  private checkRequestStatus: boolean | null = null;
   private headers: object = {};
 
   constructor(url: string) {
@@ -80,6 +81,16 @@ class Request {
 
   setContentType(type: string) {
     this.contentType = type;
+
+    return this;
+  }
+
+  getCheckRequestStatus(): boolean | null {
+    return this.checkRequestStatus;
+  }
+
+  setCheckRequestStatus(checkStatus: boolean | null) {
+    this.checkRequestStatus = checkStatus;
 
     return this;
   }

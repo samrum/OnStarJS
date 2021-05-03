@@ -343,7 +343,10 @@ class RequestService {
       const response = await this.makeClientRequest(request);
       const { data } = response;
 
-      if (this.checkRequestStatus && typeof data === "object") {
+      const checkRequestStatus =
+        request.getCheckRequestStatus() ?? this.checkRequestStatus;
+
+      if (checkRequestStatus && typeof data === "object") {
         const { commandResponse } = data;
 
         if (commandResponse) {
@@ -371,7 +374,8 @@ class RequestService {
 
             const request = new Request(url)
               .setMethod(RequestMethod.Get)
-              .setUpgradeRequired(false);
+              .setUpgradeRequired(false)
+              .setCheckRequestStatus(checkRequestStatus);
             return this.sendRequest(request);
           }
 
