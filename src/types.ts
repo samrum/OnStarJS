@@ -59,6 +59,18 @@ export interface CommandResponse {
 
 export interface CommandResponseBody {
   error?: object;
+  diagnosticResponse?: DiagnosticResponseItem[];
+}
+
+export interface DiagnosticResponseItem {
+  name: string;
+  diagnosticElement: {
+    name: string;
+    status: string;
+    message: string;
+    value?: string;
+    unit?: string;
+  }[];
 }
 
 export interface Result {
