@@ -54,10 +54,10 @@ describe("RequestService", () => {
       testConfig,
       instance(tokenHandler),
       httpClient,
-    );
-
-    requestService.setAuthToken(authToken);
-    requestService.setCheckRequestTimeout(1);
+    )
+      .setAuthToken(authToken)
+      .setRequestPollingIntervalSeconds(0)
+      .setRequestPollingTimeoutSeconds(0);
   });
 
   test("start", async () => {

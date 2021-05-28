@@ -37,4 +37,22 @@ describe("OnStarJs", () => {
     expect(result.status).toEqual("success");
     expect(result.response?.data).toHaveProperty("commandResponse");
   });
+
+  test.skip("Diagnostics Request Successful", async () => {
+    jest.setTimeout(60000);
+
+    onStar.setCheckRequestStatus(true);
+
+    const result = await onStar.diagnostics();
+
+    if (!result.response?.data || typeof result.response?.data === "string") {
+      throw new Error("Invalid response returned");
+    }
+
+    expect(result.status).toEqual("success");
+    expect(result.response?.data.commandResponse?.status).toEqual("success");
+    expect(result.response?.data.commandResponse?.body).toHaveProperty(
+      "diagnosticResponse",
+    );
+  });
 });
