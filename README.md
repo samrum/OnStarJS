@@ -14,7 +14,7 @@ Use the Get Account Vehicles request to see which requests your vehicle supports
 
 ## Sample
 
-Use a random version 4 uuid as a deviceId. Generator avaiable [here](https://www.uuidgenerator.net/version4).
+Use a random version 4 uuid as a deviceId. Generator available [here](https://www.uuidgenerator.net/version4).
 
     import OnStar from "onstarjs";
 
