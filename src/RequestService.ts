@@ -365,6 +365,12 @@ class RequestService {
 
           const requestTimestamp = new Date(requestTime).getTime();
 
+          if (status === CommandResponseStatus.failure) {
+            throw new RequestError("Command Failure")
+              .setResponse(response)
+              .setRequest(request);
+          }
+
           if (
             Date.now() >=
             requestTimestamp + this.requestPollingTimeoutSeconds * 1000
@@ -374,11 +380,7 @@ class RequestService {
               .setRequest(request);
           }
 
-          if (status === CommandResponseStatus.failure) {
-            throw new RequestError("Command Failure")
-              .setResponse(response)
-              .setRequest(request);
-          } else if (
+          if (
             status === CommandResponseStatus.inProgress &&
             type !== "connect"
           ) {
@@ -388,6 +390,7 @@ class RequestService {
               .setMethod(RequestMethod.Get)
               .setUpgradeRequired(false)
               .setCheckRequestStatus(checkRequestStatus);
+
             return this.sendRequest(request);
           }
 
