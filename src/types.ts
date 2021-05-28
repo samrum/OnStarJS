@@ -18,6 +18,8 @@ export interface OnStarConfig {
   password: string;
   onStarPin: string;
   checkRequestStatus?: boolean;
+  requestPollingIntervalSeconds?: number;
+  requestPollingTimeoutSeconds?: number;
 }
 
 export interface OAuthToken {

@@ -14,7 +14,7 @@ Use the Get Account Vehicles request to see which requests your vehicle supports
 
 ## Sample
 
-Use a random version 4 uuid (there are online generators) as a deviceId.
+Use a random version 4 uuid as a deviceId. Generator available [here](https://www.uuidgenerator.net/version4).
 
     import OnStar from "onstarjs";
 
@@ -24,7 +24,11 @@ Use a random version 4 uuid (there are online generators) as a deviceId.
       username: "foo@bar.com",
       password: "p@ssw0rd",
       onStarPin: "1234",
+
+      // Optional
       checkRequestStatus: true, // When false, requests are complete when 'In Progress' (Much faster).
+      requestPollingIntervalSeconds: 6, // When checkRequestStatus is true, this is how often status check requests will be made
+      requestPollingTimeoutSeconds: 60, // When checkRequestStatus is true, this is when requests while polling are considered timed out
     };
 
     const onStar = OnStar.create(config);

@@ -40,8 +40,9 @@ enum OnStarApiCommand {
 class RequestService {
   private config: OnStarConfig;
   private authToken?: OAuthToken;
-  private checkRequestTimeout = 6000;
   private checkRequestStatus: boolean;
+  private requestPollingTimeoutSeconds: number;
+  private requestPollingIntervalSeconds: number;
   private tokenRefreshPromise?: Promise<OAuthToken>;
   private tokenUpgradePromise?: Promise<void>;
 
@@ -56,6 +57,10 @@ class RequestService {
     };
 
     this.checkRequestStatus = this.config.checkRequestStatus ?? true;
+    this.requestPollingTimeoutSeconds =
+      config.requestPollingTimeoutSeconds ?? 60;
+    this.requestPollingIntervalSeconds =
+      config.requestPollingIntervalSeconds ?? 6;
   }
 
   setClient(client: HttpClient) {
@@ -70,8 +75,14 @@ class RequestService {
     return this;
   }
 
-  setCheckRequestTimeout(timeoutMs: number) {
-    this.checkRequestTimeout = timeoutMs;
+  setRequestPollingTimeoutSeconds(seconds: number) {
+    this.requestPollingTimeoutSeconds = seconds;
+
+    return this;
+  }
+
+  setRequestPollingIntervalSeconds(seconds: number) {
+    this.requestPollingIntervalSeconds = seconds;
 
     return this;
   }
@@ -354,9 +365,10 @@ class RequestService {
 
           const requestTimestamp = new Date(requestTime).getTime();
 
-          const requestGiveup = this.checkRequestTimeout * 10;
-
-          if (Date.now() >= requestTimestamp + requestGiveup) {
+          if (
+            Date.now() >=
+            requestTimestamp + this.requestPollingTimeoutSeconds * 1000
+          ) {
             throw new RequestError("Command Timeout")
               .setResponse(response)
               .setRequest(request);
@@ -435,7 +447,7 @@ class RequestService {
 
   private checkRequestPause() {
     return new Promise((resolve) =>
-      setTimeout(resolve, this.checkRequestTimeout),
+      setTimeout(resolve, this.requestPollingIntervalSeconds * 1000),
     );
   }
 }
