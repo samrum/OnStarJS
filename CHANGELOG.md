@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/samrum/OnStarJS/compare/v2.1.1...v2.2.0) (2021-05-28)
+
+
+### Features
+
+* add the ability to configure custom request polling timeout and interval values ([#82](https://github.com/samrum/OnStarJS/issues/82)) ([0d7286c](https://github.com/samrum/OnStarJS/commit/0d7286c4a291fc1b09c5451ee066664a7f1d72ab))
+
+
+### Bug Fixes
+
+* prioritize command failure over command timeout ([#83](https://github.com/samrum/OnStarJS/issues/83)) ([14e7ebc](https://github.com/samrum/OnStarJS/commit/14e7ebc039074b4d73488ff1b1b657c785cafe3f))
+* **deps:** bump handlebars from 4.7.6 to 4.7.7 ([#70](https://github.com/samrum/OnStarJS/issues/70)) ([e1cd5bd](https://github.com/samrum/OnStarJS/commit/e1cd5bda47de8ae5f8d5e197b29cbfd89c76770c))
+
 ### [2.1.1](https://github.com/samrum/OnStarJS/compare/v2.1.0...v2.1.1) (2021-05-03)
 
 
