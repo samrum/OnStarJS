@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.1](https://github.com/samrum/OnStarJS/compare/v2.2.0...v2.2.1) (2021-05-30)
+
+
+### Bug Fixes
+
+* **deps:** bump ws from 7.4.1 to 7.4.6 ([#84](https://github.com/samrum/OnStarJS/issues/84)) ([a6ed96e](https://github.com/samrum/OnStarJS/commit/a6ed96e67546c0226e5dea596f9d179a7365a43e))
+* update app config values (2239589) ([#85](https://github.com/samrum/OnStarJS/issues/85)) ([f0eb7d1](https://github.com/samrum/OnStarJS/commit/f0eb7d14a9ee2f8ae69f90b8db6026d4dd545858))
+
 ## [2.2.0](https://github.com/samrum/OnStarJS/compare/v2.1.1...v2.2.0) (2021-05-28)
 
 
