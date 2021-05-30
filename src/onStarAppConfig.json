@@ -1,8 +1,8 @@
 {
-  "appId": "OMB_CVY_AND_5A1",
-  "appSecret": "UGzw6PB8wpKANvnYewmSREXpxtbBkjjmGP6s",
+  "appId": "OMB_CVY_AND_5C0",
+  "appSecret": "Z9s9fP4cZupHW8vB8mRHrDWZgMeuh9QnfWZZ",
   "optionalClientScope": "",
   "requiredClientScope": "onstar gmoc commerce user_trailer",
-  "serviceUrl": "https://api.gm.com/api",
+  "serviceUrl": "https://api.gm.com",
   "userAgent": "Mozilla/5.0 (Linux; U; Android 9; en-US; Google Pixel 2 Build/PI)"
 }

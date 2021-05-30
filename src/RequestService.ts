@@ -222,7 +222,7 @@ class RequestService {
   }
 
   private getApiUrlForPath(path: string): string {
-    return `${onStarAppConfig.serviceUrl}/v1${path}`;
+    return `${onStarAppConfig.serviceUrl}/api/v1${path}`;
   }
 
   private getCommandUrl(command: string): string {
