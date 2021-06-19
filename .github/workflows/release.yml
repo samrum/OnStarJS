@@ -19,6 +19,7 @@ jobs:
         
       - name: Create release
         run: |
-          gh release create "${GITHUB_REF#refs/tags/}" -n ${{ steps.extract-release-notes.outputs.release_notes }}
+          gh release create "${GITHUB_REF#refs/tags/}" -n "$RELEASE_NOTES"
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          RELEASE_NOTES: ${{ steps.extract-release-notes.outputs.release_notes }}
