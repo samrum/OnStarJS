@@ -126,6 +126,12 @@ describe("RequestService", () => {
     expect(result.status).toEqual(CommandResponseStatus.success);
   });
 
+  test("location", async () => {
+    const result = await requestService.location();
+
+    expect(result.status).toEqual(CommandResponseStatus.success);
+  });
+
   test("requestWithExpiredAuthToken", async () => {
     httpClient.post = jest
       .fn()
