@@ -35,6 +35,7 @@ enum OnStarApiCommand {
   SetChargingProfile = "setChargingProfile",
   Start = "start",
   UnlockDoor = "unlockDoor",
+  Location = "location",
 }
 
 class RequestService {
@@ -215,6 +216,10 @@ class RequestService {
       .setMethod(RequestMethod.Get);
 
     return this.sendRequest(request);
+  }
+
+  async location(): Promise<Result> {
+    return this.sendRequest(this.getCommandRequest(OnStarApiCommand.Location));
   }
 
   private getCommandRequest(command: OnStarApiCommand): Request {

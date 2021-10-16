@@ -72,6 +72,10 @@ class OnStar {
     return this.requestService.diagnostics(options);
   }
 
+  async location(): Promise<Result> {
+    return this.requestService.location();
+  }
+
   setCheckRequestStatus(checkStatus: boolean) {
     this.requestService.setCheckRequestStatus(checkStatus);
   }
