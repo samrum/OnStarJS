@@ -22,6 +22,7 @@ import {
   CommandResponseStatus,
 } from "./types";
 import onStarAppConfig from "./onStarAppConfig.json";
+import axios from "axios";
 
 enum OnStarApiCommand {
   Alert = "alert",
@@ -413,14 +414,18 @@ class RequestService {
 
       let errorObj = new RequestError();
 
-      if (error.response) {
-        errorObj.message = `Request Failed with status ${error.response.status} - ${error.response.statusText}`;
-        errorObj.setResponse(error.response);
-        errorObj.setRequest(error.request);
-      } else if (error.request) {
-        errorObj.message = "No response";
-        errorObj.setRequest(error.request);
-      } else {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          errorObj.message = `Request Failed with status ${error.response.status} - ${error.response.statusText}`;
+          errorObj.setResponse(error.response);
+          errorObj.setRequest(error.request);
+        } else if (error.request) {
+          errorObj.message = "No response";
+          errorObj.setRequest(error.request);
+        } else {
+          errorObj.message = error.message;
+        }
+      } else if (error instanceof Error) {
         errorObj.message = error.message;
       }
 
