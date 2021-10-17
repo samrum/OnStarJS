@@ -3,6 +3,7 @@ import TokenHandler from "../../src/TokenHandler";
 import { HttpClient, CommandResponseStatus } from "../../src/types";
 import RequestService from "../../src/RequestService";
 import { testConfig, authToken, expiredAuthToken } from "./testData";
+import { AxiosError } from "axios";
 
 describe("RequestService", () => {
   let requestService: RequestService;
@@ -168,9 +169,9 @@ describe("RequestService", () => {
 
     requestService.setAuthToken(expiredAuthToken);
 
-    expect(requestService.setClient(httpClient).start()).rejects.toThrow(
-      /^Failed to fetch token$/,
-    );
+    expect(async () => {
+      await requestService.setClient(httpClient).start();
+    }).rejects.toThrowError(/^Failed to fetch token$/);
   });
 
   test("requestCheckExceedsTimeoutError", async () => {
@@ -184,9 +185,9 @@ describe("RequestService", () => {
       },
     });
 
-    expect(requestService.setClient(httpClient).start()).rejects.toThrow(
-      /^Command Timeout$/,
-    );
+    expect(async () => {
+      await requestService.setClient(httpClient).start();
+    }).rejects.toThrowError(/^Command Timeout$/);
   });
 
   test("requestStatusFailureError", async () => {
@@ -199,44 +200,60 @@ describe("RequestService", () => {
       },
     });
 
-    expect(requestService.setClient(httpClient).start()).rejects.toThrow(
-      /^Command Failure$/,
-    );
+    expect(async () => {
+      await requestService.setClient(httpClient).start();
+    }).rejects.toThrowError(/^Command Failure$/);
   });
 
-  test("requestResponseError", async () => {
+  test("axiosRequestResponseError", async () => {
     httpClient.post = jest.fn().mockRejectedValue({
+      isAxiosError: true,
       response: {
         status: "400",
         statusText: "invalid_client",
         data: "data",
       },
-    });
-
-    expect(requestService.setClient(httpClient).start()).rejects.toThrow(
-      /^Request Failed with status 400 - invalid_client$/,
-    );
-  });
-
-  test("requestNoResponseError", async () => {
-    httpClient.post = jest.fn().mockRejectedValue({
       request: {
         body: "requestBody",
       },
     });
 
-    expect(requestService.setClient(httpClient).start()).rejects.toThrow(
-      /^No response$/,
+    expect(async () => {
+      await requestService.setClient(httpClient).start();
+    }).rejects.toThrowError(
+      /^Request Failed with status 400 - invalid_client$/,
     );
   });
 
-  test("requestStandardError", async () => {
+  test("axiosRequestNoResponseError", async () => {
     httpClient.post = jest.fn().mockRejectedValue({
-      message: "errorMessage",
+      isAxiosError: true,
+      request: {
+        body: "requestBody",
+      },
     });
 
-    expect(requestService.setClient(httpClient).start()).rejects.toThrow(
-      /^errorMessage$/,
-    );
+    expect(async () => {
+      await requestService.setClient(httpClient).start();
+    }).rejects.toThrowError(/^No response$/);
+  });
+
+  test("axiosRequestError", async () => {
+    httpClient.post = jest.fn().mockRejectedValue({
+      isAxiosError: true,
+      message: "Test error",
+    });
+
+    expect(async () => {
+      await requestService.setClient(httpClient).start();
+    }).rejects.toThrowError(/^Test error$/);
+  });
+
+  test("requestError", async () => {
+    httpClient.post = jest.fn().mockRejectedValue(new Error("errorMessage"));
+
+    expect(async () => {
+      await requestService.setClient(httpClient).start();
+    }).rejects.toThrowError(/^errorMessage$/);
   });
 });
