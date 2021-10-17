@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/samrum/OnStarJS/compare/v2.2.4...v2.3.0) (2021-10-17)
+
+
+### Features
+
+* add support for the location command ([#149](https://github.com/samrum/OnStarJS/issues/149)) ([84108ee](https://github.com/samrum/OnStarJS/commit/84108ee4854e9ef99b4e9d445c6df861957a99af)), closes [#139](https://github.com/samrum/OnStarJS/issues/139)
+
+
+### Bug Fixes
+
+* **deps:** bump ansi-regex from 5.0.0 to 5.0.1 ([#150](https://github.com/samrum/OnStarJS/issues/150)) ([56bb4c7](https://github.com/samrum/OnStarJS/commit/56bb4c749575a9e79f6fbd6f3bf8a0ab9469b1c6))
+* **deps:** bump axios from 0.21.1 to 0.21.2 ([#151](https://github.com/samrum/OnStarJS/issues/151)) ([b7f4166](https://github.com/samrum/OnStarJS/commit/b7f4166c1f48187ab972e4860071674426b8173d))
+* **deps:** bump tmpl from 1.0.4 to 1.0.5 ([#142](https://github.com/samrum/OnStarJS/issues/142)) ([1e98f30](https://github.com/samrum/OnStarJS/commit/1e98f3091aca5ed09f9971e4e9bdffd975b56202))
+* update app config values (2751711) ([#148](https://github.com/samrum/OnStarJS/issues/148)) ([a34ed98](https://github.com/samrum/OnStarJS/commit/a34ed98a9eacefef6e35a3b9ae8e4fa5585db017))
+
 ### [2.2.4](https://github.com/samrum/OnStarJS/compare/v2.2.3...v2.2.4) (2021-08-21)
 
 
