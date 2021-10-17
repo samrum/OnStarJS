@@ -38,7 +38,9 @@ Use a random version 4 uuid as a deviceId. Generator available [here](https://ww
       .catch(e => console.log(e));
 
 ## Additional Configuration Options
+
 ### checkRequestStatus
+
 Default Value: true
 
 When false, requests resolve when the API returns an 'In Progress' response. For requests that return data, this option is ignored.
@@ -46,19 +48,22 @@ When false, requests resolve when the API returns an 'In Progress' response. For
 This is useful because, with the usual request polling to wait for a "Complete" response from the API, requests will take much longer to resolve.
 
 ### requestPollingIntervalSeconds
+
 Default Value: 6
 
 When checkRequestStatus is true, this is how often status check requests will be made
 
 ### requestPollingTimeoutSeconds
+
 Default Value: 60
 
 When checkRequestStatus is true, this is how long a request will make subsequent status check requests before timing out.
 
 ## Responses
+
 For commands that return data like diagnostics or location, the data returned by the API is accessible via `result.response.data.commandResponse.body`
 
-# Commands 
+# Commands
 
 ## Get Account Vehicles
 
@@ -104,11 +109,13 @@ For commands that return data like diagnostics or location, the data returned by
 | delay  | 0       | Any integer (minutes) |
 
 ## Location
+
 Returns the location of the vehicle
 
     onStar.location();
 
 ### Example Response
+
     { location: { lat: '50', long: '-75' } }
 
 ## Charge Override
