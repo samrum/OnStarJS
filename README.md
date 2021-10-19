@@ -8,9 +8,9 @@ An unofficial NodeJS library to make OnStar requests.
 
 **Use at your own risk. This is an unofficial library.**
 
-Use the Get Account Vehicles request to see which requests your vehicle supports.
-
 # Usage
+
+Use the Get Account Vehicles request to see which requests your vehicle supports if you don't already know.
 
 ## Sample
 
@@ -18,15 +18,13 @@ Use a random version 4 uuid as a deviceId. Generator available [here](https://ww
 
     import OnStar from "onstarjs";
 
-    const config = {
+    const onStar = OnStar.create({
       deviceId: "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
       vin: "1G2ZF58B774109863",
       username: "foo@bar.com",
       password: "p@ssw0rd",
       onStarPin: "1234",
-    };
-
-    const onStar = OnStar.create(config);
+    });
 
     onStar
       .alert({
@@ -35,11 +33,12 @@ Use a random version 4 uuid as a deviceId. Generator available [here](https://ww
       .then(() => {
         onStar.start();
       })
-      .catch(e => console.log(e));
+      .catch(console.error);
 
 ## Additional Configuration Options
 
-### checkRequestStatus
+<details>
+<summary>checkRequestStatus</summary>
 
 Default Value: true
 
@@ -47,17 +46,23 @@ When false, requests resolve when the API returns an 'In Progress' response. For
 
 This is useful because, with the usual request polling to wait for a "Complete" response from the API, requests will take much longer to resolve.
 
-### requestPollingIntervalSeconds
+</details>
+<details>
+<summary>requestPollingIntervalSeconds</summary>
 
 Default Value: 6
 
-When checkRequestStatus is true, this is how often status check requests will be made
+When `checkRequestStatus` is true, this is how often status check requests will be made
 
-### requestPollingTimeoutSeconds
+</details>
+<details>
+<summary>requestPollingTimeoutSeconds</summary>
 
 Default Value: 60
 
-When checkRequestStatus is true, this is how long a request will make subsequent status check requests before timing out.
+When `checkRequestStatus` is true, this is how long a request will make subsequent status check requests before timing out.
+
+</details>
 
 ## Responses
 
@@ -65,19 +70,29 @@ For commands that return data like diagnostics or location, the data returned by
 
 # Commands
 
-## Get Account Vehicles
+<details>
+<summary> Get Account Vehicles</summary>
 
     onStar.getAccountVehicles();
 
-## Start
+</details>
+
+<details>
+<summary>Start</summary>
 
     onStar.start();
 
-## Cancel Start
+</details>
+
+<details>
+<summary>Cancel Start</summary>
 
     onStar.cancelStart();
 
-## Alert
+</details>
+
+<details>
+<summary>Alert</summary>
 
     onStar.alert([options]);
 
@@ -88,11 +103,17 @@ For commands that return data like diagnostics or location, the data returned by
 | duration | 1                          | Any integer (minutes)      |
 | override | ["DoorOpen", "IgnitionOn"] | ["DoorOpen", "IgnitionOn"] |
 
-## Cancel Alert
+</details>
+
+<details>
+<summary>Cancel Alert</summary>
 
     onStar.cancelAlert();
 
-## Lock Door
+</details>
+
+<details>
+<summary>Lock Door</summary>
 
     onStar.lockDoor([options]);
 
@@ -100,7 +121,10 @@ For commands that return data like diagnostics or location, the data returned by
 | ------ | ------- | --------------------- |
 | delay  | 0       | Any integer (minutes) |
 
-## Unlock Door
+</details>
+
+<details>
+<summary>Unlock Door</summary>
 
     onStar.unlockDoor([options]);
 
@@ -108,17 +132,23 @@ For commands that return data like diagnostics or location, the data returned by
 | ------ | ------- | --------------------- |
 | delay  | 0       | Any integer (minutes) |
 
-## Location
+</details>
+
+<details>
+<summary>Location</summary>
 
 Returns the location of the vehicle
 
     onStar.location();
 
-### Example Response
+Example Response
 
     { location: { lat: '50', long: '-75' } }
 
-## Charge Override
+</details>
+
+<details>
+<summary>Charge Override</summary>
 
     onStar.chargeOverride([options]);
 
@@ -126,11 +156,17 @@ Returns the location of the vehicle
 | ------ | ------------ | ------------------------------- |
 | mode   | "CHARGE_NOW" | "CHARGE_NOW", "CANCEL_OVERRIDE" |
 
-## Get Charging Profile
+</details>
+
+<details>
+<summary>Get Charging Profile</summary>
 
     onStar.getChargingProfile();
 
-## Set Charging Profile
+</details>
+
+<details>
+<summary>Set Charging Profile</summary>
 
     onStar.setChargingProfile([options]);
 
@@ -139,13 +175,18 @@ Returns the location of the vehicle
 | chargeMode | "IMMEDIATE" | "DEFAULT_IMMEDIATE", "IMMEDIATE", "DEPARTURE_BASED", "RATE_BASED", "PHEV_AFTER_MIDNIGHT" |
 | rateType   | "MIDPEAK"   | "OFFPEAK", "MIDPEAK", "PEAK"                                                             |
 
-## Diagnostics
+</details>
+
+<details>
+<summary>Diagnostics</summary>
 
     onStar.diagnostics([options]);
 
 | Option         | Default                                                                        | Valid Values                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | -------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | diagnosticItem | ["ODOMETER", "TIRE PRESSURE", "AMBIENT AIR TEMPERATURE", "LAST TRIP DISTANCE"] | ["ENGINE COOLANT TEMP", "ENGINE RPM", "LAST TRIP FUEL ECONOMY", "EV ESTIMATED CHARGE END", "EV BATTERY LEVEL", "OIL LIFE", "EV PLUG VOLTAGE", "LIFETIME FUEL ECON", "HOTSPOT CONFIG", "LIFETIME FUEL USED", "ODOMETER", "HOTSPOT STATUS", "LIFETIME EV ODOMETER", "EV PLUG STATE", "EV CHARGE STATE", "TIRE PRESSURE", "AMBIENT AIR TEMPERATURE", "LAST TRIP DISTANCE", "INTERM VOLT BATT VOLT", "GET COMMUTE SCHEDULE", "GET CHARGE MODE", "EV SCHEDULED CHARGE START", "FUEL TANK INFO", "HANDS FREE CALLING", "ENERGY EFFICIENCY", "VEHICLE RANGE"] |
+
+</details>
 
 # Development
 
