@@ -74,7 +74,7 @@ For commands that return data like diagnostics or location, the data returned by
 # Commands
 
 <details>
-<summary> Get Account Vehicles</summary>
+<summary>Get Account Vehicles</summary>
 
     onStar.getAccountVehicles();
 
@@ -195,6 +195,12 @@ Example Response
 
 ## Tests
 
+### All
+
+Run both unit and functional tests
+
+    yarn test
+
 ### Unit
 
     yarn test:unit
@@ -206,12 +212,6 @@ These tests will execute actual requests to the OnStar API. They will perform a 
 Because of this, the test will require actual OnStar credentials to run. To provide them, copy `.env.example` to `.env` and replace the placeholder values inside.
 
     yarn test:functional
-
-### All
-
-Run both unit and functional tests
-
-    yarn test
 
 # Credits
 
