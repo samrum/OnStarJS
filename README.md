@@ -16,24 +16,27 @@ Use the Get Account Vehicles request to see which requests your vehicle supports
 
 Use a random version 4 uuid as a deviceId. Generator available [here](https://www.uuidgenerator.net/version4).
 
-    import OnStar from "onstarjs";
+```
+import OnStar from "onstarjs";
 
-    const onStar = OnStar.create({
-      deviceId: "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
-      vin: "1G2ZF58B774109863",
-      username: "foo@bar.com",
-      password: "p@ssw0rd",
-      onStarPin: "1234",
-    });
+const onStar = OnStar.create({
+  deviceId: "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+  vin: "1G2ZF58B774109863",
+  username: "foo@bar.com",
+  password: "p@ssw0rd",
+  onStarPin: "1234",
+});
 
-    onStar
-      .alert({
-        action: ["Flash"],
-      })
-      .then(() => {
-        onStar.start();
-      })
-      .catch(console.error);
+try {
+  await onStar.alert({
+    action: ["Flash"],
+  });
+
+  await onStar.start();
+} catch (e) {
+  console.error(e);
+}
+```
 
 ## Additional Configuration Options
 
