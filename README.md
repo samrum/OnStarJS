@@ -69,7 +69,7 @@ When `checkRequestStatus` is true, this is how long a request will make subseque
 
 ## Responses
 
-For commands that return data like diagnostics or location, the data returned by the API is accessible via `result.response.data.commandResponse.body`
+For commands that return data like diagnostics or location, the data returned by the API is accessible via `result.response.data`
 
 # Commands
 
