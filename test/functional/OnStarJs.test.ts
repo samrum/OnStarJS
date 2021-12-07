@@ -4,9 +4,10 @@ import OnStar from "../../src/index";
 
 jest.setTimeout(15000);
 
-const { DEVICEID, VIN, USERNAME, PASSWORD, ONSTARPIN } = process.env;
+const { DEVICEID, VIN, ONSTAR_USERNAME, ONSTAR_PASSWORD, ONSTAR_PIN } =
+  process.env;
 
-if (!DEVICEID || !VIN || !USERNAME || !PASSWORD || !ONSTARPIN) {
+if (!DEVICEID || !VIN || !ONSTAR_USERNAME || !ONSTAR_PASSWORD || !ONSTAR_PIN) {
   throw new Error("Missing environment config for functional tests");
 }
 
@@ -17,9 +18,9 @@ describe("OnStarJs", () => {
     onStar = OnStar.create({
       deviceId: DEVICEID,
       vin: VIN,
-      username: USERNAME,
-      password: PASSWORD,
-      onStarPin: ONSTARPIN,
+      username: ONSTAR_USERNAME,
+      password: ONSTAR_PASSWORD,
+      onStarPin: ONSTAR_PIN,
       checkRequestStatus: false,
     });
   });
