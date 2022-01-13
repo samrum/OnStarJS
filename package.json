@@ -16,7 +16,7 @@
     "dev": "rm -rf dist && rollup -c -w",
     "lint": "prettier --write .",
     "release": "standard-version --sign",
-    "test": "yarn run test:unit && yarn run test:functional",
+    "test": "pnpm test:unit && pnpm test:functional",
     "test:unit": "jest test/unit",
     "test:coverage": "jest test/unit --coverage",
     "test:functional": "jest test/functional",
@@ -30,7 +30,7 @@
   },
   "standard-version": {
     "scripts": {
-      "prerelease": "yarn test && yarn build"
+      "prerelease": "pnpm test && pnpm build"
     }
   },
   "sideEffects": false,
