@@ -193,17 +193,19 @@ Example Response
 
 # Development
 
+This project uses [pnpm](https://pnpm.io/) for package management.
+
 ## Tests
 
 ### All
 
 Run both unit and functional tests
 
-    yarn test
+    pnpm test
 
 ### Unit
 
-    yarn test:unit
+    pnpm test:unit
 
 ### Functional
 
@@ -211,7 +213,7 @@ These tests will execute actual requests to the OnStar API. They will perform a 
 
 Because of this, the test will require actual OnStar credentials to run. To provide them, copy `.env.example` to `.env` and replace the placeholder values inside.
 
-    yarn test:functional
+    pnpm test:functional
 
 # Credits
 
