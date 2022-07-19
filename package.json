@@ -30,7 +30,7 @@
   },
   "standard-version": {
     "scripts": {
-      "prerelease": "pnpm test && pnpm build"
+      "prerelease": "pnpm test:unit && pnpm build"
     }
   },
   "sideEffects": false,
