@@ -55,31 +55,3 @@ jobs:
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
-  test-functional:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Cache pnpm modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-
-
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 6
-          run_install: true
-
-      - name: test:functional
-        run: pnpm test:functional
-        env:
-          DEVICEID: ${{ secrets.FUNCTIONAL_TEST_DEVICEID }}
-          VIN: ${{ secrets.FUNCTIONAL_TEST_VIN }}
-          ONSTAR_USERNAME: ${{ secrets.FUNCTIONAL_TEST_USERNAME }}
-          ONSTAR_PASSWORD: ${{ secrets.FUNCTIONAL_TEST_PASSWORD }}
-          ONSTAR_PIN: ${{ secrets.FUNCTIONAL_TEST_ONSTARPIN }}
