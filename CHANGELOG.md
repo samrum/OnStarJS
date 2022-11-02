@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.12](https://github.com/samrum/OnStarJS/compare/v2.3.11...v2.3.12) (2022-11-02)
+
+
+### Bug Fixes
+
+* update app config values (4142) ([#209](https://github.com/samrum/OnStarJS/issues/209)) ([478e9fa](https://github.com/samrum/OnStarJS/commit/478e9fa683c1225d674ee65adfb39fc67c7fd3ee))
+
 ### [2.3.11](https://github.com/samrum/OnStarJS/compare/v2.3.10...v2.3.11) (2022-10-08)
 
 
