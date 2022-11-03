@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.13](https://github.com/samrum/OnStarJS/compare/v2.3.12...v2.3.13) (2022-11-03)
+
+
+### Bug Fixes
+
+* 403 insufficient_scope when running commands ([#210](https://github.com/samrum/OnStarJS/issues/210)) ([95ab4d8](https://github.com/samrum/OnStarJS/commit/95ab4d872ebdf8ba455108f913ada8b5c3bc46f1))
+
 ### [2.3.12](https://github.com/samrum/OnStarJS/compare/v2.3.11...v2.3.12) (2022-11-02)
 
 
