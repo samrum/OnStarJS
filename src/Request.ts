@@ -9,7 +9,7 @@ class Request {
   private body: string = "{}";
   private contentType: string = "application/json; charset=UTF-8";
   private authRequired: boolean = true;
-  private upgradeRequired: boolean = true;
+  private upgradeRequired: boolean = false;
   private checkRequestStatus: boolean | null = null;
   private headers: object = {};
 

@@ -34,7 +34,7 @@ describe("Request", () => {
     request.setAuthRequired(false);
     expect(request.isAuthRequired()).toBeFalsy();
 
-    expect(request.isUpgradeRequired()).toBeTruthy();
+    expect(request.isUpgradeRequired()).toBeFalsy();
     request.setUpgradeRequired(false);
     expect(request.isUpgradeRequired()).toBeFalsy();
 
