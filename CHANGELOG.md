@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.15](https://github.com/samrum/OnStarJS/compare/v2.3.14...v2.3.15) (2023-01-25)
+
+
+### Bug Fixes
+
+* disable default token upgrades ([#215](https://github.com/samrum/OnStarJS/issues/215)) ([2f5bb01](https://github.com/samrum/OnStarJS/commit/2f5bb01d4d0dbd9801423a208e7e461d158e734f))
+
 ### [2.3.14](https://github.com/samrum/OnStarJS/compare/v2.3.13...v2.3.14) (2022-12-31)
 
 

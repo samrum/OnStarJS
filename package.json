@@ -1,6 +1,6 @@
 {
   "name": "onstarjs",
-  "version": "2.3.14",
+  "version": "2.3.15",
   "description": "Unofficial package for making OnStar API requests",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
