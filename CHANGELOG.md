@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.16](https://github.com/samrum/OnStarJS/compare/v2.3.15...v2.3.16) (2023-02-11)
+
 ### [2.3.15](https://github.com/samrum/OnStarJS/compare/v2.3.14...v2.3.15) (2023-01-25)
 
 
