@@ -2,8 +2,15 @@
   "name": "onstarjs",
   "version": "2.3.20",
   "description": "Unofficial package for making OnStar API requests",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
   "type": "module",
   "types": "dist/index.d.ts",
   "files": [
