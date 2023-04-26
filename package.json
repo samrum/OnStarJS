@@ -15,6 +15,7 @@
     "build": "rm -rf dist && rollup -c",
     "dev": "rm -rf dist && rollup -c -w",
     "lint": "prettier --write .",
+    "prepublishOnly": "pnpm run build",
     "release": "standard-version --sign",
     "test": "pnpm test:unit && pnpm test:functional",
     "test:unit": "jest test/unit",
@@ -28,6 +29,7 @@
       "prettier --write"
     ]
   },
+  "packageManager": "pnpm@8.3.1",
   "standard-version": {
     "scripts": {
       "prerelease": "pnpm test:unit && pnpm build"
