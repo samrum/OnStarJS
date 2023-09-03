@@ -1,6 +1,6 @@
 {
-  "appId": "OMB_CVY_AND_6N0",
-  "appSecret": "V7h6NSfKHohF4fTkzPQ3wDzMtGy4J8i6zhPB",
+  "appId": "OMB_CVY_AND_6P1",
+  "appSecret": "5y6MRMJbMG2yVUG7dhAbbXjsCZCNDXtMt6oR",
   "optionalClientScope": "",
   "requiredClientScope": "onstar gmoc user_trailer user priv",
   "serviceUrl": "https://api.gm.com",
