@@ -1,8 +1,8 @@
 {
-  "appId": "OMB_CVY_AND_6P1",
-  "appSecret": "5y6MRMJbMG2yVUG7dhAbbXjsCZCNDXtMt6oR",
+  "appId": "OMB_CVY_iOS_6S0",
+  "appSecret": "53YJ67kyLqMCzVEb758ySwXYxCThn7eeLw3D",
   "optionalClientScope": "",
   "requiredClientScope": "onstar gmoc user_trailer user priv",
   "serviceUrl": "https://api.gm.com",
-  "userAgent": "Mozilla/5.0 (Linux; U; Android 9; en-US; Google Pixel 2 Build/PI)"
+  "userAgent": "myChevrolet/73 CFNetwork/1408.0.4 Darwin/22.5.0"
 }
