@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.27](https://github.com/samrum/OnStarJS/compare/v2.3.26...v2.3.27) (2023-10-10)
+
+
+### Bug Fixes
+
+* android credentials no longer working  ([#234](https://github.com/samrum/OnStarJS/issues/234)) ([0351f78](https://github.com/samrum/OnStarJS/commit/0351f78ed7dea2db33ed9352445f5938b6a46f65))
+
 ### [2.3.26](https://github.com/samrum/OnStarJS/compare/v2.3.25...v2.3.26) (2023-09-03)
 
 ### [2.3.25](https://github.com/samrum/OnStarJS/compare/v2.3.24...v2.3.25) (2023-08-04)
