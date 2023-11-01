@@ -1,8 +1,8 @@
 {
-  "appId": "OMB_CVY_iOS_6S0",
-  "appSecret": "53YJ67kyLqMCzVEb758ySwXYxCThn7eeLw3D",
+  "appId": "OMB_CVY_iOS_6T0",
+  "appSecret": "TNvVSfSfstbqdVSxd4yuJFFHZgUXsL3CCzoe",
   "optionalClientScope": "",
   "requiredClientScope": "onstar gmoc user_trailer user priv",
   "serviceUrl": "https://api.gm.com",
-  "userAgent": "myChevrolet/73 CFNetwork/1408.0.4 Darwin/22.5.0"
+  "userAgent": "myChevrolet/95 CFNetwork/1408.0.4 Darwin/22.5.0"
 }
