@@ -211,7 +211,7 @@ class RequestService {
     const request = new Request(
       `${this.getApiUrlForPath(
         "/account/vehicles",
-      )}?includeCommands=true&includeEntit%20lements=true&includeModules=true`,
+      )}?includeCommands=true&includeEntitlements=true&includeModules=true&includeSharedVehicles=true`,
     )
       .setUpgradeRequired(false)
       .setMethod(RequestMethod.Get);
