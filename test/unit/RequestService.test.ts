@@ -133,6 +133,18 @@ describe("RequestService", () => {
     expect(result.status).toEqual(CommandResponseStatus.success);
   });
 
+  test("lockTrunk", async () => {
+    const result = await requestService.lockTrunk();
+
+    expect(result.status).toEqual(CommandResponseStatus.success);
+  });
+
+  test("unlockTrunk", async () => {
+    const result = await requestService.unlockTrunk();
+
+    expect(result.status).toEqual(CommandResponseStatus.success);
+  });
+
   test("requestWithExpiredAuthToken", async () => {
     httpClient.post = jest
       .fn()

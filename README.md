@@ -138,6 +138,24 @@ For commands that return data like diagnostics or location, the data returned by
 </details>
 
 <details>
+<summary>Lock Trunk</summary>
+
+    onStar.lockTrunk();
+
+    Locks the trunk but doesn't automatically close it.
+
+</details>
+
+<details>
+<summary>Unlock Trunk</summary>
+
+    onStar.unlockTrunk();
+    
+    Unlocks the trunk but doesn't automatically open it. All doors remain locked.
+
+</details>
+
+<details>
 <summary>Location</summary>
 
 Returns the location of the vehicle

@@ -37,6 +37,8 @@ enum OnStarApiCommand {
   Start = "start",
   UnlockDoor = "unlockDoor",
   Location = "location",
+  LockTrunk = "lockTrunk",
+  UnlockTrunk = "unlockTrunk",
 }
 
 class RequestService {
@@ -221,6 +223,14 @@ class RequestService {
 
   async location(): Promise<Result> {
     return this.sendRequest(this.getCommandRequest(OnStarApiCommand.Location));
+  }
+  
+  async lockTrunk(): Promise<Result> {
+    return this.sendRequest(this.getCommandRequest(OnStarApiCommand.LockTrunk));
+  }
+
+  async unlockTrunk(): Promise<Result> {
+    return this.sendRequest(this.getCommandRequest(OnStarApiCommand.UnlockTrunk));
   }
 
   private getCommandRequest(command: OnStarApiCommand): Request {

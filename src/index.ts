@@ -74,6 +74,14 @@ class OnStar {
 
   async location(): Promise<Result> {
     return this.requestService.location();
+  }  
+  
+  async lockTrunk(): Promise<Result> {
+    return this.requestService.lockTrunk();
+  }
+  
+  async unlockTrunk(): Promise<Result> {
+    return this.requestService.unlockTrunk();
   }
 
   setCheckRequestStatus(checkStatus: boolean) {
