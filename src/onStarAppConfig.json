@@ -1,6 +1,6 @@
 {
-  "appId": "OMB_CVY_iOS_6W2",
-  "appSecret": "obZ6sTewyPd8c7JE9SyfLnmeLpX6gLtpoytz",
+  "appId": "OMB_CVY_iOS_6X1",
+  "appSecret": "HZ7xQfoHWhTWLj2gyHBMFzohCcZmnx4kmp2N",
   "optionalClientScope": "",
   "requiredClientScope": "onstar gmoc user_trailer user priv",
   "serviceUrl": "https://api.gm.com",
