@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/samrum/OnStarJS/compare/v2.3.30...v2.4.0) (2024-03-24)
+
+
+### Features
+
+* include shared vehicles with getAccountVehicles ([#241](https://github.com/samrum/OnStarJS/issues/241)) ([09a173c](https://github.com/samrum/OnStarJS/commit/09a173c544ff7f97c472c903da0146047c11d6ab))
+
+
+### Bug Fixes
+
+* update secrets ([#249](https://github.com/samrum/OnStarJS/issues/249)) ([0b8a1c9](https://github.com/samrum/OnStarJS/commit/0b8a1c95446ccc6c83c65f8f2bf5d79bb84676a8))
+
 ### [2.3.30](https://github.com/samrum/OnStarJS/compare/v2.3.29...v2.3.30) (2024-01-18)
 
 
