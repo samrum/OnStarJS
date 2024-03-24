@@ -60,4 +60,12 @@ describe("OnStar", () => {
   test("getAccountVehicles", async () => {
     await onStar.getAccountVehicles();
   });
+
+  test("lockTrunk", async () => {
+    await onStar.lockTrunk();
+  });
+
+  test("unlockTrunk", async () => {
+    await onStar.unlockTrunk();
+  });
 });
