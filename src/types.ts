@@ -99,31 +99,30 @@ export interface AlertRequestOptions {
 }
 
 export enum DiagnosticRequestItem {
+  AmbientAirTemperature = "AMBIENT AIR TEMPERATURE",
   EngineCoolantTemp = "ENGINE COOLANT TEMP",
   EngineRpm = "ENGINE RPM",
-  LastTripFuelEconomy = "LAST TRIP FUEL ECONOMY",
-  EvEstimatedChargeEnd = "EV ESTIMATED CHARGE END",
   EvBatteryLevel = "EV BATTERY LEVEL",
-  OilLife = "OIL LIFE",
-  EvPlugVoltage = "EV PLUG VOLTAGE",
-  LifetimeFuelEcon = "LIFETIME FUEL ECON",
-  HotspotConfig = "HOTSPOT CONFIG",
-  LifetimeFuelUsed = "LIFETIME FUEL USED",
-  Odometer = "ODOMETER",
-  HotspotStatus = "HOTSPOT STATUS",
-  LifetimeEvOdometer = "LIFETIME EV ODOMETER",
-  EvPlugState = "EV PLUG STATE",
   EvChargeState = "EV CHARGE STATE",
-  TirePressure = "TIRE PRESSURE",
-  AmbientAirTemperature = "AMBIENT AIR TEMPERATURE",
-  LastTripDistance = "LAST TRIP DISTANCE",
-  IntermVoltBattVolt = "INTERM VOLT BATT VOLT",
-  GetCommuteSchedule = "GET COMMUTE SCHEDULE",
-  GetChargeMode = "GET CHARGE MODE",
+  EvEstimatedChargeEnd = "EV ESTIMATED CHARGE END",
+  EvPlugState = "EV PLUG STATE",
+  EvPlugVoltage = "EV PLUG VOLTAGE",
   EvScheduledChargeStart = "EV SCHEDULED CHARGE START",
   FuelTankInfo = "FUEL TANK INFO",
+  GetChargeMode = "GET CHARGE MODE",
+  GetCommuteSchedule = "GET COMMUTE SCHEDULE",
   HandsFreeCalling = "HANDS FREE CALLING",
-  EnergyEfficiency = "ENERGY EFFICIENCY",
+  HotspotConfig = "HOTSPOT CONFIG",
+  HotspotStatus = "HOTSPOT STATUS",
+  IntermVoltBattVolt = "INTERM VOLT BATT VOLT",
+  LastTripDistance = "LAST TRIP DISTANCE",
+  LastTripFuelEconomy = "LAST TRIP FUEL ECONOMY",
+  LifetimeEvOdometer = "LIFETIME EV ODOMETER",
+  LifetimeFuelEcon = "LIFETIME FUEL ECON",
+  LifetimeFuelUsed = "LIFETIME FUEL USED",
+  Odometer = "ODOMETER",
+  OilLife = "OIL LIFE",
+  TirePressure = "TIRE PRESSURE",
   VehicleRange = "VEHICLE RANGE",
 }
 
@@ -151,6 +150,10 @@ export interface SetChargingProfileRequestOptions {
 }
 
 export interface DoorRequestOptions {
+  delay?: number;
+}
+
+export interface TrunkRequestOptions {
   delay?: number;
 }
 
