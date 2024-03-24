@@ -13,6 +13,7 @@ import {
   DiagnosticRequestItem,
   DiagnosticsRequestOptions,
   DoorRequestOptions,
+  TrunkRequestOptions,
   HttpClient,
   OAuthToken,
   OnStarConfig,
@@ -37,6 +38,8 @@ enum OnStarApiCommand {
   Start = "start",
   UnlockDoor = "unlockDoor",
   Location = "location",
+  LockTrunk = "lockTrunk",
+  UnlockTrunk = "unlockTrunk",
 }
 
 class RequestService {
@@ -127,6 +130,30 @@ class RequestService {
         },
       },
     );
+
+    return this.sendRequest(request);
+  }
+
+  async lockTrunk(options: TrunkRequestOptions = {}): Promise<Result> {
+    const request = this.getCommandRequest(OnStarApiCommand.LockTrunk).setBody({
+      lockTrunkRequest: {
+        delay: 0,
+        ...options,
+      },
+    });
+
+    return this.sendRequest(request);
+  }
+
+  async unlockTrunk(options: DoorRequestOptions = {}): Promise<Result> {
+    const request = this.getCommandRequest(
+      OnStarApiCommand.UnlockTrunk,
+    ).setBody({
+      unlockTrunkRequest: {
+        delay: 0,
+        ...options,
+      },
+    });
 
     return this.sendRequest(request);
   }
