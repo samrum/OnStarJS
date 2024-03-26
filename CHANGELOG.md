@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/samrum/OnStarJS/compare/v2.4.0...v2.5.0) (2024-03-26)
+
+
+### Features
+
+* lock/unlock trunk ([#250](https://github.com/samrum/OnStarJS/issues/250)) ([b35d305](https://github.com/samrum/OnStarJS/commit/b35d305666ce90bce6818fe46072ef602c09fec5))
+
 ## [2.4.0](https://github.com/samrum/OnStarJS/compare/v2.3.30...v2.4.0) (2024-03-24)
 
 
