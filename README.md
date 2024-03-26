@@ -143,10 +143,10 @@ For commands that return data like diagnostics or location, the data returned by
 Locks the trunk but doesn't automatically close it.
 
     onStar.lockTrunk([options]);
-    
+
 | Option | Default | Valid Values          |
 | ------ | ------- | --------------------- |
-| delay  | 0       | Any integer (minutes) |    
+| delay  | 0       | Any integer (minutes) |
 
 </details>
 
@@ -219,7 +219,10 @@ Example Response
 
 # Development
 
-This project uses [pnpm](https://pnpm.io/) for package management.
+- Clone this repository
+- Install latest LTS version of [Node.js](https://nodejs.org/en/)
+- Enable [Corepack](https://github.com/nodejs/corepack) using `corepack enable`
+- Install dependencies using `pnpm install`
 
 ## Tests
 
