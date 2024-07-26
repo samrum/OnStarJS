@@ -269,7 +269,7 @@ class RequestService {
       Accept: "application/json",
       "Accept-Language": "en-US",
       "Content-Type": request.getContentType(),
-      Host: "api.gm.com",
+      Host: "na-mobile-api.gm.com",
       Connection: "keep-alive",
       "Accept-Encoding": "br, gzip, deflate",
       "User-Agent": onStarAppConfig.userAgent,
