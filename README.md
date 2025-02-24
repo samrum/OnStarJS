@@ -1,3 +1,7 @@
+# Archived
+
+**This plugin has been archived and is no longer maintained.**
+
 # OnStarJS
 
 [![npm version](https://badge.fury.io/js/onstarjs.svg)](https://badge.fury.io/js/onstarjs)
