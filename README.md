@@ -2,6 +2,9 @@
 
 **This plugin has been archived and is no longer maintained.**
 
+Check out [OnStarJS2](https://github.com/BigThunderSR/OnStarJS) for an actively maintained fork.
+
+
 # OnStarJS
 
 [![npm version](https://badge.fury.io/js/onstarjs.svg)](https://badge.fury.io/js/onstarjs)
