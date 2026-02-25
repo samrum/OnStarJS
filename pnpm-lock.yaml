@@ -18,10 +18,10 @@ dependencies:
 devDependencies:
   '@rollup/plugin-json':
     specifier: ^6.0.0
-    version: 6.1.0(rollup@3.29.4)
+    version: 6.1.0(rollup@3.30.0)
   '@rollup/plugin-typescript':
     specifier: ^11.1.0
-    version: 11.1.6(rollup@3.29.4)(tslib@2.6.3)(typescript@5.5.4)
+    version: 11.1.6(rollup@3.30.0)(tslib@2.6.3)(typescript@5.5.4)
   '@types/jest':
     specifier: ^29.5.1
     version: 29.5.12
@@ -48,7 +48,7 @@ devDependencies:
     version: 3.3.3
   rollup:
     specifier: ^3.21.0
-    version: 3.29.4
+    version: 3.30.0
   standard-version:
     specifier: ^9.5.0
     version: 9.5.0
@@ -644,7 +644,7 @@ packages:
       '@jridgewell/sourcemap-codec': 1.5.0
     dev: true
 
-  /@rollup/plugin-json@6.1.0(rollup@3.29.4):
+  /@rollup/plugin-json@6.1.0(rollup@3.30.0):
     resolution: {integrity: sha512-EGI2te5ENk1coGeADSIwZ7G2Q8CJS2sF120T7jLw4xFw9n7wIOXHo+kIYRAoVpJAN+kmqZSoO3Fp4JtoNF4ReA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -653,11 +653,11 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.1.0(rollup@3.29.4)
-      rollup: 3.29.4
+      '@rollup/pluginutils': 5.1.0(rollup@3.30.0)
+      rollup: 3.30.0
     dev: true
 
-  /@rollup/plugin-typescript@11.1.6(rollup@3.29.4)(tslib@2.6.3)(typescript@5.5.4):
+  /@rollup/plugin-typescript@11.1.6(rollup@3.30.0)(tslib@2.6.3)(typescript@5.5.4):
     resolution: {integrity: sha512-R92yOmIACgYdJ7dJ97p4K69I8gg6IEHt8M7dUBxN3W6nrO8uUxX5ixl0yU/N3aZTi8WhPuICvOHXQvF6FaykAA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -670,14 +670,14 @@ packages:
       tslib:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.1.0(rollup@3.29.4)
+      '@rollup/pluginutils': 5.1.0(rollup@3.30.0)
       resolve: 1.22.8
-      rollup: 3.29.4
+      rollup: 3.30.0
       tslib: 2.6.3
       typescript: 5.5.4
     dev: true
 
-  /@rollup/pluginutils@5.1.0(rollup@3.29.4):
+  /@rollup/pluginutils@5.1.0(rollup@3.30.0):
     resolution: {integrity: sha512-XTIWOPPcpvyKI6L1NHo0lFlCyznUEyPmPY1mc3KpPVDYulHSTvyeLNVW00QTLIAFNhR3kYnJTQHeGqU4M3n09g==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -689,7 +689,7 @@ packages:
       '@types/estree': 1.0.5
       estree-walker: 2.0.2
       picomatch: 2.3.1
-      rollup: 3.29.4
+      rollup: 3.30.0
     dev: true
 
   /@sinclair/typebox@0.27.8:
@@ -1809,7 +1809,7 @@ packages:
       source-map: 0.6.1
       wordwrap: 1.0.0
     optionalDependencies:
-      uglify-js: 3.19.0
+      uglify-js: 3.19.3
     dev: true
 
   /hard-rejection@2.1.0:
@@ -3198,8 +3198,8 @@ packages:
     resolution: {integrity: sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==}
     dev: true
 
-  /rollup@3.29.4:
-    resolution: {integrity: sha512-oWzmBZwvYrU0iJHtDmhsm662rC15FRXmcjCk1xD771dFDx5jJ02ufAQQTn0etB2emNk4J9EZg/yWKpsn9BWGRw==}
+  /rollup@3.30.0:
+    resolution: {integrity: sha512-kQvGasUgN+AlWGliFn2POSajRQEsULVYFGTvOZmK06d7vCD+YhZztt70kGk3qaeAXeWYL5eO7zx+rAubBc55eA==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
@@ -3599,8 +3599,8 @@ packages:
     hasBin: true
     dev: true
 
-  /uglify-js@3.19.0:
-    resolution: {integrity: sha512-wNKHUY2hYYkf6oSFfhwwiHo4WCHzHmzcXsqXYTN9ja3iApYIFbb2U6ics9hBcYLHcYGQoAlwnZlTrf3oF+BL/Q==}
+  /uglify-js@3.19.3:
+    resolution: {integrity: sha512-v3Xu+yuwBXisp6QYTcH4UbH+xYJXqnq2m/LtQVWKWzYc1iehYnLixoQDN9FH6/j9/oybfd6W9Ghwkl8+UMKTKQ==}
     engines: {node: '>=0.8.0'}
     hasBin: true
     requiresBuild: true
